@@ -1,0 +1,70 @@
+<section>
+    <div class="d-flex align-items-center" mat-dialog-title>
+        <mat-icon>security</mat-icon>
+        <div class="ml-2">Seguridad - {{ okButtonTitle }}</div>
+    </div>
+    <form [formGroup]="form">
+        <mat-dialog-content>
+            <div class="login-container">
+
+                <mat-error *ngIf="this.invalidLogin">{{ this.errorMsg }}</mat-error>
+                <br *ngIf="!this.invalidLogin" />
+                <br />
+
+                <mat-form-field *ngIf="recoverMode">
+                    <input #emailInput matInput maxlength="50" placeholder="Ingrese su correo electronico"
+                        formControlName="email" (keydown)="onKeydown('email', $event)" />
+                    <!--<mat-error *ngIf="fields['email'].invalid">{{ getErrorMessage(fields['email']) }}</mat-error>-->
+                </mat-form-field>
+
+                <mat-form-field *ngIf="!recoverMode">
+                    <input #userNameInput matInput placeholder="Usuario" maxlength="50" formControlName="username"
+                        (input)="ConvertToLower($event)" (keydown)="onKeydown('userName', $event)" />
+                    <!--<mat-error *ngIf="fields['username'].invalid">{{ getErrorMessage(fields['username']) }}</mat-error>-->
+                </mat-form-field>
+
+                <mat-form-field *ngIf="!recoverMode || resetPasswordMode">
+                    <input #passwordInput [type]="hidePwd ? 'password' : 'text'" matInput maxlength="20"
+                        placeholder="Password" formControlName="password" (keydown)="onKeydown('password', $event)" />
+                    <mat-icon matSuffix (click)="hidePwd = !hidePwd">{{ hidePwd ? 'visibility' : 'visibility_off' }}
+                    </mat-icon>
+                    <!--<mat-error *ngIf="fields['password'].invalid">{{ getErrorMessage(fields['password']) }}</mat-error>-->
+                </mat-form-field>
+
+
+                <p style="text-align: right;margin: 0;">
+                    <button mat-button color="primary" *ngIf="!recoverMode" [disabled]="(this.isLoading$ | async)"
+                        (click)="setRecoverPasswordMode()">Recuperar Password</button>
+                </p>
+
+
+                <ng-container *ngIf="resetPasswordMode">
+
+                    <mat-form-field>
+
+                        <input #codeInput matInput maxlength="6" placeholder="Codigo" formControlName="code"
+                            (keydown)="onKeydown('code', $event)" />
+
+                        <!--<mat-error *ngIf="fields['code'].invalid">{{ getErrorMessage(fields['code']) }}</mat-error>-->
+                    </mat-form-field>
+
+                    <p style="color: blue">
+                        En breve recibira en su correo el codigo para restablecer su Password
+                    </p>
+
+                </ng-container>
+
+            </div>
+        </mat-dialog-content>
+
+        <mat-dialog-actions *ngIf="!(this.isLoading$ | async)">
+            <button mat-raised-button color="primary" (click)="ok()" [disabled]="form.invalid">
+                <mat-icon>done</mat-icon> Aceptar
+            </button>
+            <button mat-button type="button" color="primary" (click)="dismiss(false)">
+                <mat-icon>cancel</mat-icon> Cancelar
+            </button>
+        </mat-dialog-actions>
+    </form>
+    <!-- <mat-spinner *ngIf="this.isLoading$ | async"></mat-spinner> -->
+</section>

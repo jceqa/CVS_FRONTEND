@@ -1,0 +1,24 @@
+<!--<mat-sidenav-container class="app-sidenav-container">
+    <mat-sidenav-content class="app-sidenav-content bg">
+        <app-toolbar (toggleTheme)="toggleTheme()" (toggleSidenav)="sidenav.toggle()" (toggleDir)="toggleDir()"
+            *ngIf="false">
+        </app-toolbar>
+        <div class="h-100" [class.wrapper]="false" [class.pt-2]="true">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>-->
+
+<router-outlet></router-outlet>
+
+<!--<mat-toolbar color="primary" *ngIf="false">
+  <mat-toolbar-row >
+    <a class="navbar-brand" href="#" style="color: white;">Lista de Películas</a>
+    <span class="example-spacer"></span>
+    <label for="btn-sesion" style="color: white; padding-right: 1em;">Bienvenido, {{usuario}}</label>
+    <a class="btn btn-primary my-2 my-sm-0" [routerLink]="['/login']">Iniciar Sesión</a>-->
+<!--<button *ngIf="!estaLogueado" class="btn btn-success my-2 my-sm-0" mat-raised-button (click) = "openLogin()">Iniciar Sesión</button>
+    <button *ngIf="estaLogueado" mat-raised-button class="btn btn-danger my-2 my-sm-0" (click) = "signOut()">Cerrar Sesión</button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<router-outlet></router-outlet>-->

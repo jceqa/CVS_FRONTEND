@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files */
+@import  url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+body {
+    background: #456;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.bg {
+  background: url('assets/bg.jpg');
+  background-size: cover;
+  background-position: bottom center;
+  background-repeat: no-repeat;
+}

@@ -1,0 +1,50 @@
+<div class="logo-box">
+
+    <img (load)="this.imageLoaded = true" [hidden]="!imageLoaded" class="logo" [src]="inImgBase64" alt="Logo">
+    <!--<div class="img-prev-skeleton" [hidden]="imageLoaded"></div>-->
+    <img class="logo" src="assets/logo4.png" alt="Logo">
+
+</div>
+
+<div class="center">
+    <ng-container>
+        <div class="signin-buttons">
+            <p>
+                <span class="glass">Para empezar debe iniciar sesión o registrarse</span>
+            </p>
+            <div>
+                <button mat-raised-button color="primary" routerLink="/login">Iniciar Sesión</button>
+                <button class="ml-2" mat-raised-button routerLink="/register">Registrarse</button>
+            </div>
+
+            <!-- Panel de Descarga de apk -->
+            <!--<div style="position: fixed; bottom: 16px; left: 16px;" >
+
+    <a [hidden]="googlePlay === ''" [href]="googlePlay" target="_blank" title="Descargar desde Google Play" style="height:80px">
+      <img src="./assets/google_play_es.svg" alt="Google Play" style="height:60px">
+    </a>
+
+    <a [hidden]="apkName === ''" [href]="apkName" target="_blank" title="Descargar aplicacion desde aqui" style="height:80px;margin-left: 10px;">
+      <img src="./assets/download_apk.png" alt="Download APK" style="height:65px">
+    </a>
+
+  </div>-->
+
+            <!--
+    No joc 07/05/2020
+    <button class="mt-2" mat-raised-button routerLink="/public/catalog">Catálogo</button>
+  -->
+
+
+            <!--
+    <p>o</p>
+    <button mat-button color="primary" routerLink="/register">Registrarse</button>
+    -->
+        </div>
+    </ng-container>
+    <!--<ng-container *ngIf="this.accountService.authenticated">
+    <p>
+      <span class="glass">Seleccione una opcion del menu lateral para continuar</span>
+    </p>
+  </ng-container>-->
+</div>

@@ -1,0 +1,96 @@
+.logo-box{
+  min-height: 150px;
+  min-width: 150px;
+}
+.img-prev-skeleton{
+  margin: 15px;
+  width: 150px;
+  height: 63px;
+  border-radius: 20px;
+  animation: loading 1.3s infinite linear;
+  background: #dedfe1;
+  background-image: -webkit-linear-gradient(to right, #dedfe1 0%, #f2f3f5 20%, #dedfe1 40%, #dedfe1 100%);
+  background-image: linear-gradient(to right, #dedfe1 0%, #f2f3f5 20%, #dedfe1 40%, #dedfe1 100%);
+  background-repeat: no-repeat;
+}
+.logo {
+    width: 150px;
+    height: auto;
+    padding: 10px;
+    margin: 10px;
+}
+.center
+{
+    text-align: center;
+    vertical-align: middle;
+}
+.glass {
+    padding: 10px;
+    background: #d8d5d526;
+}
+.logo-sig-icon-text{
+  animation-name: display-logo;
+  animation-duration: 3s;
+  position: relative;
+}
+
+@keyframes display-logo {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.bg-sig{
+  margin-top: 50px;
+  margin-left: 30px;
+  width: 200px;
+  background-color: rgba(255, 255, 255, 0.3);
+  -webkit-box-shadow: 4px 6px 5px -5px rgba(0,0,0,0.75);
+  -moz-box-shadow: 4px 6px 5px -5px rgba(0,0,0,0.75);
+  box-shadow: 4px 6px 5px -5px rgba(0,0,0,0.75);
+  animation-name: logo-bg-sig;
+  animation-duration: 2s;
+  position: relative;
+  border-radius: 10px;
+}
+
+
+@keyframes logo-bg-sig {
+  0% {
+    opacity: 0.0;
+    top: -120px;
+  }
+  100% {
+    opacity: 1;
+    top: 0px;
+  }
+}
+
+.signin-buttons{
+  animation-name: signin;
+  animation-duration: 2s;
+  position: relative;
+}
+
+@keyframes signin {
+  0% {
+    opacity: 0.0;
+  }
+  100% {
+    opacity: 1;
+    top: 0px;
+  }
+}
+
+.bg {
+  background: url('../../assets/bg.jpg');
+  background-size: cover;
+  background-position: bottom center;
+  background-repeat: no-repeat;
+}

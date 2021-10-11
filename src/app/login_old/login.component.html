@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Iniciar Sesión</h1>
+<div mat-dialog-content>
+  <mat-form-field style="width: 100%;">
+    <mat-label>Usuario</mat-label>
+    <input matInput [(ngModel)]="usuario.username"/>
+  </mat-form-field>
+  <br>
+  <mat-form-field style="width: 100%;">
+    <mat-label>Contraseña</mat-label>
+    <input matInput type="password" [(ngModel)]="usuario.password"/>
+  </mat-form-field>
+</div>
+<mat-error *ngIf="usuarioIncorrecto">El nombre de usuario y/o contraseña son incorrectos.</mat-error>
+<div mat-dialog-actions align="end">
+    <button mat-button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+    <button mat-button mat-raised-button color="primary" (click)="signIn()">Aceptar</button>
+</div>
+

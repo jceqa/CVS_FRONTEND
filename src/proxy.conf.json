@@ -1,0 +1,8 @@
+{
+    "/api/*": {
+        "target": "https://movies.z4.tdplab.com",
+        "secure": true,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}
