@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificadorService } from 'src/notificador.service';
 import { LoginComponent } from './login_old/login.component';
 
@@ -19,7 +20,8 @@ export class AppComponent {
   estaLogueado = false;
 
   constructor(public dialog: MatDialog,
-              private data: NotificadorService){}
+              private data: NotificadorService,
+              private snackbar : MatSnackBar){}
 
   ngOnInit(): void{
 

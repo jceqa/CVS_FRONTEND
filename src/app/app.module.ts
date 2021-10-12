@@ -30,6 +30,7 @@ import { LoginPageComponent } from './login/login-page/login-page.component';
 import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { LoginDialogComponent } from './login/login-dialog/login-dialog.component';
+import { MaterialModule } from './material.module';
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import { LoginDialogComponent } from './login/login-dialog/login-dialog.componen
     MatSelectModule,
     RouterModule,
     RouterModule.forRoot([]),
-    StoreModule.forRoot({}, {})
+    StoreModule.forRoot({}, {}),
+    MaterialModule
   ],
   providers: [
     {
