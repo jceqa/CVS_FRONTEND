@@ -1,6 +1,6 @@
 {
     "/api/*": {
-        "target": "https://movies.z4.tdplab.com",
+        "target": "http://localhost:8080/CVS",
         "secure": true,
         "changeOrigin": true,
         "logLevel": "debug"

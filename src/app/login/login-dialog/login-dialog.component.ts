@@ -2,8 +2,10 @@ import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit } fr
 import { FormControl, Validators, FormGroup, AbstractControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 //import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { LoginService } from 'src/app/services/login.service';
 //import * as fromRoot from '../../../../app.reducer';
 //import * as UI from '../../../../shared/reducers/ui.actions';
 //import * as Auth from '../../../reducers/account.actions';
@@ -24,13 +26,13 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     invalidLogin!: boolean;
     errorMsg!: string;
     isLoading$!: Observable<boolean>;
-    isAuth$!: Observable<boolean>;
+    //isAuth$!: Observable<boolean>;
     user: any;//LoginClaims;
     hidePwd!: boolean;
     recoverMode = false;
     resetPasswordMode = false;
     okButtonTitle = 'Ingresar';
-    // private loginSubscription: Subscription;
+    //private loginSubscription: Subscription;
 
     // Declaración del formulario
     form!: FormGroup;
@@ -46,10 +48,11 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('codeInput') codeInput!: ElementRef;
 
     constructor(
-        // private router: Router,
-        // private route: ActivatedRoute,
-        // private _location: Location
+        private router: Router,
+        private route: ActivatedRoute,
+        //private _location: Location,
         private dialogRef: MatDialogRef<LoginDialogComponent>,
+        private loginService: LoginService,
         //private accountService: AccountService,
         private snackBar: MatSnackBar,
         //private uiService: UIService,
@@ -69,13 +72,13 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.isAuth$ = this.store.select(fromRoot.getIsAuth);
         // console.log(this.isAuth$);
         /*this.loginSubscription = this.isAuth$.subscribe(result => {
-          debugger;
-          console.log('result', result);
-          if (result) {
-            this.accountService.getMenu();
-            this.accountService.getPermissionId();
-            this.dialogRef.close(true);
-          }
+            debugger;
+            console.log('result', result);
+            if (result) {
+                //this.accountService.getMenu();
+                //this.accountService.getPermissionId();
+                this.dialogRef.close(true);
+            }
         });*/
 
     }
@@ -92,7 +95,7 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
                 : '';
     }
 
-    ConvertToLower(evt : any) {
+    ConvertToLower(evt: any) {
         if (evt) this.fields['username'].setValue(evt.target.value.toLowerCase());
     }
 
@@ -183,12 +186,12 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (params && params.returnUrl && params.returnUrl !== '')
                       this.router.navigate([params.returnUrl]);
                 });*/
-     /*       },
-            () => {
-                this.resetLoginData('Error al recuperar los datos de permisos');
-            }
-        );
-    }*/
+    /*       },
+           () => {
+               this.resetLoginData('Error al recuperar los datos de permisos');
+           }
+       );
+   }*/
 
     resetLoginData(msg: string) {
         localStorage.setItem('token', "");
@@ -203,11 +206,17 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
             new Date().getTime() + result.expires_in * 1000
         ).getTime();
 
+        console.log(result);
         // Se localStorage values
-        localStorage.setItem('token', result.access_token);
+        localStorage.setItem('token', result.datos.token);
         localStorage.setItem('expiration', expiration.toString());
         //this.accountService.username = this.user.username;
-        // joc 11/05/2020 localStorage.setItem('username', this.user.username);
+        // joc 11/05/2020 
+        localStorage.setItem('username', this.user.username);
+
+        this.dismiss(true);
+
+        //this.isAuth$ = true;
 
         // Get Companies
         // this.getCompanies();
@@ -270,6 +279,25 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         //this.store.dispatch(new UI.StartLoading());
         this.user = this.form.value;
 
+        //console.log(this.user);
+        this.loginService.signIn(this.user).subscribe(
+            (result: any) => {
+                console.log("Sucess..");
+                console.log(result);
+                if (result.datos.ok) {
+                    console.log("Logged");
+                    console.log("token: ", result.datos.token);
+                    this.loginSuccess(result);
+                } else {
+                    console.log("Invalid Credentials");
+                    this.loginError(result)
+                }
+            }, (error: any) => {
+                console.log("Error..")
+                console.log(error);
+                this.loginError(error)
+            }
+        )
         /*this.accountService.postLogin(this.user).subscribe(
             (result: any) => this.loginSuccess(result),
             (error: any) => this.loginError(error)
@@ -277,6 +305,8 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ok() {
+
+        //console.log("ok");
 
         try {
 

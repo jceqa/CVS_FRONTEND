@@ -1,24 +1,70 @@
-<!--<mat-sidenav-container class="app-sidenav-container">
-    <mat-sidenav-content class="app-sidenav-content bg">
+<mat-sidenav-container class="app-sidenav-container" [class.dark-theme]="isDarkTheme" [dir]="dir">
+    <mat-sidenav class="app-sidenav mat-elevation-z5 padding-company-name" #sidenav
+        *ngIf="true" [opened]="this.isSmall ? false : isMenuOpen"
+        [mode]="this.isSmall ? 'over' : 'side'" [class.menu-open]="isMenuOpen">
+       <div class="container-name-company">
+            <div class="d-flex justify-content-between align-items-center py-2 px-4">
+                <a routerLink="/" style="text-decoration: none;min-width: 80px;vertical-align: middle;">
+                    <img src="favicon.ico" alt='' class="logo" style="vertical-align: middle;">
+                    <span class='color-primary' style="min-height: 30px;vertical-align: middle;"
+                        title="Sistema Integrado de Gestion">{{appName}}</span>
+                </a>
+                <mat-select [(ngModel)]="companyId" (selectionChange)="company_change($event)">
+                    <mat-option *ngFor="let company of companies" [value]="company.id">{{ company.name }}</mat-option>
+                </mat-select>
+                <span fxFlex></span>
+                <button mat-icon-button title="Cerrar" (click)="toogleSideNav()" *ngIf="this.isSmall">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <mat-accordion class="app-menu mat-elevation-z0">
+
+            <mat-expansion-panel *ngFor="let menu of menus; first as isFirst" [expanded]="isFirst"
+                class="mat-elevation-z0">
+                <mat-expansion-panel-header *ngIf="menu != null" [expandedHeight]="'40px'"
+                    style="border-top: solid 1px rgb(224, 224, 224);">
+                    <mat-panel-title>
+                        <p style="vertical-align: middle">
+                            <mat-icon style="vertical-align: middle;padding-right: 5px"
+                                *ngIf="menu.Icon && menu.Icon!=''">{{ menu.Icon }}
+                            </mat-icon> {{ menu.Name }}
+                        </p>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list *ngIf="menu">
+                    <!--
+            <mat-list-item *ngFor="let p of menu.Items" (click)="go(p.Url)"
+              [ngClass]="{'active': this.router.url === p.Url}">
+            {{ p.Name }}
+            </mat-list-item>
+            -->
+                    <a mat-list-item role="navigation" routerLinkActive="active" (click)="closeMenu()"
+                        [routerLink]="item.Url" *ngFor="let item of menu.Items"> {{ item.Name }}
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <div class="sidenav-footer" *ngIf="true">
+            <mat-divider></mat-divider>
+            <span>Version: {{ version }}</span>
+            <button mat-stroked-button color="primary" (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon> Salir
+            </button>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content class="app-sidenav-content"
+        [ngClass]="{'bg': !true}">
         <app-toolbar (toggleTheme)="toggleTheme()" (toggleSidenav)="sidenav.toggle()" (toggleDir)="toggleDir()"
-            *ngIf="false">
+            *ngIf="true">
         </app-toolbar>
-        <div class="h-100" [class.wrapper]="false" [class.pt-2]="true">
+        <div class="h-100" [class.wrapper]="true"
+            [class.pt-2]="true">
             <router-outlet></router-outlet>
         </div>
     </mat-sidenav-content>
-</mat-sidenav-container>-->
-
-<router-outlet></router-outlet>
-
-<!--<mat-toolbar color="primary" *ngIf="false">
-  <mat-toolbar-row >
-    <a class="navbar-brand" href="#" style="color: white;">Lista de Películas</a>
-    <span class="example-spacer"></span>
-    <label for="btn-sesion" style="color: white; padding-right: 1em;">Bienvenido, {{usuario}}</label>
-    <a class="btn btn-primary my-2 my-sm-0" [routerLink]="['/login']">Iniciar Sesión</a>-->
-<!--<button *ngIf="!estaLogueado" class="btn btn-success my-2 my-sm-0" mat-raised-button (click) = "openLogin()">Iniciar Sesión</button>
-    <button *ngIf="estaLogueado" mat-raised-button class="btn btn-danger my-2 my-sm-0" (click) = "signOut()">Cerrar Sesión</button>
-  </mat-toolbar-row>
-</mat-toolbar>
-<router-outlet></router-outlet>-->
+</mat-sidenav-container>
+<div class="loading-container" *ngIf="this.isLoading$ | async">
+    <mat-spinner color="primary" class="center-element"></mat-spinner>
+</div>

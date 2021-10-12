@@ -1,0 +1,47 @@
+<mat-toolbar color="primary" class="mat-elevation-z4" *ngIf="true">
+    <button mat-icon-button *ngIf="true" (click)="menuOpenClick()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span *ngIf="isMenuOpen === false">{{companyName}}</span>
+    <span class="line-spacer"></span>
+    <button *ngIf="!true" mat-button (click)="openLoginDialog()">Iniciar Sesión</button>
+    <ng-container *ngIf="true">
+        <button mat-icon-button [matMenuTriggerFor]="notificationsMenu">
+            <mat-icon>notifications</mat-icon>
+        </button>
+        <mat-menu #notificationsMenu="matMenu">
+            <button mat-menu-item>
+                <mat-icon>email</mat-icon>Sin Correo
+            </button>
+            <button mat-menu-item>
+                <mat-icon>assignment</mat-icon>Sin tareas
+            </button>
+            <button mat-menu-item>
+                <mat-icon>message</mat-icon>Sin mensajes
+            </button>
+        </mat-menu>
+        <button mat-button [matMenuTriggerFor]="userMenu">
+            <mat-icon>account_circle</mat-icon>
+            <span class="ml-1">{{ username }}</span>
+        </button>
+        <mat-menu #userMenu="matMenu">
+            <button mat-menu-item (click)="openProfileDialog()">
+                <mat-icon>account_circle</mat-icon>Mi Cuenta
+            </button>
+            <button *ngIf="false" mat-menu-item (click)="openApiUrlConfDialog()">
+                <mat-icon>build</mat-icon>API-URL Config
+            </button>
+            <button mat-menu-item>
+                <mat-icon>help</mat-icon>Ayuda
+            </button>
+            <button mat-menu-item (click)="openInfoDialog()">
+                <mat-icon>info</mat-icon>Info
+            </button>
+            <button mat-menu-item (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon>Salir
+            </button>
+            <!-- <button mat-menu-item (click)="toggleTheme.emit()">Cambiar Tema</button>
+      <button mat-menu-item (click)="toggleDir.emit()">Cambiar Dir</button> -->
+        </mat-menu>
+    </ng-container>
+</mat-toolbar>

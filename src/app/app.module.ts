@@ -31,6 +31,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { LoginDialogComponent } from './login/login-dialog/login-dialog.component';
 import { MaterialModule } from './material.module';
+import { ToolbarComponent } from './toolbar/toolbar.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { MaterialModule } from './material.module';
     MainContentComponent,
     LoginComponent,
     LoginPageComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,
