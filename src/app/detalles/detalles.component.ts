@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
+//import { NgxSpinnerService } from 'ngx-spinner';
 import { Comentario } from '../models/comentario';
 import { Critica } from '../models/critica';
 import { Pelicula } from '../models/pelicula';

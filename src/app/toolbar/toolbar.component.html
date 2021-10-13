@@ -2,7 +2,7 @@
     <button mat-icon-button *ngIf="true" (click)="menuOpenClick()">
         <mat-icon>menu</mat-icon>
     </button>
-    <span *ngIf="isMenuOpen === false">{{companyName}}</span>
+    <span *ngIf="isMenuOpen === false">Nombre de la Empresa</span>
     <span class="line-spacer"></span>
     <button *ngIf="!true" mat-button (click)="openLoginDialog()">Iniciar Sesión</button>
     <ng-container *ngIf="true">

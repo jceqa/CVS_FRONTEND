@@ -2,16 +2,10 @@ import {Component, EventEmitter, Output} from '@angular/core';
 //import { ApiUrlDialogComponent } from '../api-url-dialog/api-url-dialog.component';
 //import { InfoDialogComponent } from '../info-dialog/info-dialog.component';
 //import { UserProfileDialogComponent } from '../../../security/components/usuarios/user-profile-dialog/user-profile-dialog.component';
-//import { AccountService } from '../../services/account.service';
+//import { AccountService } from '../../services/account.service'
 import { MatDialog } from '@angular/material/dialog';
-import {RouteReuseStrategy} from '@angular/router';
-
-import {
-  MatSnackBarRef,
-  SimpleSnackBar,
-  MatSnackBar
-} from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { RouteReuseStrategy, Router } from '@angular/router';
+import { MatSnackBarRef, SimpleSnackBar, MatSnackBar } from '@angular/material/snack-bar';
 import { LoginDialogComponent } from '../login/login-dialog/login-dialog.component';
 import {Store} from '@ngrx/store';
 //import * as fromRoot from '../../../app.reducer';
@@ -84,15 +78,15 @@ export class ToolbarComponent {
       width: '450px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe( (result :any) => {
       if (result) {
         this.router.navigate(['/']);
       }
     });
   }
 
-  /*openProfileDialog(): void {
-    const dialogRef = this.dialog.open(UserProfileDialogComponent, {
+  openProfileDialog(): void {
+    /*const dialogRef = this.dialog.open(UserProfileDialogComponent, {
       width: '600px'
     });
 
@@ -100,11 +94,11 @@ export class ToolbarComponent {
       if (result) {
         this.router.navigate(['/']);
       }
-    });
+    });*/
   }
 
   openApiUrlConfDialog(): void {
-    const dialogRef = this.dialog.open(ApiUrlDialogComponent, {
+    /*const dialogRef = this.dialog.open(ApiUrlDialogComponent, {
       width: '450px'
     });
 
@@ -112,11 +106,11 @@ export class ToolbarComponent {
       if (result) {
         this.router.navigate(['/']);
       }
-    });
+    });*/
   }
 
   openInfoDialog(): void {
-    const dialogRef = this.dialog.open(InfoDialogComponent, {
+    /*const dialogRef = this.dialog.open(InfoDialogComponent, {
       width: '250px'
     });
 
@@ -124,8 +118,8 @@ export class ToolbarComponent {
       if (result) {
         this.router.navigate(['/']);
       }
-    });
-  }*/
+    });*/
+  }
 
   openSnackBar(
     message: string,

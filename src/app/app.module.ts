@@ -6,12 +6,12 @@ import { AppComponent } from './app.component';
 import { PeliculaComponent } from './pelicula/pelicula.component';
 import { CommonModule } from '@angular/common';
 import { DetallesComponent } from './detalles/detalles.component';
-import { NgxSpinnerModule } from "ngx-spinner";
+//import { NgxSpinnerModule } from "ngx-spinner";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login_old/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgregarComentarioComponent } from './agregar-comentario/agregar-comentario.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+//import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
@@ -52,11 +52,11 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     AppRoutingModule,
     HttpClientModule,
     CommonModule,
-    NgxSpinnerModule,
+    //NgxSpinnerModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule,
+    //NgbModule,
     MatTableModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
