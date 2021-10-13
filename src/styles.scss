@@ -1,0 +1,443 @@
+/*-----------------------------------------------------------------------------------
+
+	Theme Name: SIG
+	Description: Sistema Integrado de Gestión
+	Version: 1.0
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+
+	- Basic
+	- Helper Classes
+	- Loading
+	- Nav
+		- Logo
+		- App Sidenav
+  - Old
+
+---------------------------------------------------------------- */
+
+
+/* ----------------------------------------------------------------
+	Basic
+-----------------------------------------------------------------*/
+html {
+  height: 100%;
+}
+
+html,
+body {
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  height: auto;
+  height: 100%;
+  overscroll-behavior: contain;
+}
+
+body,
+form,
+input[type=text] {
+  font-size: 11pt;
+}
+
+body {
+  margin: 0;
+}
+
+
+/*.bg {
+  background: url('assets/bg.jpg');
+  background-size: cover;
+  background-position: bottom center;
+  background-repeat: no-repeat;
+}*/
+
+
+/* ----------------------------------------------------------------
+	Helper Classes
+-----------------------------------------------------------------*/
+
+.w-100 {
+  width: 100% !important;
+}
+
+.w-50 {
+  width: 50% !important;
+}
+
+
+.h-100 {
+  height: 100% !important;
+}
+
+.pointer {
+  cursor: pointer;
+  outline: 0 !important;
+}
+
+.outline:focus,
+outline:active {
+  outline: 0 !important;
+}
+
+.paddingDiv:focus {
+  outline: 0;
+}
+
+.img-fluid {
+  max-width: 100% !important;
+  max-height: 100%;
+  height: auto;
+}
+
+
+
+/* ----------------------------------------------------------------
+  Nav
+-----------------------------------------------------------------*/
+
+.logo-svg {
+  width: 40px;
+  height: 41px;
+}
+
+.text-logo-svg {
+  font-size: 20px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #3f51b5;
+}
+
+.app-sidenav-container {
+  height: 100%;
+  background-color: #eff3f7;
+}
+
+.app-sidenav-content {
+  display: flex !important;
+  flex-direction: column;
+  //overflow: auto;
+  height: 100%;
+  //min-height: 100vh;
+  background-color: #eff3f7;
+}
+
+.app-sidenav {
+
+  overflow-y: scroll;
+
+  .mat-expansion-panel-header-title {
+    font-family: Roboto;
+    font-size: 13px;
+  }
+
+  .mat-list-base .mat-list-item,
+  .mat-list-base .mat-list-option .mat-list-item-content,
+  a.mat-list-item-content {
+    height: 40px !important;
+  }
+
+  .mat-list-item-content {
+    color: #616161 !important;
+    text-transform: uppercase;
+  }
+
+  .mat-list-item-content:hover {
+    color: #000000 !important;
+  }
+
+  .mat-expansion-panel-body {
+    padding: 0 !important;
+  }
+
+  .mat-list-base {
+    padding-top: 0 !important;
+  }
+
+  .mat-list-item-content {
+    padding-left: 40px !important;
+    font-size: 12px !important;
+  }
+
+  .mat-expansion-panel-spacing {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+  }
+
+  .mat-drawer-inner-container {
+    max-width: 270px;
+    overflow-y: overlay;
+  }
+
+  .sidenav-footer {
+    background-color: #ffffff;
+    position: absolute;
+    width: inherit;
+    max-width: 270px;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px;
+  }
+
+  mat-list-item {
+    transition: border-width 0.5s ease-in-out;
+
+    &.active {
+      border-left: 4px solid #1522d8;
+      background-color: rgba(0, 0, 0, 0.1);
+      color: black;
+    }
+  }
+}
+
+/* ----------------------------------------------------------------
+	Old Css
+-----------------------------------------------------------------*/
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/theming';
+@include mat-core();
+$candy-app-primary: mat-palette($mat-indigo);
+$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
+$candy-app-warn: mat-palette($mat-red);
+$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+@include angular-material-theme($candy-app-theme);
+
+.dark-theme {
+  $primary-dark: mat-palette($mat-pink, 700);
+  $accent-dark: mat-palette($mat-green);
+  $warn-dark: mat-palette($mat-red);
+  $theme-dark: mat-dark-theme($primary-dark, $accent-dark, $warn-dark);
+  @include angular-material-theme($theme-dark);
+}
+
+.color-primary {
+  color: mat-color($candy-app-primary);
+}
+
+.line-spacer {
+  flex: 1 1 auto;
+}
+
+.fixed-width {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+// Loading container centrado, estaba antes y se quito por un mal margin o una seccion en especial entonces dejo comentado
+// en caso de querer implementar nuevamente
+// silvio.sisa
+// 22/02/2020
+//.loading-container {
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//  position: fixed;
+//  top: 0;
+//  left: 0;
+//  right: 0;
+//  z-index: 9999 !important;
+//  width: 100%;
+//  height: 100%;
+//  background-color: rgba(215, 215, 215, 0.5);
+//}
+
+/* Absolute Center Spinner */
+.loading-container {
+  position: fixed;
+  z-index: 9999;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/* Transparent Overlay */
+.loading-container:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(215, 215, 215, 0.5);
+}
+
+/* Customize website's scrollbar like Mac OS
+Not supports in Firefox and IE */
+
+/* total width */
+.scrollbar::-webkit-scrollbar {
+  background-color: #fff;
+  width: 16px
+}
+
+/* background of the scrollbar except button or resizer */
+.scrollbar::-webkit-scrollbar-track {
+  background-color: #fff
+}
+
+.scrollbar::-webkit-scrollbar-track:hover {
+  background-color: #f4f4f4
+}
+
+/* scrollbar itself */
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #babac0;
+  border-radius: 16px;
+  border: 5px solid #fff
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a0a0a5;
+  border: 4px solid #f4f4f4
+}
+
+/* set button(top and bottom of the scrollbar) */
+.scrollbar::-webkit-scrollbar-button {
+  display: none
+}
+
+/* div box */
+body {
+  background-color: #babac0
+}
+
+.scrollbar {
+  height: 75vh;
+  width: 25vw;
+  min-width: 150px;
+  background: #fff;
+  overflow-y: scroll
+}
+
+.overflow {
+  min-height: 100vh
+}
+
+/*
+.no-padding,
+.no-padding .mat-dialog-container
+{
+  padding: 0!important;
+}
+.no-padding .mat-dialog-content {
+  margin: 0!important;
+  padding: 0!important;
+}
+*/
+
+//Toolbar device Map
+//silvio.sisa
+//10/03/2020
+
+.visit-list-item {
+  border-bottom: 1px solid #cccccc;
+  padding-top: 4px;
+  padding-bottom: 8px;
+
+  .strong {
+    font-weight: bolder;
+  }
+}
+
+
+/* joc 18/09/2020 */
+#iframe-container {
+  max-width: 600px;
+  min-height: 400px;
+  width: 95%;
+  margin: auto;
+}
+
+#iframe-container>iframe {
+  max-width: 600px;
+  min-height: 400px;
+}
+
+/* Para tarjetas de credito joc 25/09/2020 */
+.cards-container {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.card {
+  font-size: 8pt;
+  display: inline-block;
+  min-width: 250px;
+  max-width: 280px;
+  min-height: 150px;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  vertical-align: middle;
+  text-align: center;
+  background-color: #fff;
+}
+
+.card-reg {
+  border: solid 1px #97a2a8;
+}
+
+.card-selected {
+  background-color: #cbd4da85;
+  border: solid 1px #c1c5e0;
+  -webkit-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.75);
+}
+
+.card-new {
+  border: dotted 2px #889ca9;
+}
+
+.card-brand {
+  text-align: left;
+  height: 40px;
+}
+
+.card-number {
+  font-size: 13pt;
+  height: 50px;
+  font-weight: bold;
+}
+
+.card-exp {
+  height: 40px;
+  vertical-align: baseline;
+}
+
+.card-exp .mat-icon-button {
+  vertical-align: baseline;
+}
+
+
+/** Loading **/
+.start_loading {
+  position: relative;
+  text-align: center;
+  height: 100%;
+  background-color: white;
+}
+
+.start_loading_container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin-top: -9px;
+  color: #1482c2;
+}
+
+/* 
+https://github.com/mattlewis92/angular-calendar
+angular-cli file: src/styles.css 
+@import "../node_modules/angular-calendar/css/angular-calendar.css";*/

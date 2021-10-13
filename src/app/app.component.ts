@@ -7,7 +7,7 @@ import { LoginComponent } from './login_old/login.component';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
 
@@ -46,9 +46,9 @@ export class AppComponent {
             }
         )
 
-        this.menus.push({Name : "Menu1", Icon : null});
-        this.menus.push({Name : "Menu2", Icon : null});
-        this.menus.push({Name : "Menu3", Icon : null});
+        this.menus.push({Name : "Menu1", Icon : null, Items : [{Url : "/", Name : "Item 1"}, {Url : "/", Name : "Item 2"}, {Url : "/", Name : "Item 3"}]});
+        this.menus.push({Name : "Menu2", Icon : null, Items : [{Url : "/", Name : "Item 1"}, {Url : "/", Name : "Item 2"}]});
+        this.menus.push({Name : "Menu3", Icon : null, Items : [{Url : "/", Name : "Item 1"}]});
     }
 
     openLogin(): void {
