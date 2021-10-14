@@ -32,7 +32,9 @@
                         "styles": [
                             "src/styles.scss",
                             "src/styles.sass",
-                            "src/styles.css"
+                            "src/styles.css",
+                            "src/assets/css/circle.css",
+                            "src/bootstrap-grid.min.css"
                         ],
                         "scripts": [],
                         "vendorChunk": true,
@@ -106,7 +108,9 @@
                             "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
                             "src/styles.scss",
                             "src/styles.sass",
-                            "src/styles.css"
+                            "src/styles.css",
+                            "src/assets/css/circle.css",
+                            "src/bootstrap-grid.min.css"
                         ],
                         "scripts": []
                     }

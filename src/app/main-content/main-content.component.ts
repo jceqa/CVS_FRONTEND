@@ -11,6 +11,7 @@ import {Router} from '@angular/router';
 //import {UserRegisterComponent} from '../../../security/components/usuarios/user-register/user-register.component';
 //import { DomSanitizer } from '@angular/platform-browser';
 import { LoginDialogComponent } from '../login/login-dialog/login-dialog.component';
+import { LoginService } from '../services/login.service';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class MainContentComponent implements OnInit, OnChanges {
   imageLoaded = false;
   constructor(
     //private domSanitizer: DomSanitizer,
-    //public accountService: AccountService,
+    public loginService: LoginService,
     //private store: Store<fromRoot.State>,
     private dialog: MatDialog,
     private router: Router,

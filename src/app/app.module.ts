@@ -32,6 +32,7 @@ import { StoreModule } from '@ngrx/store';
 import { LoginDialogComponent } from './login/login-dialog/login-dialog.component';
 import { MaterialModule } from './material.module';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { InfoDialogComponent } from './info-dialog/info-dialog.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     LoginComponent,
     LoginPageComponent,
     LoginDialogComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    InfoDialogComponent
   ],
   imports: [
     BrowserModule,

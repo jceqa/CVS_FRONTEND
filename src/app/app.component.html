@@ -1,17 +1,17 @@
 <mat-sidenav-container class="app-sidenav-container" [class.dark-theme]="isDarkTheme" [dir]="dir">
     <mat-sidenav class="app-sidenav mat-elevation-z5 padding-company-name" #sidenav
-        *ngIf="estaLogueado" [opened]="this.isSmall ? false : isMenuOpen"
+        *ngIf="this.loginService.authenticated" [opened]="this.isSmall ? false : isMenuOpen"
         [mode]="this.isSmall ? 'over' : 'side'" [class.menu-open]="isMenuOpen">
        <div class="container-name-company">
             <div class="d-flex justify-content-between align-items-center py-2 px-4">
                 <a routerLink="/" style="text-decoration: none;min-width: 80px;vertical-align: middle;">
                     <img src="favicon.ico" alt='' class="logo" style="vertical-align: middle;">
                     <span class='color-primary' style="min-height: 30px;vertical-align: middle;"
-                        title="Sistema Integrado de Gestion">{{appName}}</span>
+                        title="CVS">{{appName}}</span>
                 </a>
-                <mat-select [(ngModel)]="companyId" (selectionChange)="company_change($event)">
+                <!--<mat-select [(ngModel)]="companyId" (selectionChange)="company_change($event)">
                     <mat-option *ngFor="let company of companies" [value]="company.id">{{ company.name }}</mat-option>
-                </mat-select>
+                </mat-select>-->
                 <span fxFlex></span>
                 <button mat-icon-button title="Cerrar" (click)="toogleSideNav()" *ngIf="this.isSmall">
                     <mat-icon>close</mat-icon>
@@ -20,7 +20,6 @@
         </div>
 
         <mat-accordion class="app-menu mat-elevation-z0">
-
             <mat-expansion-panel *ngFor="let menu of menus; first as isFirst" [expanded]="isFirst"
                 class="mat-elevation-z0">
                 <mat-expansion-panel-header *ngIf="menu != null" [expandedHeight]="'40px'"
@@ -46,7 +45,7 @@
                 </mat-nav-list>
             </mat-expansion-panel>
         </mat-accordion>
-        <div class="sidenav-footer" *ngIf="true">
+        <div class="sidenav-footer" *ngIf="this.loginService.authenticated">
             <mat-divider></mat-divider>
             <span>Version: {{ version }}</span>
             <button mat-stroked-button color="primary" (click)="logout()">
@@ -55,9 +54,9 @@
         </div>
     </mat-sidenav>
     <mat-sidenav-content class="app-sidenav-content"
-        [ngClass]="{'bg': !estaLogueado}">
+        [ngClass]="{'bg': !this.loginService.authenticated}">
         <app-toolbar (toggleTheme)="toggleTheme()" (toggleSidenav)="sidenav.toggle()" (toggleDir)="toggleDir()"
-            *ngIf="estaLogueado">
+            *ngIf="this.loginService.authenticated">
         </app-toolbar>
         <div class="h-100" [class.wrapper]="true"
             [class.pt-2]="true">

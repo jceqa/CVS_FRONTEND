@@ -1,0 +1,21 @@
+<section>
+    <h2 mat-dialog-title>Información del Sistema</h2>
+    <br>
+    <form (ngSubmit)="ok()">
+        <mat-dialog-content>
+            <div class="app-container">
+                <mat-form-field>
+                    <input matInput placeholder="Tipo de Conección" [formControl]='connectTypeField'
+                        [(ngModel)]='connectType' [readonly]="true">
+                </mat-form-field>
+            </div>
+        </mat-dialog-content>
+
+        <mat-dialog-actions>
+            <button mat-button type="submit" color='primary'>
+                <mat-icon>done</mat-icon> OK
+            </button>
+        </mat-dialog-actions>
+    </form>
+    <!-- <mat-spinner *ngIf="this.isLoading$ | async"></mat-spinner> -->
+</section>

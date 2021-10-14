@@ -25,7 +25,8 @@
             <span class="ml-1">{{ username }}</span>
         </button>
         <mat-menu #userMenu="matMenu">
-            <button mat-menu-item (click)="openProfileDialog()">
+            <!--<button mat-menu-item (click)="openProfileDialog()">-->
+            <button mat-menu-item>
                 <mat-icon>account_circle</mat-icon>Mi Cuenta
             </button>
             <button *ngIf="false" mat-menu-item (click)="openApiUrlConfDialog()">

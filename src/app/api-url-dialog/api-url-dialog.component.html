@@ -1,0 +1,23 @@
+<section>
+    <h2 mat-dialog-title>Configuración</h2>
+    <br>
+    <form (ngSubmit)="ok()">
+        <mat-dialog-content>
+            <div class="app-container">
+                <mat-form-field>
+                    <input matInput placeholder="Api Url" [formControl]='url'>
+                </mat-form-field>
+            </div>
+        </mat-dialog-content>
+
+        <mat-dialog-actions>
+            <button mat-button type="submit" color='primary'>
+  <mat-icon>done</mat-icon> OK
+</button>
+            <button mat-button type="button" color='primary' (click)='dismiss()'>
+  <mat-icon>cancel</mat-icon> Cancelar
+</button>
+        </mat-dialog-actions>
+    </form>
+    <!-- <mat-spinner *ngIf="this.isLoading$ | async"></mat-spinner> -->
+</section>
