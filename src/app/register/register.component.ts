@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 //import {AccountService} from '../../services/account.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+//import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, /*Router*/ } from '@angular/router';
 //import {UserRegisterComponent} from '../../../security/components/usuarios/user-register/user-register.component';
 
 @Component({
@@ -15,9 +15,10 @@ export class RegisterComponent implements OnInit {
 
     constructor(
         //public accountService: AccountService,
-        private dialog: MatDialog,
+        //private dialog: MatDialog,
         private route: ActivatedRoute,
-        private router: Router) { }
+        //private router: Router
+        ) { }
 
     ngOnInit() {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';

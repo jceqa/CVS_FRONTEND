@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Router } from  '@angular/router';
+//import { Router } from  '@angular/router';
 import { Usuario } from  '../models/usuario';
 import { AuthService } from  '../auth/auth.service';
 import { AppComponent } from '../app.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NotificadorService } from 'src/notificador.service';
+//import { NotificadorService } from 'src/notificador.service';
 
 @Component({
   selector: 'app-login',
@@ -14,12 +14,14 @@ import { NotificadorService } from 'src/notificador.service';
 export class LoginComponent implements OnInit {
 
   message! : string;
+  notif! : any;
 
   constructor(private authService: AuthService, 
-              private router: Router,
+             // private router: Router,
               public dialogRef: MatDialogRef<AppComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
-              private notif: NotificadorService) 
+              //private notif: NotificadorService
+              ) 
               { }
 
   usuarioIncorrecto = false;
@@ -27,7 +29,7 @@ export class LoginComponent implements OnInit {
   usuario : Usuario = new Usuario();
 
   ngOnInit(): void {
-    this.notif.currentMessage.subscribe(message => this.message = message)
+    this.notif.currentMessage.subscribe((message : any) => this.message = message)
   }
 
   onNoClick(): void {

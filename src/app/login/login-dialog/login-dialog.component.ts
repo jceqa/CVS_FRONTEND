@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit } fr
 import { FormControl, Validators, FormGroup, AbstractControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+//import { ActivatedRoute, Router } from '@angular/router';
 //import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { LoginService } from 'src/app/services/login.service';
+import { Observable, /*Subscription*/ } from 'rxjs';
+import { LoginService } from "../../services/login.service";
 //import * as fromRoot from '../../../../app.reducer';
 //import * as UI from '../../../../shared/reducers/ui.actions';
 //import * as Auth from '../../../reducers/account.actions';
@@ -48,8 +48,8 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('codeInput') codeInput!: ElementRef;
 
     constructor(
-        private router: Router,
-        private route: ActivatedRoute,
+        //private router: Router,
+        //private route: ActivatedRoute,
         //private _location: Location,
         private dialogRef: MatDialogRef<LoginDialogComponent>,
         private loginService: LoginService,
@@ -194,6 +194,7 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
    }*/
 
     resetLoginData(msg: string) {
+        console.log(msg);
         localStorage.setItem('token', "");
         localStorage.setItem('expiration', "");
         //this.store.dispatch(new UI.StopLoading());
@@ -250,6 +251,8 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     }*/
 
     loginError(error: any) {
+
+        console.log(error);
 
         localStorage.setItem('token', "");
         localStorage.setItem('expiration', "");

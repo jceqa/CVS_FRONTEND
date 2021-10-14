@@ -24,10 +24,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { NotificadorService } from 'src/notificador.service';
+//import { NotificadorService } from 'src/notificador.service';
 import { MainContentComponent } from './main-content/main-content.component';
 import { LoginPageComponent } from './login/login-page/login-page.component';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, /*Routes*/ } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { LoginDialogComponent } from './login/login-dialog/login-dialog.component';
 import { MaterialModule } from './material.module';
@@ -77,8 +77,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     {
       provide: MatPaginatorIntl,
       useClass: MyMatPaginatorIntl
-    },
-    NotificadorService
+    }//,
+    //NotificadorService
   ],
   bootstrap: [AppComponent]
 })

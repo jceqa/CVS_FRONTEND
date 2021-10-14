@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { NotificadorService } from 'src/notificador.service';
+//import { MatSnackBar } from '@angular/material/snack-bar';
+//import { NotificadorService } from 'src/notificador.service';
 import { LoginComponent } from './login_old/login.component';
 
 @Component({
@@ -21,9 +21,11 @@ export class AppComponent {
 
     menus : any[] = [];
 
+    data : any;
+
     constructor(public dialog: MatDialog,
-        private data: NotificadorService,
-        private snackbar: MatSnackBar) { }
+        //private data: NotificadorService,
+       /* private snackbar: MatSnackBar*/) { }
 
     ngOnInit(): void {
 
@@ -34,8 +36,8 @@ export class AppComponent {
             console.log(this.estaLogueado);
         }
 
-        this.data.currentMessage.subscribe(
-            message => {
+        /*this.data.currentMessage.subscribe(
+            (message : any) => {
                 this.message = message;
                 if (this.message === "logueado") {
                     this.usuario = JSON.stringify(localStorage.getItem('username') || "");
@@ -44,7 +46,7 @@ export class AppComponent {
                     console.log(this.estaLogueado);
                 }
             }
-        )
+        )*/
 
         this.menus.push({Name : "Menu1", Icon : null, Items : [{Url : "/", Name : "Item 1"}, {Url : "/", Name : "Item 2"}, {Url : "/", Name : "Item 3"}]});
         this.menus.push({Name : "Menu2", Icon : null, Items : [{Url : "/", Name : "Item 1"}, {Url : "/", Name : "Item 2"}]});
@@ -58,6 +60,7 @@ export class AppComponent {
         });
 
         dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
             //console.log('Se cerro el modal');
         });
     }

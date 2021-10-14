@@ -1,15 +1,15 @@
 //import { environment } from './../../../../environments/environment';
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import * as fromRoot from '../app.reducer';
+//import {Store} from '@ngrx/store';
+//import {Observable} from 'rxjs';
+//import * as fromRoot from '../app.reducer';
 //import {AppUser} from '../../../shared/models/appuser';
 //import {AccountService} from '../../services/account.service';
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 //import {LoginDialogComponent} from '../login/login-dialog/login-dialog.component';
 //import {UserRegisterComponent} from '../../../security/components/usuarios/user-register/user-register.component';
-import { DomSanitizer } from '@angular/platform-browser';
+//import { DomSanitizer } from '@angular/platform-browser';
 import { LoginDialogComponent } from '../login/login-dialog/login-dialog.component';
 
 
@@ -28,9 +28,9 @@ export class MainContentComponent implements OnInit, OnChanges {
   googlePlay = '';
   imageLoaded = false;
   constructor(
-    private domSanitizer: DomSanitizer,
+    //private domSanitizer: DomSanitizer,
     //public accountService: AccountService,
-    private store: Store<fromRoot.State>,
+    //private store: Store<fromRoot.State>,
     private dialog: MatDialog,
     private router: Router,
     //private companiesService: CompaniesService,

@@ -2,7 +2,7 @@ import * as fromUi from './reducers/ui.reducer';
 import * as fromStorage from './reducers/storage.reducer';
 import * as fromAccount from './reducers/account.reducer';
 import * as fromCGI from './reducers/cgi.reducer';
-import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
+import { /*ActionReducerMap,*/ createFeatureSelector, createSelector } from '@ngrx/store';
 /*import { translatorReducer } from './clients/components/reusable/redux/translator/translator.reducer';
 import { ShopReducer } from './clients/components/reusable/redux/cart/cart.reducer';
 import { companyReducer } from './shared/reducers/company.reducer';

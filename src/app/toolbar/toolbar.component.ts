@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RouteReuseStrategy, Router } from '@angular/router';
 import { MatSnackBarRef, SimpleSnackBar, MatSnackBar } from '@angular/material/snack-bar';
 import { LoginDialogComponent } from '../login/login-dialog/login-dialog.component';
-import {Store} from '@ngrx/store';
+//import {Store} from '@ngrx/store';
 //import * as fromRoot from '../../../app.reducer';
 //import * as fromMenuOpen from '../../reducers/menuStatus.action';
 
