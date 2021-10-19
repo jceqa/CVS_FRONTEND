@@ -68,3 +68,17 @@ app-sidenav-content {
     --clock-face-background-color         : #f0f0f0;
     --clock-hand-color                    : #3f51b5 !important;
 }
+
+.title {
+    font-size: 20px;
+    color : #3f51b5
+}
+
+.subtitle {
+    font-size: 15px;
+    padding-left: 10%;
+}
+
+.item {
+    padding-left: 20%;
+}

@@ -5,7 +5,8 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/s
 //import { ActivatedRoute, Router } from '@angular/router';
 //import { Store } from '@ngrx/store';
 import { Observable, /*Subscription*/ } from 'rxjs';
-import { LoginService } from "../../services/login.service";
+//import { LoginService } from "../../services/login.service";
+import { UsuarioService } from '../../services/usuario.service';
 //import * as fromRoot from '../../../../app.reducer';
 //import * as UI from '../../../../shared/reducers/ui.actions';
 //import * as Auth from '../../../reducers/account.actions';
@@ -52,7 +53,8 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         //private route: ActivatedRoute,
         //private _location: Location,
         private dialogRef: MatDialogRef<LoginDialogComponent>,
-        private loginService: LoginService,
+        //private loginService: LoginService,
+        private usuarioService: UsuarioService,
         //private accountService: AccountService,
         private snackBar: MatSnackBar,
         //private uiService: UIService,
@@ -283,7 +285,7 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         this.user = this.form.value;
 
         //console.log(this.user);
-        this.loginService.signIn(this.user).subscribe(
+        this.usuarioService.signIn(this.user).subscribe(
             (result: any) => {
                 console.log("Sucess..");
                 console.log(result);
@@ -384,11 +386,11 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
                     setTimeout(() => {
                         this.passwordInput.nativeElement.focus();
                     }, 0);
-                } else if (id === 'password') {
+                } /*else if (id === 'password') {
                     setTimeout(() => {
                         this.passwordInput.nativeElement.focus();
                     }, 0);
-                }
+                }*/
             }
 
             return false;

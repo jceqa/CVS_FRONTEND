@@ -1,7 +1,4 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { Usuario } from "../models/usuario";
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../app.reducer';
 import * as Auth from '../reducers/account.actions';
@@ -13,13 +10,12 @@ import * as Auth from '../reducers/account.actions';
 })
 export class LoginService {
 
-    constructor(private http: HttpClient,
+    constructor(
         private store: Store<fromRoot.State>,
     ) { }
 
     //private _menu: Menu[] = [];
 
-    private baseUrl = "api/usuario/";
 
     public get username(): string {
         const v = localStorage.getItem('username');
@@ -66,9 +62,7 @@ export class LoginService {
         }
     }*/
 
-    public signIn(userData: Usuario): Observable<any> {
-        return this.http.post<any>(this.baseUrl + `validar?usuario_usuario=${userData.username}&clave_usuario=${userData.password}`, userData)
-    }
+
 
     public isLoggedIn() {
         return localStorage.getItem('ACCESS_TOKEN') !== null;
