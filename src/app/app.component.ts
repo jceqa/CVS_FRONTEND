@@ -1,7 +1,6 @@
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as fromMenuOpen from './reducers/menuStatus.action';
-import { LoginComponent } from './login_old/login.component';
 import { LoginService } from './services/login.service';
 import { Store } from '@ngrx/store';
 import * as fromRoot from './app.reducer';
@@ -154,7 +153,7 @@ export class AppComponent {
         console.log(sistemas);
     }
 
-    openLogin(): void {
+    /*openLogin(): void {
         const dialogRef = this.dialog.open(LoginComponent, {
             width: '40%',
             data: {}
@@ -164,7 +163,7 @@ export class AppComponent {
             console.log(result);
             //console.log('Se cerro el modal');
         });
-    }
+    }*/
 
     toogleSideNav() {
         this.sidenav.toggle();
