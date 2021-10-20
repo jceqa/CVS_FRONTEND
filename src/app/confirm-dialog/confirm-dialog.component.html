@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>{{_data.title}}</h2>
+<mat-dialog-content *ngIf="_data.msg && _data.msg != ''">{{_data.msg}}</mat-dialog-content>
+<div style="margin: 8px; max-height: 700px" *ngIf="_data.submsg && _data.submsg?.length > 0" fxLayout="column">
+    <mat-card-subtitle *ngFor="let item of _data?.submsg; let i = index">
+        {{i + 1}} {{item}}
+    </mat-card-subtitle>
+</div>
+<div mat-dialog-actions *ngIf="showOkButton">
+    <button mat-button color="primary" mat-dialog-close (click)="onNoClick()">No</button>
+    <button mat-raised-button color="primary" (click)="onYesClick()" cdkFocusInitial>Si</button>
+    <!---->
+</div>
+<div *ngIf="showCancelButton" fxLayout="row" fxLayoutAlign="end end">
+    <button mat-raised-button color="primary" (click)="onCancelClick()">Cancel</button>
+</div>

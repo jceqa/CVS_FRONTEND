@@ -4,37 +4,37 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-api-url-dialog',
-  templateUrl: './api-url-dialog.component.html',
-  styleUrls: ['./api-url-dialog.component.scss']
+    selector: 'app-api-url-dialog',
+    templateUrl: './api-url-dialog.component.html',
+    styleUrls: ['./api-url-dialog.component.scss']
 })
 export class ApiUrlDialogComponent implements OnInit {
-  url: FormControl;
+    url: FormControl;
 
-  constructor(
-    private dialogRef: MatDialogRef<ApiUrlDialogComponent>,
-    private snackBar: MatSnackBar
-  ) { }
+    constructor(
+        private dialogRef: MatDialogRef<ApiUrlDialogComponent>,
+        private snackBar: MatSnackBar
+    ) { }
 
-  ngOnInit() {
-    //this.url = new FormControl(environment.apiUrl);
-  }
+    ngOnInit() {
+        //this.url = new FormControl(environment.apiUrl);
+    }
 
-  ok() {
-    //environment.apiUrl = this.url.value;
-    this.dismiss();
-  }
+    ok() {
+        //environment.apiUrl = this.url.value;
+        this.dismiss();
+    }
 
-  dismiss() {
-    this.dialogRef.close(null);
-  }
+    dismiss() {
+        this.dialogRef.close(null);
+    }
 
-  openSnackBar(
-    message: string,
-    action: string
-  ): MatSnackBarRef<SimpleSnackBar> {
-    return this.snackBar.open(message, action, {
-      duration: 5000
-    });
-  }
+    openSnackBar(
+        message: string,
+        action: string
+    ): MatSnackBarRef<SimpleSnackBar> {
+        return this.snackBar.open(message, action, {
+            duration: 5000
+        });
+    }
 }

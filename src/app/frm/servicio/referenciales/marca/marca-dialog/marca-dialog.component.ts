@@ -4,6 +4,7 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { FormType } from '../../../../../models/enum';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MarcaService } from '../../../../../services/marca.service';
+import { UIService } from '../../../../../services/ui.service';
 
 @Component({
     selector: 'app-marca-dialog',
@@ -24,7 +25,7 @@ export class MarcaDialogComponent implements OnInit {
     constructor(
         //private store: Store<fromRoot.State>,
         private dialogRef: MatDialogRef<MarcaDialogComponent>,
-        //private uiService: UIService,
+        private uiService: UIService,
         private marcaService: MarcaService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -113,13 +114,22 @@ export class MarcaDialogComponent implements OnInit {
             .subscribe(data => {
                 console.log(data);
                 this.dialogRef.close(data);
+
+                this.uiService.showSnackbar(
+                    'Argregado exitosamente.',
+                    'Cerrar',
+                    3000
+                );
             },
                 (error) => {
 
                     console.error('[ERROR]: ', error);
-                    // NO cerrar si hay error permanecer en el mismo lugar
-                    // para evitar que el usuario vuelva a cargar.
-                    // this.dialogRef.close();
+
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
 
                 }
             );
@@ -137,10 +147,23 @@ export class MarcaDialogComponent implements OnInit {
         this.marcaService.editarMarca(this.item)
             .subscribe(data => {
                 console.log(data);
+
+                this.uiService.showSnackbar(
+                    'Modificado exitosamente.',
+                    'Cerrar',
+                    3000
+                );
+
                 this.dialogRef.close(data);
             },
                 (error) => {
                     console.error('[ERROR]: ', error);
+
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
                 }
             );
     }

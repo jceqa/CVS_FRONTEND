@@ -28,6 +28,9 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { InfoDialogComponent } from './info-dialog/info-dialog.component';
 import { MarcaComponent } from './frm/servicio/referenciales/marca/marca.component';
 import { MarcaDialogComponent } from './frm/servicio/referenciales/marca/marca-dialog/marca-dialog.component';
+import { UIService } from './services/ui.service';
+import { UtilService } from './services/util.service';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 
 @NgModule({
@@ -39,7 +42,8 @@ import { MarcaDialogComponent } from './frm/servicio/referenciales/marca/marca-d
     ToolbarComponent,
     InfoDialogComponent,
     MarcaComponent,
-    MarcaDialogComponent
+    MarcaDialogComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -68,9 +72,10 @@ import { MarcaDialogComponent } from './frm/servicio/referenciales/marca/marca-d
   providers: [
     {
       provide: MatPaginatorIntl,
-      useClass: MyMatPaginatorIntl
-    }//,
-    //NotificadorService
+      useClass: MyMatPaginatorIntl,
+    },
+    UIService,
+    UtilService
   ],
   bootstrap: [AppComponent]
 })

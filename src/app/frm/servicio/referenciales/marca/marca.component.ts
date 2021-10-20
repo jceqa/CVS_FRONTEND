@@ -5,7 +5,8 @@ import { MarcaService } from '../../../../services/marca.service';
 import { Marca } from '../../../../models/marca';
 import { MatDialog } from '@angular/material/dialog';
 import { MarcaDialogComponent } from './marca-dialog/marca-dialog.component';
-//import { Router, ActivatedRoute } from '@angular/router';
+import { UIService } from '../../../../services/ui.service';
+import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-marca',
@@ -26,10 +27,10 @@ export class MarcaComponent implements OnInit {
     pagina = 1;
     numeroResultados = 5;
 
-
     constructor(
         private marcaService: MarcaService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private uiService: UIService,
     ) { }
 
     ngOnInit(): void {
@@ -57,6 +58,11 @@ export class MarcaComponent implements OnInit {
             },
             err => {
                 console.log(err.error);
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
             }
         );
     }
@@ -75,7 +81,6 @@ export class MarcaComponent implements OnInit {
             // maxWidth: '600px',
             disableClose: true,
             data: {
-                //companyId: this.companyId,
                 item: item
             }
         });
@@ -87,14 +92,44 @@ export class MarcaComponent implements OnInit {
         });
     }
 
-    deleteItem(marca: Marca): void {
-        this.marcaService.eliminarMarca(marca.id).subscribe(
+    deleteItem(id: number): void {
+        this.marcaService.eliminarMarca(id).subscribe(
             result => {
                 console.log(result);
                 this.cargarMarcas();
+
+                this.uiService.showSnackbar(
+                    'Eliminado correctamente.',
+                    'Cerrar',
+                    3000
+                );
             }, error => {
                 console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
             }
         )
+    }
+
+    openDialog(event: any, marca: Marca): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            //width: '50vw',
+            data: {
+                title: "Eliminar Marca",
+                msg: "¿Está seguro que desea eliminar esta marca?"
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.deleteItem(marca.id);
+            }
+        });
     }
 }
