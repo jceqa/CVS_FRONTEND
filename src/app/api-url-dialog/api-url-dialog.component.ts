@@ -17,11 +17,9 @@ export class ApiUrlDialogComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        //this.url = new FormControl(environment.apiUrl);
     }
 
     ok() {
-        //environment.apiUrl = this.url.value;
         this.dismiss();
     }
 

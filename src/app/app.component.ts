@@ -138,7 +138,7 @@ export class AppComponent {
             }
         });
 
-        submenus.push({
+        /*submenus.push({
             Name: anteriorSubMenu,
             SubItems: formularios.slice()
         });
@@ -147,7 +147,7 @@ export class AppComponent {
             Name: anteriorMenu,
             Items: submenus.slice(),
             Icon: null,
-        });
+        });*/
 
         this.menus = sistemas;
         console.log(sistemas);

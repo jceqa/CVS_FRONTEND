@@ -7,9 +7,8 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
-import { MyMatPaginatorIntl } from './MyMatPaginatorIntl';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -70,10 +69,6 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MaterialModule
   ],
   providers: [
-    {
-      provide: MatPaginatorIntl,
-      useClass: MyMatPaginatorIntl,
-    },
     UIService,
     UtilService
   ],
