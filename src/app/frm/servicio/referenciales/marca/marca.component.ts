@@ -87,4 +87,14 @@ export class MarcaComponent implements OnInit {
         });
     }
 
+    deleteItem(marca: Marca): void {
+        this.marcaService.eliminarMarca(marca.id).subscribe(
+            result => {
+                console.log(result);
+                this.cargarMarcas();
+            }, error => {
+                console.log(error);
+            }
+        )
+    }
 }

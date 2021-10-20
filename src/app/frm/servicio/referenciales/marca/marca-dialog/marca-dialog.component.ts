@@ -34,7 +34,7 @@ export class MarcaDialogComponent implements OnInit {
 
     ngOnInit(): void {
         this.form = new FormGroup({
-            id: new FormControl('', [Validators.required]),
+            id: new FormControl('', []),
             descripcion: new FormControl('', [Validators.required]),
         });
 
@@ -44,7 +44,7 @@ export class MarcaDialogComponent implements OnInit {
             this.editID = this.data.item.id;
             this.getMarcaById(this.data.item.id);
             this.formType = FormType.EDIT;
-            this.setForm(this.item);
+            //this.setForm(this.item);
         } else {
             //Si no existe es una nueva lista
             this.title = 'Nueva';
@@ -58,6 +58,7 @@ export class MarcaDialogComponent implements OnInit {
         this.marcaService.getMarcaById(id).subscribe(
             data => {
                 this.item = data as Marca;
+                this.setForm(this.item);
             }, (error) => {
                 console.error(error);
             });
@@ -108,22 +109,20 @@ export class MarcaDialogComponent implements OnInit {
         console.log(this.item);
 
         //Llama al servicio que almacena el objeto {PriceListDraft}
-        /*this.ventasService.createPriceListDraft(this.item, this.companyId)
+        this.marcaService.guardarMarca(this.item)
             .subscribe(data => {
                 console.log(data);
                 this.dialogRef.close(data);
             },
                 (error) => {
 
-
                     console.error('[ERROR]: ', error);
-                    
                     // NO cerrar si hay error permanecer en el mismo lugar
                     // para evitar que el usuario vuelva a cargar.
                     // this.dialogRef.close();
 
                 }
-            );*/
+            );
     }
 
     //Metodo que modifica un objeto {PriceListDraft} en base de datos
@@ -135,18 +134,15 @@ export class MarcaDialogComponent implements OnInit {
         console.log(this.item);
 
         //Llama al servicio http que actualiza el objeto.
-        /*this.ventasService.updatePriceListDraft(this.companyId, this.editID, this.item)
+        this.marcaService.editarMarca(this.item)
             .subscribe(data => {
                 console.log(data);
                 this.dialogRef.close(data);
-                this.uiService.httpSuc();
             },
                 (error) => {
                     console.error('[ERROR]: ', error);
-                    this.uiService.httpErr(error);
-                    this.dialogRef.close()
                 }
-            );*/
+            );
     }
 
 }
