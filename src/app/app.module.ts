@@ -25,53 +25,57 @@ import { LoginDialogComponent } from './login/login-dialog/login-dialog.componen
 import { MaterialModule } from './material.module';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { InfoDialogComponent } from './info-dialog/info-dialog.component';
-import { MarcaComponent } from './frm/servicio/referenciales/marca/marca.component';
-import { MarcaDialogComponent } from './frm/servicio/referenciales/marca/marca-dialog/marca-dialog.component';
+import { MarcaComponent } from './frm/compras/referenciales/marca/marca.component';
+import { MarcaDialogComponent } from './frm/compras/referenciales/marca/marca-dialog/marca-dialog.component';
 import { UIService } from './services/ui.service';
 import { UtilService } from './services/util.service';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { EquipoComponent } from './frm/servicio/referenciales/equipo/equipo.component';
+import { EquipoDialogComponent } from './frm/servicio/referenciales/equipo/equipo-dialog/equipo-dialog.component';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MainContentComponent,
-    LoginPageComponent,
-    LoginDialogComponent,
-    ToolbarComponent,
-    InfoDialogComponent,
-    MarcaComponent,
-    MarcaDialogComponent,
-    ConfirmDialogComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    CommonModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatCardModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    RouterModule,
-    RouterModule.forRoot([]),
-    StoreModule.forRoot({}, {}),
-    MaterialModule
-  ],
-  providers: [
-    UIService,
-    UtilService
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        MainContentComponent,
+        LoginPageComponent,
+        LoginDialogComponent,
+        ToolbarComponent,
+        InfoDialogComponent,
+        MarcaComponent,
+        MarcaDialogComponent,
+        ConfirmDialogComponent,
+        EquipoComponent,
+        EquipoDialogComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        CommonModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatCardModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        RouterModule,
+        RouterModule.forRoot([]),
+        StoreModule.forRoot({}, {}),
+        MaterialModule
+    ],
+    providers: [
+        UIService,
+        UtilService
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

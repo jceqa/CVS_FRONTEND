@@ -35,21 +35,13 @@ export class MarcaComponent implements OnInit {
 
     ngOnInit(): void {
         this.cargarMarcas();
-
-        this.marcas = [];
-
-        this.dataSource = new MatTableDataSource<Marca>(
-            this.marcas
-        );
-        this.dataSource.paginator = this.paginator;
-
     }
 
     cargarMarcas() {
-        this.marcaService.getBuscarMarcas(this.numeroResultados, this.pagina, "").subscribe(
+        this.marcaService.getMarcas().subscribe(
             (data) => {
                 console.log(data);
-                this.marcas = data.registros;
+                this.marcas = data;
 
                 this.dataSource = new MatTableDataSource<Marca>(
                     this.marcas

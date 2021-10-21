@@ -18,6 +18,10 @@ export class MarcaService {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`)
     }
 
+    public getMarcas() : Observable<any>{
+        return this.http.get<any>(this.baseUrl + `buscar`)
+    }
+
     public getMarcaById(idMarca: number): Observable<any> {
         return this.http.get<any>(this.baseUrl + `buscar/id?mar_id=${idMarca}`)
     }
