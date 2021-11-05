@@ -15,22 +15,22 @@ export class EquipoService {
     private baseUrl = "api/equipo/";
 
     public listEquipos(): Observable<any> {
-        return this.http.get<any>(this.baseUrl + `buscar`)
+        return this.http.get<any>(this.baseUrl)
     }
 
     public getEquipoById(id: number): Observable<any> {
-        return this.http.get<any>(this.baseUrl + `buscar/id?equi_id=${id}`)
+        return this.http.get<any>(this.baseUrl + `${id}`)
     }
 
     public guardarEquipo(equipo: Equipo): Observable<any> {
-        return this.http.post<any>(this.baseUrl + `agregar`, equipo)
+        return this.http.post<any>(this.baseUrl , equipo)
     }
 
     public editarEquipo(equipo: Equipo): Observable<any> {
-        return this.http.put<any>(this.baseUrl + `modificar`, equipo)
+        return this.http.put<any>(this.baseUrl , equipo)
     }
 
     public eliminarEquipo(idEquipo: number): Observable<any> {
-        return this.http.delete<any>(this.baseUrl + `eliminar?equi_id=${idEquipo}`)
+        return this.http.delete<any>(this.baseUrl + `${idEquipo}`)
     }
 }

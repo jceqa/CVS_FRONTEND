@@ -1,6 +1,6 @@
 {
     "/api/*": {
-        "target": "http://localhost:8080/CVS",
+        "target": "http://localhost:8080/cvs2",
         "pathRewrite": {
             "^/api": ""
         },

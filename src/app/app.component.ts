@@ -6,9 +6,11 @@ import { Store } from '@ngrx/store';
 import * as fromRoot from './app.reducer';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router, RouteReuseStrategy, RouterOutlet } from '@angular/router';
-import { TokenService } from './services/token.service';
+//import { TokenService } from './services/token.service';
 import { UsuarioRolService } from './services/usuariorol.service';
 import { PermisoService } from './services/permiso.service';
+import { UsuarioService } from './services/usuario.service';
+import { Permiso } from './models/permiso';
 
 @Component({
     selector: 'app-root',
@@ -43,7 +45,8 @@ export class AppComponent {
         private cd: ChangeDetectorRef,
         private router: Router,
         public routeStrat: RouteReuseStrategy,
-        private tokenService: TokenService,
+        private usuarioService : UsuarioService,
+        //private tokenService: TokenService,
         private usuarioRolService: UsuarioRolService,
         private permisoService: PermisoService) { }
 
@@ -53,15 +56,15 @@ export class AppComponent {
         //this.menus.push({ Name: "Menu3", Icon: null, Items: [{ Url: "/", Name: "Item 1" }] });
 
         this.token = localStorage.getItem('token');
-        this.tokenService.getUser(this.token).subscribe(
+        this.usuarioService.getUserByToken(this.token).subscribe(
             result => {
                 console.log(result);
                 this.userId = result.id
 
-                this.usuarioRolService.getRolesByUserId(this.userId).subscribe(
-                    roles => {
-                        console.log(roles);
-                        this.rolId = roles[0].id_rol;
+                this.usuarioRolService.getByUserId(this.userId).subscribe(
+                    usuarioRol => {
+                        console.log(usuarioRol);
+                        this.rolId = usuarioRol.id;
                         this.permisoService.getPermisosByRolId(this.rolId).subscribe(
                             permisos => {
                                 console.log(permisos);
@@ -88,34 +91,34 @@ export class AppComponent {
         }
     }
 
-    generarMenu(permisos: any[]) {
-        let sistema = permisos[0].id_sistema;
-        let subMenu = permisos[0].id_sub_menu;
+    generarMenu(permisos: Permiso[]) {
+        let sistema = permisos[0].formulario.sistema.id;
+        let subMenu = permisos[0].formulario.subMenu.id;
         let sistemas = [];
         let submenus = [];
         let formularios = [];
         let anteriorMenu = "";
         let anteriorSubMenu = "";
         permisos.forEach(element => {
-            if (element.id_sub_menu === subMenu && element.id_sistema === sistema) {
+            if (element.formulario.subMenu.id === subMenu && element.formulario.sistema.id === sistema) {
                 formularios.push({
-                    Name: element.nombre_formulario,
-                    Url: element.url_formulario
+                    Name: element.formulario.nombre,
+                    Url: element.formulario.url
                 });
-                anteriorSubMenu = element.nombre_sub_menu;
-                anteriorMenu = element.nombre_sistema;
-            } else if (element.id_sistema === sistema) {
+                anteriorSubMenu = element.formulario.subMenu.nombre;
+                anteriorMenu = element.formulario.sistema.nombre;
+            } else if (element.formulario.sistema.id === sistema) {
                 submenus.push({
                     Name: anteriorSubMenu,
                     SubItems: formularios.slice()
                 });
                 formularios.length = 0;
-                subMenu = element.id_sub_menu;
+                subMenu = element.formulario.subMenu.id;
                 formularios.push({
-                    Name: element.nombre_formulario,
-                    Url: element.url_formulario
+                    Name: element.formulario.nombre,
+                    Url: element.formulario.url
                 });
-                anteriorMenu = element.nombre_sistema
+                anteriorMenu = element.formulario.sistema.nombre
             } else {
                 submenus.push({
                     Name: anteriorSubMenu,
@@ -129,16 +132,16 @@ export class AppComponent {
                 });
                 submenus.length = 0;
                 formularios.push({
-                    Name: element.nombre_formulario,
-                    Url: element.url_formulario
+                    Name: element.formulario.nombre,
+                    Url: element.formulario.url
                 });
-                subMenu = element.id_sub_menu;
-                anteriorSubMenu = element.nombre_sub_menu;
-                sistema = element.id_sistema;
+                subMenu = element.formulario.subMenu.id;
+                anteriorSubMenu = element.formulario.subMenu.nombre;
+                sistema = element.formulario.sistema.id;
             }
         });
 
-        /*submenus.push({
+        submenus.push({
             Name: anteriorSubMenu,
             SubItems: formularios.slice()
         });
@@ -147,7 +150,7 @@ export class AppComponent {
             Name: anteriorMenu,
             Items: submenus.slice(),
             Icon: null,
-        });*/
+        });
 
         this.menus = sistemas;
         console.log(sistemas);

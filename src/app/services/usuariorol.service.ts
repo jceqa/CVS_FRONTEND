@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UsuarioRol } from '../models/usuarioRol';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,7 @@ export class UsuarioRolService {
 
     private baseUrl = "api/usuariorol/";
 
-    public getRolesByUserId(userId: number): Observable<any> {
-        return this.http.get<any>(this.baseUrl + `buscar/usuario/id?id_usuario=${userId}`)
+    public getByUserId(userId: number): Observable<UsuarioRol> {
+        return this.http.get<UsuarioRol>(this.baseUrl + `/${userId}`)
     }
 }

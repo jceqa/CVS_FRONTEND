@@ -1,4 +1,6 @@
 export class Usuario {
-    username! : string;
-    password! : string;
+    id : number;
+    nombre : string;
+    usuario : string;
+    clave : string;
 }

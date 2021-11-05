@@ -15,6 +15,10 @@ export class UsuarioService {
     private baseUrl = "api/usuario/";
 
     public signIn(userData: Usuario): Observable<any> {
-        return this.http.post<any>(this.baseUrl + `validar?usuario_usuario=${userData.username}&clave_usuario=${userData.password}`, userData)
+        return this.http.post<any>(this.baseUrl + `validar`, userData)
+    }
+
+    public getUserByToken(token: string): Observable<Usuario> {
+        return this.http.get<Usuario>(this.baseUrl + `?token=${token}`)
     }
 }

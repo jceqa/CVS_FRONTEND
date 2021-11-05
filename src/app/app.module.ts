@@ -32,6 +32,7 @@ import { UtilService } from './services/util.service';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { EquipoComponent } from './frm/servicio/referenciales/equipo/equipo.component';
 import { EquipoDialogComponent } from './frm/servicio/referenciales/equipo/equipo-dialog/equipo-dialog.component';
+import { AccountService } from './services/account.service';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { EquipoDialogComponent } from './frm/servicio/referenciales/equipo/equip
     ],
     providers: [
         UIService,
-        UtilService
+        UtilService,
+        AccountService
     ],
     bootstrap: [AppComponent]
 })

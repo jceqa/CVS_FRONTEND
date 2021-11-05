@@ -5,6 +5,7 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/s
 //import { ActivatedRoute, Router } from '@angular/router';
 //import { Store } from '@ngrx/store';
 import { Observable, /*Subscription*/ } from 'rxjs';
+import { Usuario } from '../../models/usuario';
 //import { LoginService } from "../../services/login.service";
 import { UsuarioService } from '../../services/usuario.service';
 //import * as fromRoot from '../../../../app.reducer';
@@ -27,8 +28,7 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     invalidLogin!: boolean;
     errorMsg!: string;
     isLoading$!: Observable<boolean>;
-    //isAuth$!: Observable<boolean>;
-    user: any;//LoginClaims;
+    user: Usuario;
     hidePwd!: boolean;
     recoverMode = false;
     resetPasswordMode = false;
@@ -98,7 +98,7 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ConvertToLower(evt: any) {
-        if (evt) this.fields['username'].setValue(evt.target.value.toLowerCase());
+        if (evt) this.fields['usuario'].setValue(evt.target.value.toLowerCase());
     }
 
     recover() {
@@ -211,11 +211,11 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
         console.log(result);
         // Se localStorage values
-        localStorage.setItem('token', result.datos.token);
+        localStorage.setItem('token', result.token);
         localStorage.setItem('expiration', expiration.toString());
         //this.accountService.username = this.user.username;
         // joc 11/05/2020 
-        localStorage.setItem('username', this.user.username);
+        localStorage.setItem('username', this.user.usuario);
 
         this.dismiss(true);
 
@@ -283,15 +283,18 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
         //this.store.dispatch(new UI.StartLoading());
         this.user = this.form.value;
+        console.log(this.form.value);
+        //this.user.nombre = this.form.value.username;
+        //this.user.clave = this.form.value.password;
 
         //console.log(this.user);
         this.usuarioService.signIn(this.user).subscribe(
             (result: any) => {
                 console.log("Sucess..");
                 console.log(result);
-                if (result.datos.ok) {
+                if (result.ok) {
                     console.log("Logged");
-                    console.log("token: ", result.datos.token);
+                    console.log("token: ", result.token);
                     this.loginSuccess(result);
                 } else {
                     console.log("Invalid Credentials");
@@ -431,8 +434,8 @@ export class LoginDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
     setLoginMode() {
         this.form = new FormGroup({
-            username: new FormControl(this.userName, [Validators.required]),
-            password: new FormControl('', [Validators.required])
+            usuario: new FormControl(this.userName, [Validators.required]),
+            clave: new FormControl('', [Validators.required])
         });
         this.fields = this.form.controls;
         this.okButtonTitle = 'Ingresar';

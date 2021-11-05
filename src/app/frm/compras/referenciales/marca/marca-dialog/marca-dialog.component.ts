@@ -107,6 +107,7 @@ export class MarcaDialogComponent implements OnInit {
     add(): void {
 
         this.setAtributes();
+        this.item.id = 0;
         console.log(this.item);
 
         //Llama al servicio que almacena el objeto {PriceListDraft}

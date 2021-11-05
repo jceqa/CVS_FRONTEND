@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Permiso } from '../models/permiso';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,7 @@ export class PermisoService {
 
     private baseUrl = "api/permiso/";
 
-    public getPermisosByRolId(rolId: number): Observable<any> {
-        return this.http.get<any>(this.baseUrl + `buscar/rol/id?id_rol=${rolId}`)
+    public getPermisosByRolId(rolId: number): Observable<Permiso[]> {
+        return this.http.get<Permiso[]>(this.baseUrl + `rol/${rolId}`)
     }
 }
