@@ -33,7 +33,22 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { EquipoComponent } from './frm/servicio/referenciales/equipo/equipo.component';
 import { EquipoDialogComponent } from './frm/servicio/referenciales/equipo/equipo-dialog/equipo-dialog.component';
 import { AccountService } from './services/account.service';
-
+import { CiudadComponent } from './frm/compras/referenciales/ciudad/ciudad.component';
+import { CiudadDialogComponent } from './frm/compras/referenciales/ciudad/ciudad-dialog/ciudad-dialog.component';
+import { ImpuestoComponent } from './frm/compras/referenciales/impuesto/impuesto.component';
+import { ImpuestoDialogComponent } from './frm/compras/referenciales/impuesto/impuesto-dialog/impuesto-dialog.component';
+import { TipoArticuloComponent } from './frm/compras/referenciales/tipoarticulo/tipoarticulo.component';
+import { TipoArticuloDialogComponent } from './frm/compras/referenciales/tipoarticulo/tipoarticulo-dialog/tipoarticulo-dialog.component';
+import { CargoComponent } from './frm/administracion/referenciales/cargo/cargo.component';
+import { CargoDialogComponent } from './frm/administracion/referenciales/cargo/cargo-dialog/cargo-dialog.component';
+import { EstadoComponent } from './frm/administracion/referenciales/estado/estado.component';
+import { EstadoDialogComponent } from './frm/administracion/referenciales/estado/estado-dialog/estado-dialog.component';
+import { EntidadEmisoraComponent } from './frm/ventas/referenciales/entidademisora/entidademisora.component';
+import { EntidadEmisoraDialogComponent } from './frm/ventas/referenciales/entidademisora/entidademisora-dialog/entidademisora-dialog.component';
+import { CondicionPagoComponent } from './frm/ventas/referenciales/condicionpago/condicionpago.component';
+import { CondicionPagoDialogComponent } from './frm/ventas/referenciales/condicionpago/condicionpago-dialog/condicionpago-dialog.component';
+import { TipoTarjetaComponent } from './frm/ventas/referenciales/tipotarjeta/tipotarjeta.component';
+import { TipoTarjetaDialogComponent } from './frm/ventas/referenciales/tipotarjeta/tipotarjeta-dialog/tipotarjeta-dialog.component';
 
 @NgModule({
     declarations: [
@@ -47,7 +62,23 @@ import { AccountService } from './services/account.service';
         MarcaDialogComponent,
         ConfirmDialogComponent,
         EquipoComponent,
-        EquipoDialogComponent
+        EquipoDialogComponent,
+        CiudadComponent,
+        CiudadDialogComponent,
+        ImpuestoDialogComponent,
+        ImpuestoComponent,
+        TipoArticuloComponent,
+        TipoArticuloDialogComponent,
+        CargoComponent,
+        CargoDialogComponent,
+        EstadoComponent,
+        EstadoDialogComponent,
+        CondicionPagoComponent,
+        CondicionPagoDialogComponent,
+        EntidadEmisoraComponent,
+        EntidadEmisoraDialogComponent,
+        TipoTarjetaComponent,
+        TipoTarjetaDialogComponent,
     ],
     imports: [
         BrowserModule,
