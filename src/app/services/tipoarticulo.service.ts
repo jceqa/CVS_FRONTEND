@@ -11,7 +11,7 @@ import { AccountService } from './account.service';
 export class TipoArticuloService {
 
     constructor(
-        private http: HttpClient, 
+        private http: HttpClient,
         private accountService: AccountService
     ) { }
 
@@ -19,14 +19,14 @@ export class TipoArticuloService {
         return this.accountService.getAuthHeather();
       }
 
-    private baseUrl = "api/tipoarticulo/";
+    private baseUrl = 'api/tipoarticulo/';
 
     public getTipoArticulos(): Observable<TipoArticulo[]> {
-        return this.http.get<TipoArticulo[]>(this.baseUrl)
+        return this.http.get<TipoArticulo[]>(this.baseUrl);
     }
 
     public getTipoArticuloById(id: number): Observable<TipoArticulo> {
-        return this.http.get<TipoArticulo>(this.baseUrl + `/${id}`)
+        return this.http.get<TipoArticulo>(this.baseUrl + `/${id}`);
     }
 
 
@@ -38,11 +38,11 @@ export class TipoArticuloService {
     }
 
     public editarTipoArticulo(tipoArticulo: TipoArticulo): Observable<any> {
-        return this.http.put<any>(this.baseUrl, tipoArticulo)
+        return this.http.put<any>(this.baseUrl, tipoArticulo);
     }
 
     public eliminarTipoArticulo(id: number): Observable<any> {
-        return this.http.delete<any>(this.baseUrl + `${id}`)
+        return this.http.delete<any>(this.baseUrl + `${id}`);
     }
 
 }

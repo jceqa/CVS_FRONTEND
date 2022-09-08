@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CondicionPago } from '../models/condicionpago';
+import { CondicionPago } from '../models/condicionPago';
 import { AccountService } from './account.service';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class CondicionPagoService {
         return this.accountService.getAuthHeather();
       }
 
-    private baseUrl = "api/condicionpago/";
+    private baseUrl = "api/condicionPago/";
 
     public buscarCondicionPagos(cantRegistros: number, pag: number, texto): Observable<any> {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`)

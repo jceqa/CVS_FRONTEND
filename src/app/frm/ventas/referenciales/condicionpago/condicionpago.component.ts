@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { CondicionPagoService } from '../../../../services/condicionpago.service';
+import { CondicionPagoService } from '../../../../services/condicionPago.service';
 import { CondicionPago } from '../../../../models/condicionPago';
 import { MatDialog } from '@angular/material/dialog';
-import { CondicionPagoDialogComponent } from './condicionpago-dialog/condicionpago-dialog.component';
+import { CondicionPagoDialogComponent } from './condicionPago-dialog/condicionPago-dialog.component';
 import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-condicionpago',
-    templateUrl: './condicionpago.component.html',
-    styleUrls: ['./condicionpago.component.css']
+    selector: 'app-condicion-pago',
+    templateUrl: './condicionPago.component.html',
+    styleUrls: ['./condicionPago.component.css']
 })
 export class CondicionPagoComponent implements OnInit {
 

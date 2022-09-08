@@ -3,13 +3,13 @@ import { CondicionPago } from '../../../../../models/condicionPago';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { FormType } from '../../../../../models/enum';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CondicionPagoService } from '../../../../../services/condicionpago.service';
+import { CondicionPagoService } from '../../../../../services/condicionPago.service';
 import { UIService } from '../../../../../services/ui.service';
 
 @Component({
-    selector: 'app-condicionpago-dialog',
-    templateUrl: './condicionpago-dialog.component.html',
-    styleUrls: ['./conicionpago-dialog.component.css']
+    selector: 'app-condicion-pago-dialog',
+    templateUrl: './condicionPago-dialog.component.html',
+    styleUrls: ['./condicionPago-dialog.component.css']
 })
 export class CondicionPagoDialogComponent implements OnInit {
 

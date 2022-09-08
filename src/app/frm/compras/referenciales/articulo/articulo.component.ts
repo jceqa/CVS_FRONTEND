@@ -1,50 +1,50 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { TipoArticuloService } from '../../../../services/tipoarticulo.service';
-import { TipoArticulo } from '../../../../models/tipoArticulo';
+import { Articulo } from '../../../../models/articulo';
 import { MatDialog } from '@angular/material/dialog';
-import { TipoArticuloDialogComponent } from './tipoArticulo-dialog/tipoArticulo-dialog.component';
+import { ArticuloDialogComponent } from './articulo-dialog/articulo-dialog.component';
 import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {ArticuloService} from '../../../../services/articulo.service';
 
 @Component({
-    selector: 'app-tipo-articulo.component.ts',
-    templateUrl: './tipoArticulo.component.html',
-    styleUrls: ['./tipoArticulo.component.css']
+    selector: 'app-articulo',
+    templateUrl: './articulo.component.html',
+    styleUrls: ['./articulo.component.css']
 })
-export class TipoArticuloComponent implements OnInit {
+export class ArticuloComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'descripcion', 'actions'];
+    displayedColumns: string[] = ['id', 'descripcion', 'precioCompra', 'precioVenta', 'codigoGenerico', 'marca', 'tipoArticulo', 'impuesto', 'actions'];
 
-    dataSource = new MatTableDataSource<TipoArticulo>();
+    dataSource = new MatTableDataSource<Articulo>();
 
     @ViewChild(MatPaginator)
     paginator!: MatPaginator;
 
-    tipoarticulos: TipoArticulo[] = [];
+    articulos: Articulo[] = [];
 
     pagina = 1;
     numeroResultados = 5;
 
     constructor(
-        private tipoarticuloService: TipoArticuloService,
+        private articuloService: ArticuloService,
         private dialog: MatDialog,
         private uiService: UIService,
     ) { }
 
     ngOnInit(): void {
-        this.cargarTipoArticulos();
+        this.cargarArticulos();
     }
 
-    cargarTipoArticulos() {
-        this.tipoarticuloService.getTipoArticulos().subscribe(
+    cargarArticulos() {
+        this.articuloService.getArticulos().subscribe(
             (data) => {
                 console.log(data);
-                this.tipoarticulos = data;
+                this.articulos = data;
 
-                this.dataSource = new MatTableDataSource<TipoArticulo>(
-                    this.tipoarticulos
+                this.dataSource = new MatTableDataSource<Articulo>(
+                    this.articulos
                 );
                 this.dataSource.paginator = this.paginator;
             },
@@ -61,14 +61,14 @@ export class TipoArticuloComponent implements OnInit {
 
     addItem(): void {
 
-        const item = new TipoArticulo();
+        const item = new Articulo();
 
         this.editItem(item);
 
     }
 
-    editItem(item: TipoArticulo): void {
-        const dialogRef = this.dialog.open(TipoArticuloDialogComponent, {
+    editItem(item: Articulo): void {
+        const dialogRef = this.dialog.open(ArticuloDialogComponent, {
             minWidth: '60%',
             // maxWidth: '600px',
             disableClose: true,
@@ -79,16 +79,16 @@ export class TipoArticuloComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargarTipoArticulos();
+                this.cargarArticulos();
             }
         });
     }
 
     deleteItem(id: number): void {
-        this.tipoarticuloService.eliminarTipoArticulo(id).subscribe(
+        this.articuloService.eliminarArticulo(id).subscribe(
             result => {
                 console.log(result);
-                this.cargarTipoArticulos();
+                this.cargarArticulos();
 
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
@@ -104,23 +104,23 @@ export class TipoArticuloComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
-    openDialog(event: any, tipoarticulo: TipoArticulo): void {
+    openDialog(event: any, articulo: Articulo): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Eliminar Tipo de Articulo',
-                msg: '¿Está seguro que desea eliminar este tipo de articulo.component.ts?'
+                title: 'Eliminar Articulo',
+                msg: '¿Está seguro que desea eliminar esta articulo?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.deleteItem(tipoarticulo.id);
+                this.deleteItem(articulo.id);
             }
         });
     }

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { TipoTarjetaService } from '../../../../services/tipotarjeta.service';
-import { TipoTarjeta } from '../../../../models/tipotarjeta';
+import { TipoTarjeta } from '../../../../models/tipoTarjeta';
 import { MatDialog } from '@angular/material/dialog';
 import { TipoTarjetaDialogComponent } from './tipotarjeta-dialog/tipotarjeta-dialog.component';
 import { UIService } from '../../../../services/ui.service';

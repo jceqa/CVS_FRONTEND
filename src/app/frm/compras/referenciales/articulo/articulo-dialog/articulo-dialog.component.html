@@ -1,0 +1,88 @@
+<h4 mat-dialog-title>{{title}} Articulo</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <div class="mt-2" *ngIf="formType === 1">
+            <mat-form-field class="full-with-field" >
+                <input id="id" formControlName="id" matInput placeholder="Id" readonly />
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input id="descripcion" formControlName="descripcion" required matInput placeholder="Descripcion"
+                    autocomplete="off" />
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input id="precioCompra" formControlName="precioCompra" required matInput placeholder="Precio Compra"
+                       autocomplete="off" />
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input id="precioVenta" formControlName="precioVenta" required matInput placeholder="Precio Venta"
+                       autocomplete="off" />
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input id="codigoGenerico" formControlName="codigo" required matInput placeholder="Código"
+                       autocomplete="off" />
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field>
+                <mat-label>Marca</mat-label>
+                <mat-select name="food">
+                    <mat-option *ngFor="let marca of marcas" [value]="marca">
+                        {{marca.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field>
+                <mat-label>Impuesto</mat-label>
+                <mat-select name="food">
+                    <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
+                        {{impuesto.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field>
+                <mat-label>Tipo</mat-label>
+                <mat-select name="food">
+                    <mat-option *ngFor="let tipo of tipoArticulos" [value]="tipo">
+                        {{tipo.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon> Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid">
+            <mat-icon>save</mat-icon> Aceptar
+        </button>
+
+    </mat-dialog-actions>
+
+</form>

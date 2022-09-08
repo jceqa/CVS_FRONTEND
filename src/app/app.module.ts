@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -37,18 +37,20 @@ import { CiudadComponent } from './frm/compras/referenciales/ciudad/ciudad.compo
 import { CiudadDialogComponent } from './frm/compras/referenciales/ciudad/ciudad-dialog/ciudad-dialog.component';
 import { ImpuestoComponent } from './frm/compras/referenciales/impuesto/impuesto.component';
 import { ImpuestoDialogComponent } from './frm/compras/referenciales/impuesto/impuesto-dialog/impuesto-dialog.component';
-import { TipoArticuloComponent } from './frm/compras/referenciales/tipoarticulo/tipoarticulo.component';
-import { TipoArticuloDialogComponent } from './frm/compras/referenciales/tipoarticulo/tipoarticulo-dialog/tipoarticulo-dialog.component';
+import { TipoArticuloComponent } from './frm/compras/referenciales/tipoArticulo/tipoArticulo.component';
+import { TipoArticuloDialogComponent } from './frm/compras/referenciales/tipoArticulo/tipoArticulo-dialog/tipoArticulo-dialog.component';
 import { CargoComponent } from './frm/administracion/referenciales/cargo/cargo.component';
 import { CargoDialogComponent } from './frm/administracion/referenciales/cargo/cargo-dialog/cargo-dialog.component';
 import { EstadoComponent } from './frm/administracion/referenciales/estado/estado.component';
 import { EstadoDialogComponent } from './frm/administracion/referenciales/estado/estado-dialog/estado-dialog.component';
 import { EntidadEmisoraComponent } from './frm/ventas/referenciales/entidademisora/entidademisora.component';
 import { EntidadEmisoraDialogComponent } from './frm/ventas/referenciales/entidademisora/entidademisora-dialog/entidademisora-dialog.component';
-import { CondicionPagoComponent } from './frm/ventas/referenciales/condicionpago/condicionpago.component';
-import { CondicionPagoDialogComponent } from './frm/ventas/referenciales/condicionpago/condicionpago-dialog/condicionpago-dialog.component';
+import { CondicionPagoComponent } from './frm/ventas/referenciales/condicionPago/condicionPago.component';
+import { CondicionPagoDialogComponent } from './frm/ventas/referenciales/condicionPago/condicionPago-dialog/condicionPago-dialog.component';
 import { TipoTarjetaComponent } from './frm/ventas/referenciales/tipotarjeta/tipotarjeta.component';
 import { TipoTarjetaDialogComponent } from './frm/ventas/referenciales/tipotarjeta/tipotarjeta-dialog/tipotarjeta-dialog.component';
+import {ArticuloComponent} from './frm/compras/referenciales/articulo/articulo.component';
+import {ArticuloDialogComponent} from './frm/compras/referenciales/articulo/articulo-dialog/articulo-dialog.component';
 
 @NgModule({
     declarations: [
@@ -79,6 +81,8 @@ import { TipoTarjetaDialogComponent } from './frm/ventas/referenciales/tipotarje
         EntidadEmisoraDialogComponent,
         TipoTarjetaComponent,
         TipoTarjetaDialogComponent,
+        ArticuloComponent,
+        ArticuloDialogComponent
     ],
     imports: [
         BrowserModule,
