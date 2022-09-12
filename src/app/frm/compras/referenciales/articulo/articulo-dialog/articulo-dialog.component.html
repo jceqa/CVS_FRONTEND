@@ -41,7 +41,7 @@
         <div class="mt-2">
             <mat-form-field>
                 <mat-label>Marca</mat-label>
-                <mat-select name="food">
+                <mat-select formControlName="marca">
                     <mat-option *ngFor="let marca of marcas" [value]="marca">
                         {{marca.descripcion}}
                     </mat-option>
@@ -52,7 +52,7 @@
         <div class="mt-2">
             <mat-form-field>
                 <mat-label>Impuesto</mat-label>
-                <mat-select name="food">
+                <mat-select formControlName="impuesto">
                     <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
                         {{impuesto.descripcion}}
                     </mat-option>
@@ -63,7 +63,7 @@
         <div class="mt-2">
             <mat-form-field>
                 <mat-label>Tipo</mat-label>
-                <mat-select name="food">
+                <mat-select formControlName="tipo">
                     <mat-option *ngFor="let tipo of tipoArticulos" [value]="tipo">
                         {{tipo.descripcion}}
                     </mat-option>

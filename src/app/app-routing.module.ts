@@ -12,6 +12,8 @@ import { TipoArticuloComponent } from './frm/compras/referenciales/tipoArticulo/
 import { CargoComponent } from './frm/administracion/referenciales/cargo/cargo.component';
 import { EstadoComponent } from './frm/administracion/referenciales/estado/estado.component';
 import {ArticuloComponent} from './frm/compras/referenciales/articulo/articulo.component';
+import {TipoTarjetaComponent} from './frm/ventas/referenciales/tipotarjeta/tipotarjeta.component';
+import {ProveedorComponent} from './frm/compras/referenciales/proveedor/proveedor.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -20,11 +22,13 @@ const routes: Routes = [
     { path: 'equipo', component: EquipoComponent },
     { path: 'ciudad', component: CiudadComponent },
     { path: 'impuesto', component: ImpuestoComponent },
-    { path: 'tipoArticulo', component: TipoArticuloComponent },
+    { path: 'tipoarticulo', component: TipoArticuloComponent },
     { path: 'cargo', component: CargoComponent },
     { path: 'estado', component: EstadoComponent },
-  //  { path: 'impuesto', component: ImpuestoComponent },
+    { path: 'impuesto', component: ImpuestoComponent },
     { path: 'articulo', component: ArticuloComponent},
+    { path: 'tipotarjeta', component: TipoTarjetaComponent},
+    { path: 'proveedor', component: ProveedorComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

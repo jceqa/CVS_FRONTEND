@@ -53,6 +53,9 @@ export class ArticuloDialogComponent implements OnInit {
             precioVenta: new FormControl('', [Validators.required]),
             precioCompra: new FormControl('', [Validators.required]),
             codigo: new FormControl('', [Validators.required]),
+            marca: new FormControl('', [Validators.required]),
+            impuesto: new FormControl('', [Validators.required]),
+            tipo: new FormControl('', [Validators.required]),
         });
 
         if (this.data.item.id && this.data != null) {
@@ -147,6 +150,9 @@ export class ArticuloDialogComponent implements OnInit {
         this.item.precioCompra = this.form.get('precioCompra').value;
         this.item.precioVenta = this.form.get('precioVenta').value;
         this.item.codigoGenerico = this.form.get('codigo').value;
+        this.item.marca = this.form.get('marca').value;
+        this.item.impuesto = this.form.get('impuesto').value;
+        this.item.tipoArticulo = this.form.get('tipo').value;
     }
 
     dismiss(result?: any) {
