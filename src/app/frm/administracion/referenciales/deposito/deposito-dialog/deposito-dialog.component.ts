@@ -17,7 +17,7 @@ import {DepositoService} from '../../../../../services/deposito.service';
 })
 export class DepositoDialogComponent implements OnInit {
 
-    item: Sucursal;
+    item: Deposito;
     companyId = 0;
     form: FormGroup;
 
@@ -91,7 +91,7 @@ export class DepositoDialogComponent implements OnInit {
     }
 
     // Rellena los campos del formulario con los valores dados
-    setForm(item: Sucursal) {
+    setForm(item: Deposito) {
         console.log(item);
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({

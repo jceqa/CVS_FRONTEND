@@ -55,6 +55,10 @@ import {SucursalComponent} from './frm/administracion/referenciales/sucursal/suc
 import {SucursalDialogComponent} from './frm/administracion/referenciales/sucursal/sucursal-dialog/sucursal-dialog.component';
 import {DepositoComponent} from './frm/administracion/referenciales/deposito/deposito.component';
 import {DepositoDialogComponent} from './frm/administracion/referenciales/deposito/deposito-dialog/deposito-dialog.component';
+import {ProveedorComponent} from './frm/compras/referenciales/proveedor/proveedor.component';
+import {
+    ProveedorDialogComponent
+} from './frm/compras/referenciales/proveedor/proveedor-dialog/proveedor-dialog.component';
 
 @NgModule({
     declarations: [
@@ -90,7 +94,9 @@ import {DepositoDialogComponent} from './frm/administracion/referenciales/deposi
         SucursalComponent,
         SucursalDialogComponent,
         DepositoComponent,
-        DepositoDialogComponent
+        DepositoDialogComponent,
+        ProveedorComponent,
+        ProveedorDialogComponent
     ],
     imports: [
         BrowserModule,

@@ -1,6 +1,5 @@
 import {Component, OnInit, Inject} from '@angular/core';
-import {Proveedor} from '../../../../../models/Proveedor';
-import {FormGroup, Validators, FormControl} from '@angular/forms';
+import {FormGroup, Validators, FormControl, FormBuilder} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ProveedorService} from '../../../../../services/proveedor.service';
@@ -8,6 +7,7 @@ import {UIService} from '../../../../../services/ui.service';
 import {Ciudad} from '../../../../../models/ciudad';
 import {Impuesto} from '../../../../../models/impuesto';
 import {CiudadService} from '../../../../../services/ciudad.service';
+import {Proveedor} from '../../../../../models/proveedor';
 
 @Component({
     selector: 'app-proveedor-dialog',
@@ -34,6 +34,7 @@ export class ProveedorDialogComponent implements OnInit {
         private uiService: UIService,
         private proveedorService: ProveedorService,
         private ciudadService: CiudadService,
+        private fb: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -41,7 +42,7 @@ export class ProveedorDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.form = new FormGroup({
+        this.form = this.fb.group({
             id: new FormControl('', []),
             ruc: new FormControl('', [Validators.required]),
             razon: new FormControl('', [Validators.required]),
@@ -78,8 +79,10 @@ export class ProveedorDialogComponent implements OnInit {
                 );
             }
         );
+    }
 
-
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
     }
 
     getProveedorById(id: number): void {
@@ -101,10 +104,11 @@ export class ProveedorDialogComponent implements OnInit {
             this.form.patchValue({
                 id: item.id,
                 ruc: item.ruc,
-                razon: item.razon,
+                razon: item.razonSocial,
                 direccion: item.direccion,
                 correo: item.correo,
-                telefono: item.telefono
+                telefono: item.telefono,
+                ciudad : item.ciudad
             });
         }
     }
@@ -113,12 +117,11 @@ export class ProveedorDialogComponent implements OnInit {
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.ruc = this.form.get('ruc').value;
-        this.item.razon = this.form.get('razon').value;
+        this.item.razonSocial = this.form.get('razon').value;
         this.item.direccion = this.form.get('direccion').value;
         this.item.correo = this.form.get('correo').value;
         this.item.telefono = this.form.get('telefono').value;
         this.item.ciudad = this.form.get('ciudad').value;
-
     }
 
     dismiss(result?: any) {

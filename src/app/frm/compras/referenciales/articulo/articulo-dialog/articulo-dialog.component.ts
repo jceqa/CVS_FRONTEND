@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Articulo } from '../../../../../models/Articulo';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { FormType } from '../../../../../models/enum';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -11,6 +10,7 @@ import {Impuesto} from '../../../../../models/impuesto';
 import {MarcaService} from '../../../../../services/marca.service';
 import {TipoArticuloService} from '../../../../../services/tipoarticulo.service';
 import {ImpuestoService} from '../../../../../services/impuesto.service';
+import {Articulo} from '../../../../../models/articulo';
 
 @Component({
     selector: 'app-articulo-dialog',
@@ -117,6 +117,10 @@ export class ArticuloDialogComponent implements OnInit {
         );
     }
 
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
+    }
+
     getArticuloById(id: number): void {
 
         // Realiza la llamada http para obtener el objeto
@@ -138,7 +142,10 @@ export class ArticuloDialogComponent implements OnInit {
                 descripcion: item.descripcion,
                 precioCompra: item.precioCompra,
                 precioVenta: item.precioVenta,
-                codigo: item.codigoGenerico
+                codigo: item.codigoGenerico,
+                marca : item.marca,
+                impuesto : item.impuesto,
+                tipo : item.tipoArticulo,
             });
         }
     }

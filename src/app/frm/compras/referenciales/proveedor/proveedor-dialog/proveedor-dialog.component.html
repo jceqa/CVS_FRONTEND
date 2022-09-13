@@ -45,20 +45,21 @@
             </mat-form-field>
         </div>
 
-        
+
 
         <div class="mt-2">
             <mat-form-field>
                 <mat-label>Ciudad</mat-label>
-                <mat-select name="food">
-                    <mat-option *ngFor="let ciudad of ciudades" [value]="ciudad">
+                <mat-select [compareWith]="compareFunction" formControlName="ciudad">
+                    <mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>
+                    <mat-option *ngFor="let ciudad of ciudades" [value]="ciudad" >
                         {{ciudad.descripcion}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
 
-       
+
     </mat-dialog-content>
 
     <mat-dialog-actions align="end" class="mt-4">

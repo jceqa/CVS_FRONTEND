@@ -15,7 +15,7 @@ import {ProveedorService} from '../../../../services/proveedor.service';
 })
 export class ProveedorComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'ruc', 'razon', 'direccion', 'correo', 'telefono', 'ciudad'];
+    displayedColumns: string[] = ['id', 'ruc', 'razon', 'direccion', 'correo', 'telefono', 'ciudad', 'actions'];
 
     dataSource = new MatTableDataSource<Proveedor>();
 
