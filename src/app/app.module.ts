@@ -51,6 +51,10 @@ import { TipoTarjetaComponent } from './frm/ventas/referenciales/tipotarjeta/tip
 import { TipoTarjetaDialogComponent } from './frm/ventas/referenciales/tipotarjeta/tipotarjeta-dialog/tipotarjeta-dialog.component';
 import {ArticuloComponent} from './frm/compras/referenciales/articulo/articulo.component';
 import {ArticuloDialogComponent} from './frm/compras/referenciales/articulo/articulo-dialog/articulo-dialog.component';
+import {SucursalComponent} from './frm/administracion/referenciales/sucursal/sucursal.component';
+import {SucursalDialogComponent} from './frm/administracion/referenciales/sucursal/sucursal-dialog/sucursal-dialog.component';
+import {DepositoComponent} from './frm/administracion/referenciales/deposito/deposito.component';
+import {DepositoDialogComponent} from './frm/administracion/referenciales/deposito/deposito-dialog/deposito-dialog.component';
 
 @NgModule({
     declarations: [
@@ -82,7 +86,11 @@ import {ArticuloDialogComponent} from './frm/compras/referenciales/articulo/arti
         TipoTarjetaComponent,
         TipoTarjetaDialogComponent,
         ArticuloComponent,
-        ArticuloDialogComponent
+        ArticuloDialogComponent,
+        SucursalComponent,
+        SucursalDialogComponent,
+        DepositoComponent,
+        DepositoDialogComponent
     ],
     imports: [
         BrowserModule,

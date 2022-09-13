@@ -1,0 +1,83 @@
+<div style="margin: 8px;">
+    <mat-toolbar>
+        <span>Deposito</span>
+        <span class="line-spacer"></span>
+
+        <button color="primary" mat-button (click)="cargarDepositos()">
+            <mat-icon>refresh</mat-icon>
+            <span>Actualizar</span>
+        </button>
+
+        <button color="primary" mat-button (click)="addItem()">
+            <mat-icon>add</mat-icon>
+            <span>Nuevo</span>
+        </button>
+
+        <!--<button color="primary" mat-button (click)="uploadNewFile()">
+            <mat-icon>file_upload</mat-icon>
+            <span>Subir Planilla</span>
+        </button>
+
+        <a mat-button color="primary" href="./assets/xls/price_list_import.xlsx" target="_blank">
+            <mat-icon>file_download</mat-icon>
+            Descargar Planilla
+        </a>
+
+        <button mat-button color="primary" (click)="downloadManual()"
+                matTooltip="Muestra el manual del modulo en PDF">
+          <mat-icon>library_books</mat-icon>
+          <span fxHide.xs>Manual</span>
+        </button>-->
+    </mat-toolbar>
+    <mat-card>
+        <mat-card-content>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Id</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">{{ dato.id }}</mat-cell>>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Descripcion</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{ dato.descripcion }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="sucursal">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Sucursal</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{ dato.sucursal.descripcion }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let dato">
+
+                        <!--<button color="primary" mat-icon-button (click)="viewDetail(dato)">
+                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
+                        </button>-->
+
+                        <button color="primary" mat-icon-button (click)="editItem(dato)">
+                            <mat-icon aria-label="Editar item">mode_edit</mat-icon>
+                        </button>
+
+                        <button color="warn" mat-icon-button (click)="openDialog($event, dato)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <mat-paginator #painator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+            </mat-paginator>
+
+        </mat-card-content>
+    </mat-card>
+</div>
