@@ -50,14 +50,14 @@
                 <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                   <h4><strong>P. Compra</strong></h4>
                 </mat-header-cell>
-                <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.precioCompra}}</i></mat-cell>
+                <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.precioCompra | myCurrency}}</i></mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="precioVenta">
                 <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                   <h4><strong>P. Venta</strong></h4>
                 </mat-header-cell>
-                <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.precioVenta}}</i></mat-cell>
+                <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.precioVenta | myCurrency}}</i></mat-cell>
               </ng-container>
 
                 <ng-container matColumnDef="codigoGenerico">

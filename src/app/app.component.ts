@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import * as fromRoot from './app.reducer';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router, RouteReuseStrategy, RouterOutlet } from '@angular/router';
-//import { TokenService } from './services/token.service';
+// import { TokenService } from './services/token.service';
 import { UsuarioRolService } from './services/usuariorol.service';
 import { PermisoService } from './services/permiso.service';
 import { UsuarioService } from './services/usuario.service';
@@ -19,10 +19,10 @@ import { Permiso } from './models/permiso';
 })
 export class AppComponent {
 
-    title = 'CVS';
-    usuario = "Invitado";
-    version: string = "1.0.2";
-    appName: string = "CVS";
+    title = 'Innovalogic System';
+    usuario = 'Invitado';
+    version = '1.0.2';
+    appName = 'Innovalogic System';
     message!: string;
 
     menus: any[] = [];
@@ -45,21 +45,21 @@ export class AppComponent {
         private cd: ChangeDetectorRef,
         private router: Router,
         public routeStrat: RouteReuseStrategy,
-        private usuarioService : UsuarioService,
-        //private tokenService: TokenService,
+        private usuarioService: UsuarioService,
+        // private tokenService: TokenService,
         private usuarioRolService: UsuarioRolService,
         private permisoService: PermisoService) { }
 
     ngOnInit(): void {
-        //this.menus.push({ Name: "Menu1", Icon: null, Items: [{ Name: "Item 1", SubItems: [{ Url: "/", Name: "Sub Item 1" }] }, { Url: "/", Name: "Item 2" }, { Url: "/", Name: "Item 3" }] });
-        //this.menus.push({ Name: "Menu2", Icon: null, Items: [{ Url: "/", Name: "Item 1" }, { Url: "/", Name: "Item 2" }] });
-        //this.menus.push({ Name: "Menu3", Icon: null, Items: [{ Url: "/", Name: "Item 1" }] });
+        // this.menus.push({ Name: "Menu1", Icon: null, Items: [{ Name: "Item 1", SubItems: [{ Url: "/", Name: "Sub Item 1" }] }, { Url: "/", Name: "Item 2" }, { Url: "/", Name: "Item 3" }] });
+        // this.menus.push({ Name: "Menu2", Icon: null, Items: [{ Url: "/", Name: "Item 1" }, { Url: "/", Name: "Item 2" }] });
+        // this.menus.push({ Name: "Menu3", Icon: null, Items: [{ Url: "/", Name: "Item 1" }] });
 
         this.token = localStorage.getItem('token');
         this.usuarioService.getUserByToken(this.token).subscribe(
             result => {
                 console.log(result);
-                this.userId = result.id
+                this.userId = result.id;
 
                 this.usuarioRolService.getByUserId(this.userId).subscribe(
                     usuarioRol => {
@@ -70,17 +70,17 @@ export class AppComponent {
                                 console.log(permisos);
                                 this.generarMenu(permisos);
                             }
-                        )
+                        );
                     },
                     error => {
                         console.log(error);
                     }
-                )
+                );
             },
             error => {
                 console.log(error);
             }
-        )
+        );
 
 
         this.isMenuOpen = this.loginService.IsMenuOpen;
@@ -94,11 +94,11 @@ export class AppComponent {
     generarMenu(permisos: Permiso[]) {
         let sistema = permisos[0].formulario.sistema.id;
         let subMenu = permisos[0].formulario.subMenu.id;
-        let sistemas = [];
-        let submenus = [];
-        let formularios = [];
-        let anteriorMenu = "";
-        let anteriorSubMenu = "";
+        const sistemas = [];
+        const submenus = [];
+        const formularios = [];
+        let anteriorMenu = '';
+        let anteriorSubMenu = '';
         permisos.forEach(element => {
             if (element.formulario.subMenu.id === subMenu && element.formulario.sistema.id === sistema) {
                 formularios.push({
@@ -118,7 +118,7 @@ export class AppComponent {
                     Name: element.formulario.nombre,
                     Url: element.formulario.url
                 });
-                anteriorMenu = element.formulario.sistema.nombre
+                anteriorMenu = element.formulario.sistema.nombre;
             } else {
                 submenus.push({
                     Name: anteriorSubMenu,
@@ -252,7 +252,7 @@ export class AppComponent {
 
     signOut() {
         localStorage.clear();
-        this.usuario = "Invitado";
-        //this.estaLogueado = false;
+        this.usuario = 'Invitado';
+        // this.estaLogueado = false;
     }
 }

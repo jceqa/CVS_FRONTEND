@@ -143,9 +143,9 @@ export class ArticuloDialogComponent implements OnInit {
                 precioCompra: item.precioCompra,
                 precioVenta: item.precioVenta,
                 codigo: item.codigoGenerico,
-                marca : item.marca,
-                impuesto : item.impuesto,
-                tipo : item.tipoArticulo,
+                marca: item.marca,
+                impuesto: item.impuesto,
+                tipo: item.tipoArticulo,
             });
         }
     }
@@ -153,9 +153,9 @@ export class ArticuloDialogComponent implements OnInit {
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.descripcion = this.form.get('descripcion').value;
-        this.item.precioCompra = this.form.get('precioCompra').value;
-        this.item.precioVenta = this.form.get('precioVenta').value;
+        this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase();
+        this.item.precioCompra = parseInt(this.form.get('precioCompra').value.toString().replace(/[.]/g, ''), 10);
+        this.item.precioVenta = parseInt(this.form.get('precioVenta').value.toString().replace(/[.]/g, ''), 10);
         this.item.codigoGenerico = this.form.get('codigo').value;
         this.item.marca = this.form.get('marca').value;
         this.item.impuesto = this.form.get('impuesto').value;
@@ -193,15 +193,15 @@ export class ArticuloDialogComponent implements OnInit {
         // Llama al servicio que almacena el objeto {PriceListDraft}
         this.articuloService.guardarArticulo(this.item)
             .subscribe(data => {
-                console.log(data);
-                this.dialogRef.close(data);
+                    console.log(data);
+                    this.dialogRef.close(data);
 
-                this.uiService.showSnackbar(
-                    'Argregado exitosamente.',
-                    'Cerrar',
-                    3000
-                );
-            },
+                    this.uiService.showSnackbar(
+                        'Argregado exitosamente.',
+                        'Cerrar',
+                        3000
+                    );
+                },
                 (error) => {
 
                     console.error('[ERROR]: ', error);
@@ -227,26 +227,29 @@ export class ArticuloDialogComponent implements OnInit {
         // Llama al servicio http que actualiza el objeto.
         this.articuloService.editarArticulo(this.item)
             .subscribe(data => {
-                console.log(data);
+                    console.log(data);
 
-                this.uiService.showSnackbar(
-                    'Modificado exitosamente.',
-                    'Cerrar',
-                    3000
-                );
+                    this.uiService.showSnackbar(
+                        'Modificado exitosamente.',
+                        'Cerrar',
+                        3000
+                    );
 
-                this.dialogRef.close(data);
-            },
+                    this.dialogRef.close(data);
+                },
                 (error) => {
                     console.error('[ERROR]: ', error);
 
                     this.uiService.showSnackbar(
-                        'Ha ocurrido un error.',
+                        error.error ? error.error : 'Ha ocurrido un error.',
                         'Cerrar',
-                        3000
+                        5000
                     );
                 }
             );
     }
 
+    setNumber($event, type) {
+        this.form.get(type).setValue($event.target.value);
+    }
 }
