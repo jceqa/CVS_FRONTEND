@@ -437,7 +437,11 @@ body {
   color: #1482c2;
 }
 
-/* 
+.text{
+    text-transform: uppercase;
+}
+
+/*
 https://github.com/mattlewis92/angular-calendar
-angular-cli file: src/styles.css 
+angular-cli file: src/styles.css
 @import "../node_modules/angular-calendar/css/angular-calendar.css";*/

@@ -71,6 +71,8 @@ import {ProveedorComponent} from './frm/compras/referenciales/proveedor/proveedo
 import {
     ProveedorDialogComponent
 } from './frm/compras/referenciales/proveedor/proveedor-dialog/proveedor-dialog.component';
+import {MyCurrencyPipe} from './pipes/my-currency-pipe';
+import {MyCurrencyFormatterDirective} from './directives/my-currency-formatter-directive';
 
 @NgModule({
     declarations: [
@@ -108,7 +110,10 @@ import {
         DepositoComponent,
         DepositoDialogComponent,
         ProveedorComponent,
-        ProveedorDialogComponent
+        ProveedorDialogComponent,
+
+        MyCurrencyPipe,
+        MyCurrencyFormatterDirective
     ],
     imports: [
         BrowserModule,
@@ -137,7 +142,9 @@ import {
     providers: [
         UIService,
         UtilService,
-        AccountService
+        AccountService,
+        MyCurrencyPipe,
+        MyCurrencyFormatterDirective
     ],
     bootstrap: [AppComponent]
 })

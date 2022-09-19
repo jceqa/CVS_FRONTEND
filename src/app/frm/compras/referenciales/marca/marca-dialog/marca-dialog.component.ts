@@ -79,7 +79,7 @@ export class MarcaDialogComponent implements OnInit {
     //Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.descripcion = this.form.get('descripcion').value;
+        this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase();
     }
 
     dismiss(result?: any) {
@@ -127,9 +127,9 @@ export class MarcaDialogComponent implements OnInit {
                     console.error('[ERROR]: ', error);
 
                     this.uiService.showSnackbar(
-                        'Ha ocurrido un error.',
+                        error.error,
                         'Cerrar',
-                        3000
+                        5000
                     );
 
                 }
