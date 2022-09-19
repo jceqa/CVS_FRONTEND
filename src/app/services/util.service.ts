@@ -1,16 +1,12 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-//import { environment } from '../../../environments/environment';
 import { Browser } from '../models/enum';
 import { AbstractControl } from '@angular/forms';
 
 @Injectable()
 export class UtilService {
-    /*private get endpoint() {
-      return environment.apiUrl + 'Util';
-    }
-    private headers = this.getApiKeyHeather();
-  */
+    letras = 'abcdefghyjklmnñopqrstuvwxyz';
+
     constructor(private httpClient: HttpClient) { }
 
     /*getConnectType() {
@@ -289,5 +285,15 @@ export class UtilService {
         // const url = 'http://10.10.21.30:8800/weigh';
         // this.httpClient.get(url, {headers: this.headers});
         return this.httpClient.get(url);
+    }
+
+    tieneLetras(texto) {
+        texto = texto.toLowerCase();
+        for (let i = 0; i < texto.length; i++) {
+            if (this.letras.indexOf(texto.charAt(i), 0) !== -1) {
+                return true;
+            }
+        }
+        return false;
     }
 }
