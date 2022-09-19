@@ -153,7 +153,7 @@ export class ArticuloDialogComponent implements OnInit {
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase();
+        this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
         this.item.precioCompra = parseInt(this.form.get('precioCompra').value.toString().replace(/[.]/g, ''), 10);
         this.item.precioVenta = parseInt(this.form.get('precioVenta').value.toString().replace(/[.]/g, ''), 10);
         this.item.codigoGenerico = this.form.get('codigo').value;
