@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MarcaDialogComponent } from './marca-dialog/marca-dialog.component';
 import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {UtilService} from '../../../../services/util.service';
 
 @Component({
     selector: 'app-marca',
@@ -27,10 +28,13 @@ export class MarcaComponent implements OnInit {
     pagina = 1;
     numeroResultados = 5;
 
+    all = false;
+
     constructor(
         private marcaService: MarcaService,
         private dialog: MatDialog,
         private uiService: UIService,
+        private util: UtilService
     ) { }
 
     ngOnInit(): void {
@@ -38,7 +42,10 @@ export class MarcaComponent implements OnInit {
     }
 
     cargarMarcas() {
-        this.marcaService.getMarcas().subscribe(
+        // this.store.dispatch(new UI.StartLoading());
+        // this.util.localStorageSetItem('loading', 'true');
+        this.util.startLoading();
+        this.marcaService.getMarcas(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.marcas = data;
@@ -47,8 +54,14 @@ export class MarcaComponent implements OnInit {
                     this.marcas
                 );
                 this.dataSource.paginator = this.paginator;
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
             },
             err => {
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
                 console.log(err.error);
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
@@ -104,16 +117,39 @@ export class MarcaComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
-    openDialog(event: any, marca: Marca): void {
+    reactivateItem(marca: Marca): void {
+        marca.estado = 'ACTIVO';
+        this.marcaService.editarMarca(marca).subscribe(
+            result => {
+                console.log(result);
+                this.cargarMarcas();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, marca: Marca): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
-                title: "Eliminar Marca",
-                msg: "¿Está seguro que desea eliminar esta marca?"
+                title: 'Eliminar Marca',
+                msg: '¿Está seguro que desea eliminar esta marca?'
             }
         });
 
@@ -121,6 +157,24 @@ export class MarcaComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.deleteItem(marca.id);
+            }
+        });
+    }
+
+    reactivate(event: any, marca: Marca): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Marca',
+                msg: '¿Está seguro que desea reactivar esta marca?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(marca);
             }
         });
     }

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewChecked} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as fromMenuOpen from './reducers/menuStatus.action';
 import { LoginService } from './services/login.service';
@@ -11,13 +11,18 @@ import { UsuarioRolService } from './services/usuariorol.service';
 import { PermisoService } from './services/permiso.service';
 import { UsuarioService } from './services/usuario.service';
 import { Permiso } from './models/permiso';
+import {Observable, Subscription} from 'rxjs';
+import {UtilService} from './services/util.service';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewChecked {
+
+    isLoading$!: Observable<boolean>;
+    isLoadingSubscription: Subscription;
 
     title = 'Innovalogic System';
     usuario = 'Invitado';
@@ -48,13 +53,21 @@ export class AppComponent {
         private usuarioService: UsuarioService,
         // private tokenService: TokenService,
         private usuarioRolService: UsuarioRolService,
-        private permisoService: PermisoService) { }
+        private permisoService: PermisoService,
+        private util: UtilService) { }
 
     ngOnInit(): void {
         // this.menus.push({ Name: "Menu1", Icon: null, Items: [{ Name: "Item 1", SubItems: [{ Url: "/", Name: "Sub Item 1" }] }, { Url: "/", Name: "Item 2" }, { Url: "/", Name: "Item 3" }] });
         // this.menus.push({ Name: "Menu2", Icon: null, Items: [{ Url: "/", Name: "Item 1" }, { Url: "/", Name: "Item 2" }] });
         // this.menus.push({ Name: "Menu3", Icon: null, Items: [{ Url: "/", Name: "Item 1" }] });
-
+        // this.isLoading$ = this.store.select(fromRoot.getIsLoading);
+        this.util.localStorageSetItem('loading', 'false');
+        /*debugger;
+        this.isLoadingSubscription = this.isLoading$.subscribe(result => {
+            // debugger;
+            console.log('result', result);
+            // this.isLoading$ =
+        });*/
         this.token = localStorage.getItem('token');
         this.usuarioService.getUserByToken(this.token).subscribe(
             result => {

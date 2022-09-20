@@ -70,6 +70,6 @@
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>
-<div class="loading-container" *ngIf="false | async">
+<div class="loading-container" *ngIf="util.localStorageGetItem('loading') === 'true'">
     <mat-spinner color="primary" class="center-element"></mat-spinner>
 </div>

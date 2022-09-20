@@ -441,6 +441,15 @@ body {
     text-transform: uppercase;
 }
 
+.end{
+    text-align: end;
+}
+
+.eliminado {
+    text-decoration: line-through;
+    color: #6c6c6c;
+}
+
 /*
 https://github.com/mattlewis92/angular-calendar
 angular-cli file: src/styles.css
