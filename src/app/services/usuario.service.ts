@@ -12,13 +12,13 @@ export class UsuarioService {
     constructor(private http: HttpClient,
     ) { }
 
-    private baseUrl = "api/usuario/";
+    private baseUrl = 'api/usuario/';
 
     public signIn(userData: Usuario): Observable<any> {
-        return this.http.post<any>(this.baseUrl + `validar`, userData)
+        return this.http.post<any>(this.baseUrl + `validar`, userData);
     }
 
     public getUserByToken(token: string): Observable<Usuario> {
-        return this.http.get<Usuario>(this.baseUrl + `?token=${token}`)
+        return this.http.get<Usuario>(this.baseUrl + `?token=${token}`);
     }
 }

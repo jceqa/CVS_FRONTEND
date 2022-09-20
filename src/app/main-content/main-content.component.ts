@@ -41,12 +41,11 @@ export class MainContentComponent implements OnInit, OnChanges {
         });
     }
 
-
     /*openRegisterDialog(): void {
       const dialogRegister = this.dialog.open(UserRegisterComponent, {
         width: '500px'
       });
-  
+
       dialogRegister.afterClosed().subscribe(result => console.log(result));
     }*/
 }

@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-//import { InfoDialogComponent } from '../info-dialog/info-dialog.component';
-//import { AccountService } from '../../services/account.service'
 import { MatDialog } from '@angular/material/dialog';
 import { RouteReuseStrategy, Router } from '@angular/router';
 import { MatSnackBarRef, SimpleSnackBar, MatSnackBar } from '@angular/material/snack-bar';
@@ -22,9 +20,9 @@ export class ToolbarComponent {
     @Output() toggleSidenav: EventEmitter<void>;
     @Output() toggleTheme: EventEmitter<void>;
     @Output() toggleDir: EventEmitter<void>;
-    //companyName: string;
+    // companyName: string;
     isMenuOpen!: boolean;
-    username = "Usuario";
+    username = localStorage.getItem('username');
 
     constructor(
         public routeStrat: RouteReuseStrategy,

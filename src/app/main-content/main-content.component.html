@@ -9,7 +9,7 @@
                 <span class="glass">Para empezar debe iniciar sesión o registrarse</span>
             </p>
             <div>
-                <button mat-raised-button color="primary" routerLink="/login">Iniciar Sesión</button>
+                <button mat-raised-button color="primary" (click)="openLoginDialog()">Iniciar Sesión</button>
                 <button class="ml-2" mat-raised-button routerLink="/register" [disabled]="true">Registrarse</button>
             </div>
         </div>
