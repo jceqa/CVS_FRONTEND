@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MarcaService } from '../../../../services/marca.service';
-import { Marca } from '../../../../models/marca';
-import { MatDialog } from '@angular/material/dialog';
-import { MarcaDialogComponent } from './marca-dialog/marca-dialog.component';
-import { UIService } from '../../../../services/ui.service';
-import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {MarcaService} from '../../../../services/marca.service';
+import {Marca} from '../../../../models/marca';
+import {MatDialog} from '@angular/material/dialog';
+import {MarcaDialogComponent} from './marca-dialog/marca-dialog.component';
+import {UIService} from '../../../../services/ui.service';
+import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-marca',
@@ -31,7 +31,8 @@ export class MarcaComponent implements OnInit {
         private marcaService: MarcaService,
         private dialog: MatDialog,
         private uiService: UIService,
-    ) { }
+    ) {
+    }
 
     ngOnInit(): void {
         this.cargarMarcas();
@@ -104,16 +105,16 @@ export class MarcaComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
     openDialog(event: any, marca: Marca): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
-                title: "Eliminar Marca",
-                msg: "¿Está seguro que desea eliminar esta marca?"
+                title: 'Eliminar Marca',
+                msg: '¿Está seguro que desea eliminar esta marca?'
             }
         });
 

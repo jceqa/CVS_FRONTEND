@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { CiudadService } from '../../../../services/ciudad.service';
-import { Ciudad } from '../../../../models/ciudad';
-import { MatDialog } from '@angular/material/dialog';
-import { CiudadDialogComponent } from './ciudad-dialog/ciudad-dialog.component';
-import { UIService } from '../../../../services/ui.service';
-import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {CiudadService} from '../../../../services/ciudad.service';
+import {Ciudad} from '../../../../models/ciudad';
+import {MatDialog} from '@angular/material/dialog';
+import {CiudadDialogComponent} from './ciudad-dialog/ciudad-dialog.component';
+import {UIService} from '../../../../services/ui.service';
+import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-ciudad',
@@ -31,7 +31,8 @@ export class CiudadComponent implements OnInit {
         private ciudadService: CiudadService,
         private dialog: MatDialog,
         private uiService: UIService,
-    ) { }
+    ) {
+    }
 
     ngOnInit(): void {
         this.cargarCiudades();
@@ -104,7 +105,7 @@ export class CiudadComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
     openDialog(event: any, ciudad: Ciudad): void {
@@ -112,8 +113,8 @@ export class CiudadComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             //width: '50vw',
             data: {
-                title: "Eliminar Ciudad",
-                msg: "¿Está seguro que desea eliminar esta ciudad?"
+                title: 'Eliminar Ciudad',
+                msg: '¿Está seguro que desea eliminar esta ciudad?'
             }
         });
 
