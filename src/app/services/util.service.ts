@@ -1,13 +1,14 @@
-import { Injectable, isDevMode } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Browser } from '../models/enum';
-import { AbstractControl } from '@angular/forms';
+import {Injectable, isDevMode} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Browser} from '../models/enum';
+import {AbstractControl} from '@angular/forms';
 
 @Injectable()
 export class UtilService {
     letras = 'abcdefghyjklmnñopqrstuvwxyz';
 
-    constructor(private httpClient: HttpClient) { }
+    constructor(private httpClient: HttpClient) {
+    }
 
     /*getConnectType() {
       return this.httpClient.get<any>(this.endpoint + '/conex', {
@@ -38,7 +39,6 @@ export class UtilService {
       sessionStorage.setItem('expiration', localStorage.getItem('expiration'));
       sessionStorage.setItem('username', localStorage.getItem('username'));
     }*/
-
 
 
     toParams = function ObjectsToParams(obj) {
@@ -125,15 +125,24 @@ export class UtilService {
     Unidades(num) {
 
         switch (num) {
-            case 1: return 'UN';
-            case 2: return 'DOS';
-            case 3: return 'TRES';
-            case 4: return 'CUATRO';
-            case 5: return 'CINCO';
-            case 6: return 'SEIS';
-            case 7: return 'SIETE';
-            case 8: return 'OCHO';
-            case 9: return 'NUEVE';
+            case 1:
+                return 'UN';
+            case 2:
+                return 'DOS';
+            case 3:
+                return 'TRES';
+            case 4:
+                return 'CUATRO';
+            case 5:
+                return 'CINCO';
+            case 6:
+                return 'SEIS';
+            case 7:
+                return 'SIETE';
+            case 8:
+                return 'OCHO';
+            case 9:
+                return 'NUEVE';
         }
 
         return '';
@@ -147,27 +156,44 @@ export class UtilService {
         switch (decena) {
             case 1:
                 switch (unidad) {
-                    case 0: return 'DIEZ';
-                    case 1: return 'ONCE';
-                    case 2: return 'DOCE';
-                    case 3: return 'TRECE';
-                    case 4: return 'CATORCE';
-                    case 5: return 'QUINCE';
-                    default: return 'DIECI' + this.Unidades(unidad);
+                    case 0:
+                        return 'DIEZ';
+                    case 1:
+                        return 'ONCE';
+                    case 2:
+                        return 'DOCE';
+                    case 3:
+                        return 'TRECE';
+                    case 4:
+                        return 'CATORCE';
+                    case 5:
+                        return 'QUINCE';
+                    default:
+                        return 'DIECI' + this.Unidades(unidad);
                 }
             case 2:
                 switch (unidad) {
-                    case 0: return 'VEINTE';
-                    default: return 'VEINTI' + this.Unidades(unidad);
+                    case 0:
+                        return 'VEINTE';
+                    default:
+                        return 'VEINTI' + this.Unidades(unidad);
                 }
-            case 3: return this.DecenasY('TREINTA', unidad);
-            case 4: return this.DecenasY('CUARENTA', unidad);
-            case 5: return this.DecenasY('CINCUENTA', unidad);
-            case 6: return this.DecenasY('SESENTA', unidad);
-            case 7: return this.DecenasY('SETENTA', unidad);
-            case 8: return this.DecenasY('OCHENTA', unidad);
-            case 9: return this.DecenasY('NOVENTA', unidad);
-            case 0: return this.Unidades(unidad);
+            case 3:
+                return this.DecenasY('TREINTA', unidad);
+            case 4:
+                return this.DecenasY('CUARENTA', unidad);
+            case 5:
+                return this.DecenasY('CINCUENTA', unidad);
+            case 6:
+                return this.DecenasY('SESENTA', unidad);
+            case 7:
+                return this.DecenasY('SETENTA', unidad);
+            case 8:
+                return this.DecenasY('OCHENTA', unidad);
+            case 9:
+                return this.DecenasY('NOVENTA', unidad);
+            case 0:
+                return this.Unidades(unidad);
         }
     }// Unidades()
 
@@ -187,14 +213,22 @@ export class UtilService {
                 if (decenas > 0)
                     return 'CIENTO ' + this.Decenas(decenas);
                 return 'CIEN';
-            case 2: return 'DOSCIENTOS ' + this.Decenas(decenas);
-            case 3: return 'TRESCIENTOS ' + this.Decenas(decenas);
-            case 4: return 'CUATROCIENTOS ' + this.Decenas(decenas);
-            case 5: return 'QUINIENTOS ' + this.Decenas(decenas);
-            case 6: return 'SEISCIENTOS ' + this.Decenas(decenas);
-            case 7: return 'SETECIENTOS ' + this.Decenas(decenas);
-            case 8: return 'OCHOCIENTOS ' + this.Decenas(decenas);
-            case 9: return 'NOVECIENTOS ' + this.Decenas(decenas);
+            case 2:
+                return 'DOSCIENTOS ' + this.Decenas(decenas);
+            case 3:
+                return 'TRESCIENTOS ' + this.Decenas(decenas);
+            case 4:
+                return 'CUATROCIENTOS ' + this.Decenas(decenas);
+            case 5:
+                return 'QUINIENTOS ' + this.Decenas(decenas);
+            case 6:
+                return 'SEISCIENTOS ' + this.Decenas(decenas);
+            case 7:
+                return 'SETECIENTOS ' + this.Decenas(decenas);
+            case 8:
+                return 'OCHOCIENTOS ' + this.Decenas(decenas);
+            case 9:
+                return 'NOVECIENTOS ' + this.Decenas(decenas);
         }
 
         return this.Decenas(decenas);
@@ -275,10 +309,11 @@ export class UtilService {
         else
             return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
     }
+
     //
 
     getRawHTML(url: string): any {
-        this.httpClient.get(url, { responseType: 'text' });
+        this.httpClient.get(url, {responseType: 'text'});
     }
 
     getWeight(url: string): any {
@@ -295,5 +330,21 @@ export class UtilService {
             }
         }
         return false;
+    }
+
+    public localStorageGetItem(key: string): string {
+        return localStorage.getItem(key);
+    }
+
+    public localStorageSetItem(key: string, value: string): void {
+        localStorage.setItem(key, value);
+    }
+
+    public startLoading(): void {
+        this.localStorageSetItem('loading', 'true');
+    }
+
+    public stopLoading(): void {
+        this.localStorageSetItem('loading', 'false');
     }
 }

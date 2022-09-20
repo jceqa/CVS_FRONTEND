@@ -18,18 +18,18 @@ export class MarcaService {
         return this.accountService.getAuthHeather();
       }
 
-    private baseUrl = "api/marca/";
+    private baseUrl = 'api/marca/';
 
     public buscarMarcas(cantRegistros: number, pag: number, texto): Observable<any> {
-        return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`)
+        return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
     }
 
-    public getMarcas(): Observable<Marca[]> {
-        return this.http.get<Marca[]>(this.baseUrl)
+    public getMarcas(all: boolean = false): Observable<Marca[]> {
+        return this.http.get<Marca[]>(this.baseUrl + `?all=${all}`);
     }
 
     public getMarcaById(idMarca: number): Observable<Marca> {
-        return this.http.get<Marca>(this.baseUrl + `${idMarca}`)
+        return this.http.get<Marca>(this.baseUrl + `${idMarca}`);
     }
 
     public guardarMarca(marca: Marca): Observable<any> {
@@ -40,10 +40,10 @@ export class MarcaService {
     }
 
     public editarMarca(marca: Marca): Observable<any> {
-        return this.http.put<any>(this.baseUrl, marca)
+        return this.http.put<any>(this.baseUrl, marca);
     }
 
     public eliminarMarca(idMarca: number): Observable<any> {
-        return this.http.delete<any>(this.baseUrl + `${idMarca}`)
+        return this.http.delete<any>(this.baseUrl + `${idMarca}`);
     }
 }

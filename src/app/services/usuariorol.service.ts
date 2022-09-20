@@ -12,9 +12,9 @@ export class UsuarioRolService {
     constructor(private http: HttpClient,
     ) { }
 
-    private baseUrl = "api/usuariorol/";
+    private baseUrl = 'api/usuariorol/';
 
-    public getByUserId(userId: number): Observable<UsuarioRol> {
-        return this.http.get<UsuarioRol>(this.baseUrl + `/${userId}`)
+    public getByUserId(userId: number): Observable<UsuarioRol[]> {
+        return this.http.get<UsuarioRol[]>(this.baseUrl + `${userId}`);
     }
 }

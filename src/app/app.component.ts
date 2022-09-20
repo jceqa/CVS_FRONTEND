@@ -1,29 +1,35 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewChecked} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import * as fromMenuOpen from './reducers/menuStatus.action';
-import { LoginService } from './services/login.service';
-import { Store } from '@ngrx/store';
+import {LoginService} from './services/login.service';
+import {Store} from '@ngrx/store';
 import * as fromRoot from './app.reducer';
-import { MatSidenav } from '@angular/material/sidenav';
-import { Router, RouteReuseStrategy, RouterOutlet } from '@angular/router';
+import {MatSidenav} from '@angular/material/sidenav';
+import {Router, RouteReuseStrategy, RouterOutlet} from '@angular/router';
 // import { TokenService } from './services/token.service';
-import { UsuarioRolService } from './services/usuariorol.service';
-import { PermisoService } from './services/permiso.service';
-import { UsuarioService } from './services/usuario.service';
-import { Permiso } from './models/permiso';
+import {UsuarioRolService} from './services/usuariorol.service';
+// import {PermisoService} from './services/permiso.service';
+// import {UsuarioService} from './services/usuario.service';
+import {Permiso} from './models/permiso';
+import {UtilService} from './services/util.service';
+import {MenuService} from './services/menu.service';
+import {Menu} from './models/menu';
+import {UsuarioRol} from './models/usuarioRol';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewChecked {
 
     title = 'Innovalogic System';
     usuario = 'Invitado';
     version = '1.0.2';
     appName = 'Innovalogic System';
     message!: string;
+
+    menu: Menu;
 
     menus: any[] = [];
     data: any;
@@ -35,60 +41,92 @@ export class AppComponent {
 
     token: string;
     userId: number;
-    rolId: number;
+    usuarioRol: UsuarioRol[];
 
     @ViewChild(MatSidenav) sidenav: MatSidenav;
 
     constructor(public dialog: MatDialog,
-        public loginService: LoginService,
-        private store: Store<fromRoot.State>,
-        private cd: ChangeDetectorRef,
-        private router: Router,
-        public routeStrat: RouteReuseStrategy,
-        private usuarioService: UsuarioService,
-        // private tokenService: TokenService,
-        private usuarioRolService: UsuarioRolService,
-        private permisoService: PermisoService) { }
+                public loginService: LoginService,
+                private store: Store<fromRoot.State>,
+                private cd: ChangeDetectorRef,
+                private router: Router,
+                public routeStrat: RouteReuseStrategy,
+                private usuarioRolService: UsuarioRolService,
+                private util: UtilService,
+                private menuService: MenuService
+    ) {
+    }
 
     ngOnInit(): void {
-        // this.menus.push({ Name: "Menu1", Icon: null, Items: [{ Name: "Item 1", SubItems: [{ Url: "/", Name: "Sub Item 1" }] }, { Url: "/", Name: "Item 2" }, { Url: "/", Name: "Item 3" }] });
-        // this.menus.push({ Name: "Menu2", Icon: null, Items: [{ Url: "/", Name: "Item 1" }, { Url: "/", Name: "Item 2" }] });
-        // this.menus.push({ Name: "Menu3", Icon: null, Items: [{ Url: "/", Name: "Item 1" }] });
-
+        this.util.localStorageSetItem('loading', 'false');
         this.token = localStorage.getItem('token');
-        this.usuarioService.getUserByToken(this.token).subscribe(
-            result => {
-                console.log(result);
-                this.userId = result.id;
-
-                this.usuarioRolService.getByUserId(this.userId).subscribe(
-                    usuarioRol => {
-                        console.log(usuarioRol);
-                        this.rolId = usuarioRol.id;
-                        this.permisoService.getPermisosByRolId(this.rolId).subscribe(
-                            permisos => {
-                                console.log(permisos);
-                                this.generarMenu(permisos);
-                            }
-                        );
-                    },
-                    error => {
-                        console.log(error);
-                    }
-                );
+        this.util.startLoading();
+        this.userId = parseInt(localStorage.getItem('userid'), 10);
+        console.log('user id : ', this.userId);
+        if (this.userId) {
+            this.menuService.getMenu().subscribe( data => {
+                console.log(data);
+                this.menu = data;
+                    this.usuarioRolService.getByUserId(this.userId).subscribe(usuarioRol => {
+                            console.log(usuarioRol);
+                            this.usuarioRol = usuarioRol;
+                            this.util.stopLoading();
+                            this.generarMenu2();
+                        },
+                        error => {
+                            this.util.stopLoading();
+                            console.log(error);
+                        }
+                    );
             },
-            error => {
-                console.log(error);
-            }
-        );
-
+                error => {
+                    this.util.stopLoading();
+                    console.log(error);
+                });
+        }
 
         this.isMenuOpen = this.loginService.IsMenuOpen;
+
         if (this.isMenuOpen) {
             this.openMenuAction();
         } else {
             this.closeMenuAction();
         }
+    }
+
+    generarMenu2() {
+        const newMenu = [];
+        this.menu.sistemas.forEach(s =>
+            newMenu.push({
+                Icon : null,
+                Name : s.nombre,
+                Items: []
+            })
+        );
+
+        newMenu.forEach(nm =>
+            this.menu.subMenus.forEach(sm =>
+                nm.Items.push({
+                    Name : sm.nombre,
+                    SubItems : []
+                })
+
+            )
+        );
+
+        this.usuarioRol.forEach(ur =>
+            ur.permisos.forEach(p =>
+                newMenu.find( nm => nm.Name === p.formulario.sistema.nombre).Items.
+                    find(i => i.Name === p.formulario.subMenu.nombre).SubItems.
+                push({
+                    Url : p.formulario.url,
+                    Name : p.formulario.nombre
+                })
+            )
+        );
+
+        console.log(newMenu);
+        this.menus = newMenu;
     }
 
     generarMenu(permisos: Permiso[]) {
@@ -105,6 +143,7 @@ export class AppComponent {
                     Name: element.formulario.nombre,
                     Url: element.formulario.url
                 });
+
                 anteriorSubMenu = element.formulario.subMenu.nombre;
                 anteriorMenu = element.formulario.sistema.nombre;
             } else if (element.formulario.sistema.id === sistema) {
@@ -139,7 +178,8 @@ export class AppComponent {
                 anteriorSubMenu = element.formulario.subMenu.nombre;
                 sistema = element.formulario.sistema.id;
             }
-        });
+        })
+        ;
 
         submenus.push({
             Name: anteriorSubMenu,
@@ -155,18 +195,6 @@ export class AppComponent {
         this.menus = sistemas;
         console.log(sistemas);
     }
-
-    /*openLogin(): void {
-        const dialogRef = this.dialog.open(LoginComponent, {
-            width: '40%',
-            data: {}
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(result);
-            //console.log('Se cerro el modal');
-        });
-    }*/
 
     toogleSideNav() {
         this.sidenav.toggle();

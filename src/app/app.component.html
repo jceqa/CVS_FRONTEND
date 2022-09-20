@@ -32,10 +32,10 @@
                         </p>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <mat-nav-list *ngIf="menu">
+                <mat-nav-list *ngIf="menu && menu.Items.length > 0">
                     <mat-expansion-panel *ngFor="let item of menu.Items; first as isFirst" [expanded]="isFirst"
                         class="mat-elevation-z0">
-                        <mat-expansion-panel-header *ngIf="menu != null" [expandedHeight]="'40px'"
+                        <mat-expansion-panel-header *ngIf="menu != null && item.SubItems.length > 0" [expandedHeight]="'40px'"
                             style="border-top: solid 1px rgb(224, 224, 224);">
                             <mat-panel-title>
                                 <p style="vertical-align: middle" class="subtitle">
@@ -43,7 +43,7 @@
                                 </p>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <mat-nav-list *ngIf="menu">
+                        <mat-nav-list *ngIf="menu && item.SubItems.length > 0">
                             <a mat-list-item role="navigation" routerLinkActive="active" (click)="closeMenu()"
                                 [routerLink]="subitem.Url" *ngFor="let subitem of item.SubItems">
                                 <span class="item">{{ subitem.Name }}</span>
@@ -70,6 +70,6 @@
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>
-<div class="loading-container" *ngIf="false | async">
+<div class="loading-container" *ngIf="util.localStorageGetItem('loading') === 'true'">
     <mat-spinner color="primary" class="center-element"></mat-spinner>
 </div>
