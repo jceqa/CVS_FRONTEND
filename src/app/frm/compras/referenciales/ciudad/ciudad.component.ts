@@ -7,6 +7,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {CiudadDialogComponent} from './ciudad-dialog/ciudad-dialog.component';
 import {UIService} from '../../../../services/ui.service';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
+import {UtilService} from '../../../../services/util.service';
 
 @Component({
     selector: 'app-ciudad',
@@ -27,10 +28,13 @@ export class CiudadComponent implements OnInit {
     pagina = 1;
     numeroResultados = 5;
 
+    all = false;
+
     constructor(
         private ciudadService: CiudadService,
         private dialog: MatDialog,
         private uiService: UIService,
+        private util: UtilService
     ) {
     }
 
@@ -39,7 +43,10 @@ export class CiudadComponent implements OnInit {
     }
 
     cargarCiudades() {
-        this.ciudadService.getCiudades().subscribe(
+        // this.store.dispatch(new UI.StartLoading());
+        // this.util.localStorageSetItem('loading', 'true');
+        this.util.startLoading();
+        this.ciudadService.getCiudades(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.ciudades = data;
@@ -48,8 +55,14 @@ export class CiudadComponent implements OnInit {
                     this.ciudades
                 );
                 this.dataSource.paginator = this.paginator;
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
             },
             err => {
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
                 console.log(err.error);
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
@@ -108,12 +121,35 @@ export class CiudadComponent implements OnInit {
         );
     }
 
-    openDialog(event: any, ciudad: Ciudad): void {
+    reactivateItem(ciudad: Ciudad): void {
+        ciudad.estado = 'ACTIVO';
+        this.ciudadService.editarCiudad(ciudad).subscribe(
+            result => {
+                console.log(result);
+                this.cargarCiudades();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, ciudad: Ciudad): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
-                title: 'Eliminar Ciudad',
+                title: 'Eliminar esta Ciudad',
                 msg: '¿Está seguro que desea eliminar esta ciudad?'
             }
         });
@@ -122,6 +158,24 @@ export class CiudadComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.deleteItem(ciudad.id);
+            }
+        });
+    }
+
+    reactivate(event: any, ciudad: Ciudad): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Ciudad',
+                msg: '¿Está seguro que desea reactivar esta ciudad?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(ciudad);
             }
         });
     }

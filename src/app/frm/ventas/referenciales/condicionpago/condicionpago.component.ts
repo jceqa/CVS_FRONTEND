@@ -7,9 +7,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { CondicionPagoDialogComponent } from './condicionPago-dialog/condicionPago-dialog.component';
 import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {UtilService} from '../../../../services/util.service';
+
 
 @Component({
-    selector: 'app-condicion-pago',
+    selector: 'app-condicionpago',
     templateUrl: './condicionPago.component.html',
     styleUrls: ['./condicionPago.component.css']
 })
@@ -27,10 +29,12 @@ export class CondicionPagoComponent implements OnInit {
     pagina = 1;
     numeroResultados = 5;
 
+    all = false;
     constructor(
-        private condicionpagoService: CondicionPagoService,
+        private condicionPagoService: CondicionPagoService,
         private dialog: MatDialog,
         private uiService: UIService,
+        private util: UtilService
     ) { }
 
     ngOnInit(): void {
@@ -38,7 +42,10 @@ export class CondicionPagoComponent implements OnInit {
     }
 
     cargarCondicionPagos() {
-        this.condicionpagoService.getCondicionPagos().subscribe(
+        // this.store.dispatch(new UI.StartLoading());
+        // this.util.localStorageSetItem('loading', 'true');
+        this.util.startLoading();
+        this.condicionPagoService.getCondicionPagos(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.condicionpagos = data;
@@ -47,8 +54,14 @@ export class CondicionPagoComponent implements OnInit {
                     this.condicionpagos
                 );
                 this.dataSource.paginator = this.paginator;
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
             },
             err => {
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
                 console.log(err.error);
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
@@ -85,7 +98,7 @@ export class CondicionPagoComponent implements OnInit {
     }
 
     deleteItem(id: number): void {
-        this.condicionpagoService.eliminarCondicionPago(id).subscribe(
+        this.condicionPagoService.eliminarCondicionPago(id).subscribe(
             result => {
                 console.log(result);
                 this.cargarCondicionPagos();
@@ -104,16 +117,39 @@ export class CondicionPagoComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
-    openDialog(event: any, condicionpago: CondicionPago): void {
+    reactivateItem(condicionpago: CondicionPago): void {
+        condicionpago.estado = 'ACTIVO';
+        this.condicionPagoService.editarCondicionPago(condicionpago).subscribe(
+            result => {
+                console.log(result);
+                this.cargarCondicionPagos();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, condicionpago: CondicionPago): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
-                title: "Eliminar condicion de pago",
-                msg: "¿Está seguro que desea eliminar esta condicion de pago?"
+                title: 'Eliminar esta Condicion de pago',
+                msg: '¿Está seguro que desea eliminar esta condicion de pago?'
             }
         });
 
@@ -121,6 +157,24 @@ export class CondicionPagoComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.deleteItem(condicionpago.id);
+            }
+        });
+    }
+
+    reactivate(event: any, condicionpago: CondicionPago): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar condicion de pago',
+                msg: '¿Está seguro que desea reactivar esta condicion de pago?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(condicionpago);
             }
         });
     }

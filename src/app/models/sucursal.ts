@@ -4,4 +4,5 @@ export class Sucursal {
     id: number;
     descripcion: string;
     ciudad: Ciudad;
+    estado: string;
 }

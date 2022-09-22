@@ -7,6 +7,7 @@ import {UIService} from '../../../../../services/ui.service';
 import {Ciudad} from '../../../../../models/ciudad';
 import {Sucursal} from '../../../../../models/sucursal';
 import {CiudadService} from '../../../../../services/ciudad.service';
+import {UtilService} from '../../../../../services/util.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class SucursalDialogComponent implements OnInit {
         private uiService: UIService,
         private sucursalService: SucursalService,
         private ciudadService: CiudadService,
+        private utils: UtilService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -103,7 +105,7 @@ export class SucursalDialogComponent implements OnInit {
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.descripcion = this.form.get('descripcion').value;
+        this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
         this.item.ciudad = this.form.get('ciudad').value;
     }
 
@@ -133,8 +135,7 @@ export class SucursalDialogComponent implements OnInit {
 
         this.setAtributes();
         this.item.id = 0;
-        console.log(this.item);
-
+        if (this.utils.tieneLetras(this.item.descripcion)) {
         // Llama al servicio que almacena el objeto {PriceListDraft}
         this.sucursalService.guardarSucursal(this.item)
             .subscribe(data => {
@@ -159,39 +160,47 @@ export class SucursalDialogComponent implements OnInit {
 
                 }
             );
+        } else {
+            this.uiService.showSnackbar(
+                'La descripción no puede ser solo númerica.',
+                'Cerrar',
+                5000
+            );
+        }
     }
 
     // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
 
         // Asigna los valores del formulario al objeto a almacenar
-        console.log(this.item);
         this.setAtributes();
-        console.log(this.item);
 
         // Llama al servicio http que actualiza el objeto.
-        this.sucursalService.editarSucursal(this.item)
-            .subscribe(data => {
+        if (this.utils.tieneLetras(this.item.descripcion)) {
+        this.sucursalService.editarSucursal(this.item).subscribe(data => {
                     console.log(data);
-
                     this.uiService.showSnackbar(
                         'Modificado exitosamente.',
                         'Cerrar',
                         3000
                     );
 
-                    this.dialogRef.close(data);
-                },
-                (error) => {
-                    console.error('[ERROR]: ', error);
+            this.dialogRef.close(data);
+        }, (error) => {
+            console.error('[ERROR]: ', error);
 
-                    this.uiService.showSnackbar(
-                        'Ha ocurrido un error.',
-                        'Cerrar',
-                        3000
-                    );
-                }
+            this.uiService.showSnackbar(
+                'Ha ocurrido un error.',
+                'Cerrar',
+                3000
             );
+        });
+        } else {
+            this.uiService.showSnackbar(
+                'La descripción no puede ser solo númerica.',
+                'Cerrar',
+                5000
+            );
+        }
     }
-
 }

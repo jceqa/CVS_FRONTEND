@@ -25,8 +25,8 @@ export class SucursalService {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
     }
 
-    public getSucursales(): Observable<Sucursal[]> {
-        return this.http.get<Sucursal[]>(this.baseUrl);
+    public getSucursales(all: boolean = false): Observable<Sucursal[]> {
+        return this.http.get<Sucursal[]>(this.baseUrl + `?all=${all}`);
     }
 
     public getSucursalById(idSucursal: number): Observable<Sucursal> {

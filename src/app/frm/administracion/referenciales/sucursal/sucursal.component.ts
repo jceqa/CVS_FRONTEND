@@ -7,6 +7,7 @@ import { SucursalDialogComponent } from './sucursal-dialog/sucursal-dialog.compo
 import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
 import {SucursalService} from '../../../../services/sucursal.service';
+import {UtilService} from '../../../../services/util.service';
 
 @Component({
     selector: 'app-sucursal',
@@ -27,10 +28,12 @@ export class SucursalComponent implements OnInit {
     pagina = 1;
     numeroResultados = 5;
 
+    all = false;
     constructor(
         private sucursalService: SucursalService,
         private dialog: MatDialog,
         private uiService: UIService,
+        private util: UtilService
     ) { }
 
     ngOnInit(): void {
@@ -38,7 +41,8 @@ export class SucursalComponent implements OnInit {
     }
 
     cargarSucursales() {
-        this.sucursalService.getSucursales().subscribe(
+        this.util.startLoading();
+        this.sucursalService.getSucursales(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.sucursales = data;
@@ -47,8 +51,14 @@ export class SucursalComponent implements OnInit {
                     this.sucursales
                 );
                 this.dataSource.paginator = this.paginator;
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
             },
             err => {
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
                 console.log(err.error);
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
@@ -107,7 +117,30 @@ export class SucursalComponent implements OnInit {
         );
     }
 
-    openDialog(event: any, sucursal: Sucursal): void {
+    reactivateItem(sucursal: Sucursal): void {
+        sucursal.estado = 'ACTIVO';
+        this.sucursalService.editarSucursal(sucursal).subscribe(
+            result => {
+                console.log(result);
+                this.cargarSucursales();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, sucursal: Sucursal): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
@@ -121,6 +154,24 @@ export class SucursalComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.deleteItem(sucursal.id);
+            }
+        });
+    }
+
+    reactivate(event: any, sucursal: Sucursal): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Sucursal',
+                msg: '¿Está seguro que desea reactivar esta sucursal?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(sucursal);
             }
         });
     }

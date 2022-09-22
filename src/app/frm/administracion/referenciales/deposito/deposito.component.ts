@@ -7,6 +7,7 @@ import {DepositoDialogComponent} from './deposito-dialog/deposito-dialog.compone
 import {UIService} from '../../../../services/ui.service';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 import {DepositoService} from '../../../../services/deposito.service';
+import {UtilService} from '../../../../services/util.service';
 
 @Component({
     selector: 'app-deposito',
@@ -27,10 +28,12 @@ export class DepositoComponent implements OnInit {
     pagina = 1;
     numeroResultados = 5;
 
+    all = false;
     constructor(
         private depositoService: DepositoService,
         private dialog: MatDialog,
         private uiService: UIService,
+        private util: UtilService
     ) {
     }
 
@@ -39,6 +42,7 @@ export class DepositoComponent implements OnInit {
     }
 
     cargarDepositos() {
+        this.util.startLoading();
         this.depositoService.getDepositos().subscribe(
             (data) => {
                 console.log(data);
@@ -48,6 +52,7 @@ export class DepositoComponent implements OnInit {
                     this.depositos
                 );
                 this.dataSource.paginator = this.paginator;
+                this.util.stopLoading();
             },
             err => {
                 console.log(err.error);

@@ -81,7 +81,7 @@ export class CiudadDialogComponent implements OnInit {
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.descripcion = this.form.get('descripcion').value;
+        this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
     }
 
     dismiss(result?: any) {

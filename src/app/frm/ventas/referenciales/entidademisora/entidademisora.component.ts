@@ -1,17 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { EntidadEmisoraService } from '../../../../services/entidademisora.service';
-import { EntidadEmisora } from '../../../../models/entidadEmisora';
-import { MatDialog } from '@angular/material/dialog';
-import { EntidadEmisoraDialogComponent } from './entidademisora-dialog/entidademisora-dialog.component';
-import { UIService } from '../../../../services/ui.service';
-import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {EntidadEmisoraService} from '../../../../services/entidademisora.service';
+import {EntidadEmisora} from '../../../../models/entidadEmisora';
+import {MatDialog} from '@angular/material/dialog';
+import {EntidadEmisoraDialogComponent} from './entidademisora-dialog/entidademisora-dialog.component';
+import {UIService} from '../../../../services/ui.service';
+import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
+import {UtilService} from '../../../../services/util.service';
+
 
 @Component({
-    selector: 'app-entidademisora',
-    templateUrl: './entidademisora.component.html',
-    styleUrls: ['./entidademisora.component.css']
+    selector: 'app-entidad-emisora',
+    templateUrl: './entidad-emisora.component.html',
+    styleUrls: ['./entidad-emisora.component.css']
 })
 export class EntidadEmisoraComponent implements OnInit {
 
@@ -27,18 +29,23 @@ export class EntidadEmisoraComponent implements OnInit {
     pagina = 1;
     numeroResultados = 5;
 
+    all = false;
+
     constructor(
         private entidademisoraService: EntidadEmisoraService,
         private dialog: MatDialog,
         private uiService: UIService,
-    ) { }
+        private util: UtilService
+    ) {
+    }
 
     ngOnInit(): void {
         this.cargarEntidadEmisoras();
     }
 
     cargarEntidadEmisoras() {
-        this.entidademisoraService.getEntidadEmisoras().subscribe(
+        this.util.startLoading();
+        this.entidademisoraService.getEntidadEmisoras(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.entidademisoras = data;
@@ -47,8 +54,14 @@ export class EntidadEmisoraComponent implements OnInit {
                     this.entidademisoras
                 );
                 this.dataSource.paginator = this.paginator;
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
             },
             err => {
+                // this.store.dispatch(new UI.StopLoading());
+                // this.util.localStorageSetItem('loading', 'false');
+                this.util.stopLoading();
                 console.log(err.error);
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
@@ -104,16 +117,39 @@ export class EntidadEmisoraComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
-    openDialog(event: any, entidademisora: EntidadEmisora): void {
+    reactivateItem(entidademisora: EntidadEmisora): void {
+        entidademisora.estado = 'ACTIVO';
+        this.entidademisoraService.editarEntidadEmisora(entidademisora).subscribe(
+            result => {
+                console.log(result);
+                this.cargarEntidadEmisoras();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, entidademisora: EntidadEmisora): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
-                title: "Eliminar Entidad Emisora",
-                msg: "¿Está seguro que desea eliminar esta Entidad Emisora?"
+                title: 'Eliminar esta Entidad',
+                msg: '¿Está seguro que desea eliminar esta entidad?'
             }
         });
 
@@ -121,6 +157,24 @@ export class EntidadEmisoraComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.deleteItem(entidademisora.id);
+            }
+        });
+    }
+
+    reactivate(event: any, entidademisora: EntidadEmisora): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Entidad',
+                msg: '¿Está seguro que desea reactivar esta entidad?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(entidademisora);
             }
         });
     }
