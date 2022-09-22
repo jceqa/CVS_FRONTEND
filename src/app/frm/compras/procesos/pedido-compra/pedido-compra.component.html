@@ -84,15 +84,15 @@
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
                     <mat-cell *matCellDef="let dato">
 
-                        <button color="primary" mat-icon-button (click)="openDialog(dato)">
+                        <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(dato)">
                             <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                         </button>
 
-                        <!--<button matTooltip="Editar" *ngIf="dato.estado === 'ACTIVO'" color="primary" mat-icon-button (click)="editItem(dato)">
-                            <mat-icon aria-label="Editar item">mode_edit</mat-icon>
+                        <button [disabled]="dato.estadoPedido.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                            <mat-icon aria-label="Editar item">block</mat-icon>
                         </button>
 
-                        <button matTooltip="Eliminar" *ngIf="dato.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">
+                        <!--<button matTooltip="Eliminar" *ngIf="dato.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">
                             <mat-icon>delete</mat-icon>
                         </button>
 

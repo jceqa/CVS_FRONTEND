@@ -35,4 +35,8 @@ export class PedidoCompraService {
     public editarPedidoCompra(pedidoCompra: PedidoCompra): Observable<any> {
         return this.http.put<any>(this.baseUrl, pedidoCompra);
     }
+
+    public anularPedidoCompra(pedidoCompra: PedidoCompra): Observable<any> {
+        return this.http.put<any>(this.baseUrl + 'anular', pedidoCompra);
+    }
 }

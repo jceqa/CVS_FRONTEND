@@ -7,6 +7,7 @@ import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
 import {PedidoCompraService} from '../../../../services/pedidocompra.service';
 import {PedidoCompraDialogComponent} from './pedido-compra-dialog/pedido-compra-dialog.component';
+import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-pedido-compra',
@@ -78,9 +79,51 @@ export class PedidoCompraComponent implements OnInit {
 
     }
 
+    anular(dato: PedidoCompra): void {
+        this.util.startLoading();
+        this.pedidoCompraService.anularPedidoCompra(dato).subscribe(
+            result => {
+                console.log(result);
+                this.cargar();
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    'Anulado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    anularDialog(event: any, pedidoCompra: PedidoCompra): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Anular Pedido Compra',
+                msg: '¿Está seguro que desea anular este Pedido de Compra?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.anular(pedidoCompra);
+            }
+        });
+    }
+
     openDialog(item: PedidoCompra): void {
         const dialogRef = this.dialog.open(PedidoCompraDialogComponent, {
-            minWidth: '60%',
+            minWidth: '70%',
             // maxWidth: '600px',
             disableClose: true,
             data: {
@@ -89,6 +132,7 @@ export class PedidoCompraComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
+            // debugger;
             if (result) {
                 this.cargar();
             }

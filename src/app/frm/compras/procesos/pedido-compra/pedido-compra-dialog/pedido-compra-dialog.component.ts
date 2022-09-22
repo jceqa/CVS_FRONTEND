@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
 import {PedidoCompra} from '../../../../../models/pedidoCompra';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
 import {UtilService} from '../../../../../services/util.service';
 import {PedidoCompraService} from '../../../../../services/pedidocompra.service';
@@ -18,6 +18,7 @@ import {SucursalService} from '../../../../../services/sucursal.service';
 import {DepositoService} from '../../../../../services/deposito.service';
 import {Usuario} from '../../../../../models/usuario';
 import {Estado} from '../../../../../models/estado';
+import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-pedido-compra-dialog',
@@ -59,6 +60,7 @@ export class PedidoCompraDialogComponent implements OnInit {
         private utils: UtilService,
         private sucursalService: SucursalService,
         private depositoService: DepositoService,
+        private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -355,6 +357,48 @@ export class PedidoCompraDialogComponent implements OnInit {
                 5000
             );
         }
+    }
+
+    anular(dato: PedidoCompra): void {
+        this.utils.startLoading();
+        this.pedidoCompraService.anularPedidoCompra(dato).subscribe(
+            data => {
+                console.log(data);
+                this.utils.stopLoading();
+                this.uiService.showSnackbar(
+                    'Anulado Exitosamente.',
+                    'Cerrar',
+                    3000
+                );
+                this.dialogRef.close(true);
+            }, error => {
+                console.log(error);
+                this.utils.stopLoading();
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    anularDialog(event: any): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Anular Pedido Compra',
+                msg: '¿Está seguro que desea anular este Pedido de Compra?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.anular(this.item);
+            }
+        });
     }
 
 }
