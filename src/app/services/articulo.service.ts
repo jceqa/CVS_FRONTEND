@@ -24,8 +24,8 @@ export class ArticuloService {
     return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
   }
 
-  public getArticulos(): Observable<Articulo[]> {
-    return this.http.get<Articulo[]>(this.baseUrl);
+  public getArticulos(all = false): Observable<Articulo[]> {
+    return this.http.get<Articulo[]>(this.baseUrl + `?all=${all}`);
   }
 
   public getArticuloById(idArticulo: number): Observable<Articulo> {

@@ -61,7 +61,7 @@ export class EstadoComponent implements OnInit {
 
     addItem(): void {
 
-        const item = new Estado();
+        const item = new Estado(0);
 
         this.editItem(item);
 
@@ -104,16 +104,16 @@ export class EstadoComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
     openDialog(event: any, estado: Estado): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
-                title: "Eliminar Estado",
-                msg: "¿Está seguro que desea eliminar este Estado?"
+                title: 'Eliminar Estado',
+                msg: '¿Está seguro que desea eliminar este Estado?'
             }
         });
 
