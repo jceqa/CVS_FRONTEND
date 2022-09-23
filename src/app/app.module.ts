@@ -59,6 +59,10 @@ import {ProveedorComponent} from './frm/compras/referenciales/proveedor/proveedo
 import {ProveedorDialogComponent} from './frm/compras/referenciales/proveedor/proveedor-dialog/proveedor-dialog.component';
 import {MyCurrencyPipe} from './pipes/my-currency-pipe';
 import {MyCurrencyFormatterDirective} from './directives/my-currency-formatter-directive';
+import {PedidoCompraComponent} from './frm/compras/procesos/pedido-compra/pedido-compra.component';
+import {
+    PedidoCompraDialogComponent
+} from './frm/compras/procesos/pedido-compra/pedido-compra-dialog/pedido-compra-dialog.component';
 
 @NgModule({
     declarations: [
@@ -97,6 +101,8 @@ import {MyCurrencyFormatterDirective} from './directives/my-currency-formatter-d
         DepositoDialogComponent,
         ProveedorComponent,
         ProveedorDialogComponent,
+        PedidoCompraComponent,
+        PedidoCompraDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

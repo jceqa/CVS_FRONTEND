@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     ngOnInit(): void {
         this.util.localStorageSetItem('loading', 'false');
         this.token = localStorage.getItem('token');
-        this.userId = parseInt(localStorage.getItem('userid'), 10);
+        this.userId = this.util.getUserId();
         console.log('user id : ', this.userId);
         if (this.userId) {
             this.util.startLoading();

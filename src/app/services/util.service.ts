@@ -347,4 +347,8 @@ export class UtilService {
     public stopLoading(): void {
         this.localStorageSetItem('loading', 'false');
     }
+
+    public getUserId(): number {
+        return parseInt(localStorage.getItem('userid'), 10);
+    }
 }

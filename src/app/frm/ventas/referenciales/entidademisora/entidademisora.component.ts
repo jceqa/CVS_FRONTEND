@@ -11,9 +11,9 @@ import {UtilService} from '../../../../services/util.service';
 
 
 @Component({
-    selector: 'app-entidad-emisora',
-    templateUrl: './entidad-emisora.component.html',
-    styleUrls: ['./entidad-emisora.component.css']
+    selector: 'app-entidademisora',
+    templateUrl: './entidademisora.component.html',
+    styleUrls: ['./entidademisora.component.css']
 })
 export class EntidadEmisoraComponent implements OnInit {
 

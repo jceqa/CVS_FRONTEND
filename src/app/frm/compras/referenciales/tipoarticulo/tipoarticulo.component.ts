@@ -9,9 +9,9 @@ import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-tipo-articulo.component.ts',
-    templateUrl: './tipoArticulo.component.html',
-    styleUrls: ['./tipoArticulo.component.css']
+    selector: 'app-tipoarticulo.component.ts',
+    templateUrl: './tipoarticulo.component.html',
+    styleUrls: ['./tipoarticulo.component.css']
 })
 export class TipoArticuloComponent implements OnInit {
 

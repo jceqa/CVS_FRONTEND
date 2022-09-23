@@ -47,4 +47,8 @@ export class SucursalService {
     public eliminarSucursal(idSucursal: number): Observable<any> {
         return this.http.delete<any>(this.baseUrl + `${idSucursal}`);
     }
+
+    public getSucursalByUserId(userId: number): Observable<Sucursal[]> {
+        return this.http.get<Sucursal[]>(this.baseUrl + `user/${userId}`);
+    }
 }

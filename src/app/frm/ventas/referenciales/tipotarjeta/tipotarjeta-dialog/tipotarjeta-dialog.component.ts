@@ -8,9 +8,9 @@ import {UIService} from '../../../../../services/ui.service';
 import {UtilService} from '../../../../../services/util.service';
 
 @Component({
-    selector: 'app-tipo-tarjeta-dialog',
-    templateUrl: './tipo-tarjeta-dialog.component.html',
-    styleUrls: ['./tipo-tarjeta-dialog.component.css']
+    selector: 'app-tipotarjeta',
+    templateUrl: './tipotarjeta-dialog.component.html',
+    styleUrls: ['./tipotarjeta-dialog.component.css']
 })
 export class TipoTarjetaDialogComponent implements OnInit {
 

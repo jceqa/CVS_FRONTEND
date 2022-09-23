@@ -47,4 +47,8 @@ export class DepositoService {
     public eliminarDeposito(idDeposito: number): Observable<any> {
         return this.http.delete<any>(this.baseUrl + `${idDeposito}`);
     }
+
+    public listDepositosBySucursal(idSucursal: number): Observable<Deposito[]> {
+        return this.http.get<Deposito[]>(this.baseUrl + `sucursal/${idSucursal}`);
+    }
 }

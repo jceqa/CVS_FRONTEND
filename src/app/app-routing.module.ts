@@ -14,6 +14,7 @@ import { EstadoComponent } from './frm/administracion/referenciales/estado/estad
 import {ArticuloComponent} from './frm/compras/referenciales/articulo/articulo.component';
 import {TipoTarjetaComponent} from './frm/ventas/referenciales/tipotarjeta/tipotarjeta.component';
 import {ProveedorComponent} from './frm/compras/referenciales/proveedor/proveedor.component';
+import {PedidoCompraComponent} from './frm/compras/procesos/pedido-compra/pedido-compra.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -29,6 +30,7 @@ const routes: Routes = [
     { path: 'articulo', component: ArticuloComponent},
     { path: 'tipotarjeta', component: TipoTarjetaComponent},
     { path: 'proveedor', component: ProveedorComponent},
+    { path: 'pedidocompra', component: PedidoCompraComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];
