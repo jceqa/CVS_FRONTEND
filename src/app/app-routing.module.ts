@@ -16,6 +16,7 @@ import {TipoTarjetaComponent} from './frm/ventas/referenciales/tipotarjeta/tipot
 import {ProveedorComponent} from './frm/compras/referenciales/proveedor/proveedor.component';
 import {PedidoCompraComponent} from './frm/compras/procesos/pedido-compra/pedido-compra.component';
 import {PresupuestoCompraComponent} from './frm/compras/procesos/presupuesto-compra/presupuesto-compra.component';
+import {OrdenCompraComponent} from './frm/compras/procesos/orden-compra/orden-compra.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -33,6 +34,7 @@ const routes: Routes = [
     { path: 'proveedor', component: ProveedorComponent},
     { path: 'pedidocompra', component: PedidoCompraComponent},
     { path: 'presupuestocompra', component: PresupuestoCompraComponent},
+    { path: 'ordencompra', component: OrdenCompraComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

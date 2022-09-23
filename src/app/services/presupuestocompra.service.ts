@@ -38,4 +38,8 @@ export class PresupuestoCompraService {
     public anularPresupuestoCompra(presupuestoCompra: PresupuestoCompra): Observable<any> {
         return this.http.put<any>(this.baseUrl + 'anular', presupuestoCompra);
     }
+
+    public getPresupuestosCompraPendientes(): Observable<PresupuestoCompra[]> {
+        return this.http.get<PresupuestoCompra[]>(this.baseUrl + 'pendientes');
+    }
 }

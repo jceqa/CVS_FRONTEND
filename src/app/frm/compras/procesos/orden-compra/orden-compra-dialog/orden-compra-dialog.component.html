@@ -1,0 +1,261 @@
+<h4 mat-dialog-title>{{ title }} Orden de Compra</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <!--<div class="mt-2" *ngIf="formType === 1">
+            <mat-form-field class="full-with-field" >
+                <input id="id" formControlName="id" matInput placeholder="Id" readonly />
+            </mat-form-field>
+        </div>-->
+
+
+        <div style="display: flex">
+            <div class="third-width-field">
+                <span>Nro Orden: {{ item.id }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Estado: {{ estadoOrden }}</span>
+            </div>
+        </div>
+
+        <div>
+            <div *ngIf="this.formType === 1">
+                <br/>
+                <span >Presupuesto de Compra: {{ item.presupuestoCompra.observacion }} | {{ item.presupuestoCompra.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ item.presupuestoCompra.usuario.nombre }} |  {{ item.presupuestoCompra.proveedor.razonSocial }} |
+                    {{ item.presupuestoCompra.total }}</span>
+                <br/>
+            </div>
+
+            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+                <input type="text"
+                       placeholder="Presupuesto de Compra"
+                       matInput
+                       [formControl]="presupuestosControl"
+                       [matAutocomplete]="autoPresupuesto"
+                       class="text">
+                <mat-autocomplete #autoPresupuesto="matAutocomplete" [displayWith]="displayPresupuesto">
+                    <mat-option *ngFor="let presupuesto of presupuestosFiltered | async" [value]="presupuesto"
+                                (onSelectionChange)="selectedPresupuesto($event)">
+                        {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
+                        {{ presupuesto.usuario.nombre }} | {{ presupuesto.proveedor.razonSocial }} | {{ presupuesto.total }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input [disabled]="this.formType === 1" id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="this.formType === 1">
+            <span>Condición Pago: {{ item.condicionPago.descripcion}}</span>
+        </div>
+        <br/>
+        <div style="display: flex" *ngIf="this.formType === 1 && this.item.condicionPago.id === 2">
+            <div class="third-width-field">
+                <span>Cantidad Cuotas: {{ item.cantidadCuota }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Intervalo (días): {{ item.intervalo }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Monto Cuota: {{ item.montoCuota | myCurrency }}</span>
+            </div>
+        </div>
+        <br/>
+
+        <div *ngIf="this.formType !== 1">
+            <mat-form-field class="middle-width-field">
+                <mat-label>Condición Pago</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="condicionPago">
+                    <mat-option *ngFor="let condicionPago of condicionesPago" [value]="condicionPago" (onSelectionChange)="tipoPagoSelected($event)">
+                        {{condicionPago.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="condicionPagoType === 2">
+            <mat-form-field class="third-width-field">
+                <mat-label>Cantidad Cuotas</mat-label>
+                <mat-select formControlName="cantidadCuota">
+                    <mat-option *ngFor="let cantidadCuota of cantidadCuotas" [value]="cantidadCuota"
+                                (onSelectionChange)="cantidadCuotaSelected($event)">
+                        {{cantidadCuota}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="third-width-field">
+                <mat-label>Intervalo</mat-label>
+                <mat-select formControlName="intervalo">
+                    <mat-option *ngFor="let intervalo of intervalos" [value]="intervalo">
+                        {{intervalo}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="third-width-field">
+                <mat-label>Monto Cuota</mat-label>
+                    <input readonly id="montoCuota" formControlName="montoCuota" matInput placeholder="Monto Cuota"
+                           autocomplete="off" myCurrencyFormatter (change)="setNumber($event, 'montoCuota')"/>
+            </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h4>Detalles</h4>
+        <!-- <div class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field>
+                <input type="text"
+                       placeholder="Artículo"
+                       matInput
+                       [formControl]="myControl"
+                       [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="display">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+                                (onSelectionChange)="selected($event)">
+                        {{option.codigoGenerico}} | {{option.descripcion}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field>
+                <input type=number id="cantidad" formControlName="cantidadArticulo" matInput
+                       placeholder="Cantidad"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+            &nbsp;
+            <button matTooltip="Agregar Item" color="primary" mat-icon-button
+                    (click)="addItem()">
+                <mat-icon aria-label="Agregar Item">add_circle</mat-icon>
+            </button>
+
+        </div> -->
+        <div align="end">
+            <h3>Total: {{total | myCurrency}}</h3>
+        </div>
+
+        <div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Código</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span> {{ dato.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.codigoGenerico }} </span>
+                    </mat-cell>
+                    >
+                </ng-container>
+
+                <ng-container matColumnDef="item">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Item</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.descripcion }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cantidad">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Cantidad</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="precio">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Precio</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.presupuestoCompraDetalle.monto | myCurrency }}
+                    </mat-cell>
+                    <!--<mat-cell *matCellDef="let dato;let index = index" class="texto-tabla">
+                        <input id="precioCompra" matInput [value]="dato.presupuestoCompraDetalle.monto"
+                               autocomplete="off" myCurrencyFormatter (blur)="setNumber($event, index)"
+                               (keydown)="onKeydown($event, index)"/>
+
+                    </mat-cell>-->
+                </ng-container>
+
+                <ng-container matColumnDef="total">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Sub Total</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.presupuestoCompraDetalle.monto * dato.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}
+                    </mat-cell>
+                </ng-container>
+
+                <!--<ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let dato">
+
+                        <<button color="primary" mat-icon-button (click)="viewDetail(dato)">
+                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
+                        </button>
+
+                        <button matTooltip="Aumentar" color="primary" mat-icon-button
+                                (click)="incItem(dato)" *ngIf="formType !== 1">
+                            <mat-icon aria-label="Aumentar item">add_circle_outline</mat-icon>
+                        </button>
+
+                        <button matTooltip="Disminuir" color="primary" mat-icon-button
+                                (click)="descItem(dato)" [disabled]="dato.cantidad === 1" *ngIf="formType !== 1">
+                            <mat-icon aria-label="Disminuir item">remove_circle_outline</mat-icon>
+                        </button>
+
+                        <button matTooltip="Eliminar" color="warn" mat-icon-button
+                                (click)="deleteItem(dato)" *ngIf="formType !== 1">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+
+                        <button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>-->
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid" *ngIf="this.formType !== 1">
+            <mat-icon>save</mat-icon>
+            Aceptar
+        </button>
+
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoOrdenCompra.id === 2" *ngIf="this.formType === 1">
+            <mat-icon>block</mat-icon>
+            Anular
+        </button>
+
+    </mat-dialog-actions>
+
+</form>
