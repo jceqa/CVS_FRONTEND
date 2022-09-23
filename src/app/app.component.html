@@ -20,8 +20,8 @@
         </div>
 
         <mat-accordion class="app-menu mat-elevation-z0">
-            <mat-expansion-panel *ngFor="let menu of menus; first as isFirst" [expanded]="isFirst"
-                class="mat-elevation-z0">
+            <!--<mat-expansion-panel *ngFor="let menu of menus; first as isFirst" [expanded]="isFirst"-->
+            <mat-expansion-panel *ngFor="let menu of menus;" class="mat-elevation-z0">
                 <mat-expansion-panel-header *ngIf="menu != null" [expandedHeight]="'40px'"
                     style="border-top: solid 1px rgb(224, 224, 224);">
                     <mat-panel-title>
@@ -33,8 +33,8 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-nav-list *ngIf="menu && menu.Items.length > 0">
-                    <mat-expansion-panel *ngFor="let item of menu.Items; first as isFirst" [expanded]="isFirst"
-                        class="mat-elevation-z0">
+                    <!--<mat-expansion-panel *ngFor="let item of menu.Items; first as isFirst" [expanded]="isFirst"-->
+                    <mat-expansion-panel *ngFor="let item of menu.Items" class="mat-elevation-z0">
                         <mat-expansion-panel-header *ngIf="menu != null && item.SubItems.length > 0" [expandedHeight]="'40px'"
                             style="border-top: solid 1px rgb(224, 224, 224);">
                             <mat-panel-title>

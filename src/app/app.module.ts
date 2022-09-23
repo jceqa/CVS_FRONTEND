@@ -63,6 +63,10 @@ import {PedidoCompraComponent} from './frm/compras/procesos/pedido-compra/pedido
 import {
     PedidoCompraDialogComponent
 } from './frm/compras/procesos/pedido-compra/pedido-compra-dialog/pedido-compra-dialog.component';
+import {PresupuestoCompraComponent} from './frm/compras/procesos/presupuesto-compra/presupuesto-compra.component';
+import {
+    PresupuestoCompraDialogComponent
+} from './frm/compras/procesos/presupuesto-compra/presupuesto-compra-dialog/presupuesto-compra-dialog.component';
 
 @NgModule({
     declarations: [
@@ -103,6 +107,8 @@ import {
         ProveedorDialogComponent,
         PedidoCompraComponent,
         PedidoCompraDialogComponent,
+        PresupuestoCompraComponent,
+        PresupuestoCompraDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

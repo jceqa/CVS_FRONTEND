@@ -12,46 +12,43 @@
 
         <div class="mt-2">
             <mat-form-field class="full-with-field">
-                <input ruc="ruc" formControlName="ruc" required matInput placeholder="Ruc"
+                <input id="ruc" formControlName="ruc" required matInput placeholder="Ruc"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
 
         <div class="mt-2">
             <mat-form-field class="full-with-field">
-                <input ruc="razon" formControlName="razon" required matInput placeholder="Razon"
+                <input id="razon" formControlName="razon" required matInput placeholder="Razon"
+                    autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input id="direccion" formControlName="direccion" required matInput placeholder="Direccion"
+                    autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input id="correo" formControlName="correo" required matInput placeholder="Correo"
+                    autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input id="telefono" formControlName="telefono" required matInput placeholder="Telefono"
                     autocomplete="off" />
             </mat-form-field>
         </div>
 
         <div class="mt-2">
             <mat-form-field class="full-with-field">
-                <input ruc="direccion" formControlName="direccion" required matInput placeholder="Direccion"
-                    autocomplete="off" />
-            </mat-form-field>
-        </div>
-
-        <div class="mt-2">
-            <mat-form-field class="full-with-field">
-                <input ruc="correo" formControlName="correo" required matInput placeholder="Correo"
-                    autocomplete="off" />
-            </mat-form-field>
-        </div>
-
-        <div class="mt-2">
-            <mat-form-field class="full-with-field">
-                <input ruc="telefono" formControlName="telefono" required matInput placeholder="Telefono"
-                    autocomplete="off" />
-            </mat-form-field>
-        </div>
-
-
-
-        <div class="mt-2">
-            <mat-form-field>
                 <mat-label>Ciudad</mat-label>
                 <mat-select [compareWith]="compareFunction" formControlName="ciudad">
-                    <mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>
                     <mat-option *ngFor="let ciudad of ciudades" [value]="ciudad" >
                         {{ciudad.descripcion}}
                     </mat-option>

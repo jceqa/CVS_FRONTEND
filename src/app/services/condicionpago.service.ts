@@ -18,18 +18,18 @@ export class CondicionPagoService {
         return this.accountService.getAuthHeather();
       }
 
-    private baseUrl = "api/condicionPago/";
+    private baseUrl = 'api/condicionPago/';
 
     public buscarCondicionPagos(cantRegistros: number, pag: number, texto): Observable<any> {
-        return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`)
+        return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
     }
 
-    public getCondicionPagos(): Observable<CondicionPago[]> {
-        return this.http.get<CondicionPago[]>(this.baseUrl)
+    public getCondicionPagos(all: boolean = false): Observable<CondicionPago[]> {
+        return this.http.get<CondicionPago[]>(this.baseUrl + `?all=${all}`);
     }
 
     public getCondicionPagoById(idCondicionPago: number): Observable<CondicionPago> {
-        return this.http.get<CondicionPago>(this.baseUrl + `${idCondicionPago}`)
+        return this.http.get<CondicionPago>(this.baseUrl + `${idCondicionPago}`);
     }
 
     public guardarCondicionPago(condicionpago: CondicionPago): Observable<any> {
@@ -40,10 +40,10 @@ export class CondicionPagoService {
     }
 
     public editarCondicionPago(condicionpago: CondicionPago): Observable<any> {
-        return this.http.put<any>(this.baseUrl, condicionpago)
+        return this.http.put<any>(this.baseUrl, condicionpago);
     }
 
     public eliminarCondicionPago(idCondicionPago: number): Observable<any> {
-        return this.http.delete<any>(this.baseUrl + `${idCondicionPago}`)
+        return this.http.delete<any>(this.baseUrl + `${idCondicionPago}`);
     }
 }

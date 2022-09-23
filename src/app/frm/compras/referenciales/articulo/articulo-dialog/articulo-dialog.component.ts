@@ -11,6 +11,7 @@ import {MarcaService} from '../../../../../services/marca.service';
 import {TipoArticuloService} from '../../../../../services/tipoarticulo.service';
 import {ImpuestoService} from '../../../../../services/impuesto.service';
 import {Articulo} from '../../../../../models/articulo';
+import {UtilService} from '../../../../../services/util.service';
 
 @Component({
     selector: 'app-articulo-dialog',
@@ -40,6 +41,7 @@ export class ArticuloDialogComponent implements OnInit {
         private marcaService: MarcaService,
         private tipoArticuloService: TipoArticuloService,
         private impuestoService: ImpuestoService,
+        private utils: UtilService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -71,13 +73,16 @@ export class ArticuloDialogComponent implements OnInit {
             this.formType = FormType.NEW;
         }
 
+        this.utils.startLoading();
         this.marcaService.getMarcas().subscribe(
             (data) => {
                 console.log(data);
                 this.marcas = data;
+                this.utils.stopLoading();
             },
             err => {
                 console.log(err.error);
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -86,13 +91,16 @@ export class ArticuloDialogComponent implements OnInit {
             }
         );
 
+        this.utils.startLoading();
         this.impuestoService.getImpuestos().subscribe(
             (data) => {
                 console.log(data);
                 this.impuestos = data;
+                this.utils.stopLoading();
             },
             err => {
                 console.log(err.error);
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -101,13 +109,16 @@ export class ArticuloDialogComponent implements OnInit {
             }
         );
 
+        this.utils.startLoading();
         this.tipoArticuloService.getTipoArticulos().subscribe(
             (data) => {
                 console.log(data);
                 this.tipoArticulos = data;
+                this.utils.stopLoading();
             },
             err => {
                 console.log(err.error);
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -123,12 +134,14 @@ export class ArticuloDialogComponent implements OnInit {
 
     getArticuloById(id: number): void {
 
-        // Realiza la llamada http para obtener el objeto
+        this.utils.startLoading();
         this.articuloService.getArticuloById(id).subscribe(
             data => {
                 this.item = data as Articulo;
                 this.setForm(this.item);
+                this.utils.stopLoading();
             }, (error) => {
+                this.utils.stopLoading();
                 console.error(error);
             });
     }
@@ -154,8 +167,8 @@ export class ArticuloDialogComponent implements OnInit {
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
-        this.item.precioCompra = parseInt(this.form.get('precioCompra').value.toString().replace(/[.]/g, ''), 10);
-        this.item.precioVenta = parseInt(this.form.get('precioVenta').value.toString().replace(/[.]/g, ''), 10);
+        this.item.precioCompra = this.utils.getNumber(this.form.get('precioCompra').value);
+        this.item.precioVenta = this.utils.getNumber(this.form.get('precioVenta').value);
         this.item.codigoGenerico = this.form.get('codigo').value;
         this.item.marca = this.form.get('marca').value;
         this.item.impuesto = this.form.get('impuesto').value;
@@ -190,12 +203,12 @@ export class ArticuloDialogComponent implements OnInit {
         this.item.id = 0;
         console.log(this.item);
 
-        // Llama al servicio que almacena el objeto {PriceListDraft}
+        this.utils.startLoading();
         this.articuloService.guardarArticulo(this.item)
             .subscribe(data => {
                     console.log(data);
+                    this.utils.stopLoading();
                     this.dialogRef.close(data);
-
                     this.uiService.showSnackbar(
                         'Argregado exitosamente.',
                         'Cerrar',
@@ -203,9 +216,8 @@ export class ArticuloDialogComponent implements OnInit {
                     );
                 },
                 (error) => {
-
                     console.error('[ERROR]: ', error);
-
+                    this.utils.stopLoading();
                     this.uiService.showSnackbar(
                         'Ha ocurrido un error.',
                         'Cerrar',

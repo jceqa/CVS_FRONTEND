@@ -25,8 +25,8 @@ export class ProveedorService {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
     }
 
-    public getProveedores(): Observable<Proveedor[]> {
-        return this.http.get<Proveedor[]>(this.baseUrl);
+    public getProveedores(all: boolean = false): Observable<Proveedor[]> {
+        return this.http.get<Proveedor[]>(this.baseUrl + `?all=${all}`);
     }
 
     public getProveedorById(idProveedor: number): Observable<Proveedor> {

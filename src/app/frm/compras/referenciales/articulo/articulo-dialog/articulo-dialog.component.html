@@ -38,23 +38,19 @@
             </mat-form-field>
         </div>
 
-        <div class="mt-2">
-            <mat-form-field>
+        <div>
+            <mat-form-field class="middle-width-field">
                 <mat-label>Marca</mat-label>
                 <mat-select [compareWith]="compareFunction" formControlName="marca">
-                    <mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>
                     <mat-option *ngFor="let marca of marcas" [value]="marca">
                         {{marca.descripcion}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-        </div>
-
-        <div class="mt-2">
-            <mat-form-field>
+            &nbsp;
+            <mat-form-field class="middle-width-field">
                 <mat-label>Impuesto</mat-label>
                 <mat-select [compareWith]="compareFunction" formControlName="impuesto">
-                    <mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>
                     <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
                         {{impuesto.descripcion}}
                     </mat-option>
@@ -66,7 +62,6 @@
             <mat-form-field>
                 <mat-label>Tipo</mat-label>
                 <mat-select [compareWith]="compareFunction" formControlName="tipo">
-                    <mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>
                     <mat-option *ngFor="let tipo of tipoArticulos" [value]="tipo">
                         {{tipo.descripcion}}
                     </mat-option>

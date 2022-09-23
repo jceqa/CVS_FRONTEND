@@ -21,8 +21,8 @@ export class TipoArticuloService {
 
     private baseUrl = 'api/tipoarticulo/';
 
-    public getTipoArticulos(): Observable<TipoArticulo[]> {
-        return this.http.get<TipoArticulo[]>(this.baseUrl);
+    public getTipoArticulos(all = false): Observable<TipoArticulo[]> {
+        return this.http.get<TipoArticulo[]>(this.baseUrl + `?all=${all}`);
     }
 
     public getTipoArticuloById(id: number): Observable<TipoArticulo> {

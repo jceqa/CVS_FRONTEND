@@ -7,6 +7,7 @@ import { ArticuloDialogComponent } from './articulo-dialog/articulo-dialog.compo
 import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
 import {ArticuloService} from '../../../../services/articulo.service';
+import {UtilService} from '../../../../services/util.service';
 
 @Component({
     selector: 'app-articulo',
@@ -31,6 +32,7 @@ export class ArticuloComponent implements OnInit {
         private articuloService: ArticuloService,
         private dialog: MatDialog,
         private uiService: UIService,
+        private utils: UtilService
     ) { }
 
     ngOnInit(): void {
@@ -38,18 +40,20 @@ export class ArticuloComponent implements OnInit {
     }
 
     cargarArticulos() {
+        this.utils.startLoading();
         this.articuloService.getArticulos().subscribe(
             (data) => {
                 console.log(data);
                 this.articulos = data;
-
                 this.dataSource = new MatTableDataSource<Articulo>(
                     this.articulos
                 );
                 this.dataSource.paginator = this.paginator;
+                this.utils.stopLoading();
             },
             err => {
                 console.log(err.error);
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -85,11 +89,12 @@ export class ArticuloComponent implements OnInit {
     }
 
     deleteItem(id: number): void {
+        this.utils.startLoading();
         this.articuloService.eliminarArticulo(id).subscribe(
             result => {
                 console.log(result);
                 this.cargarArticulos();
-
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
                     'Cerrar',
@@ -97,7 +102,7 @@ export class ArticuloComponent implements OnInit {
                 );
             }, error => {
                 console.log(error);
-
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',

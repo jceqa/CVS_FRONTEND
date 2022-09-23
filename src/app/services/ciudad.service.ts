@@ -18,18 +18,18 @@ export class CiudadService {
         return this.accountService.getAuthHeather();
       }
 
-    private baseUrl = "api/ciudad/";
+    private baseUrl = 'api/ciudad/';
 
     public buscarCiudades(cantRegistros: number, pag: number, texto): Observable<any> {
-        return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`)
+        return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
     }
 
-    public getCiudades(): Observable<Ciudad[]> {
-        return this.http.get<Ciudad[]>(this.baseUrl)
+    public getCiudades(all: boolean = false): Observable<Ciudad[]> {
+        return this.http.get<Ciudad[]>(this.baseUrl + `?all=${all}`);
     }
 
     public getCiudadById(idCiudad: number): Observable<Ciudad> {
-        return this.http.get<Ciudad>(this.baseUrl + `${idCiudad}`)
+        return this.http.get<Ciudad>(this.baseUrl + `${idCiudad}`);
     }
 
     public guardarCiudad(ciudad: Ciudad): Observable<any> {
@@ -40,10 +40,10 @@ export class CiudadService {
     }
 
     public editarCiudad(ciudad: Ciudad): Observable<any> {
-        return this.http.put<any>(this.baseUrl, ciudad)
+        return this.http.put<any>(this.baseUrl, ciudad);
     }
 
     public eliminarCiudad(idCiudad: number): Observable<any> {
-        return this.http.delete<any>(this.baseUrl + `${idCiudad}`)
+        return this.http.delete<any>(this.baseUrl + `${idCiudad}`);
     }
 }

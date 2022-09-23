@@ -1,9 +1,7 @@
-import { Injectable } from "@angular/core";
-import { Store } from '@ngrx/store';
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
 import * as fromRoot from '../app.reducer';
 import * as Auth from '../reducers/account.actions';
-//import { Menu } from '../models/menu';
-
 
 @Injectable({
     providedIn: 'root'
@@ -12,9 +10,10 @@ export class LoginService {
 
     constructor(
         private store: Store<fromRoot.State>,
-    ) { }
+    ) {
+    }
 
-    //private _menu: Menu[] = [];
+    // private _menu: Menu[] = [];
 
 
     public get username(): string {
@@ -63,14 +62,13 @@ export class LoginService {
     }*/
 
 
-
     public isLoggedIn() {
         return localStorage.getItem('ACCESS_TOKEN') !== null;
     }
 
     public logout() {
         this.store.dispatch(new Auth.SetUnauthenticated());
-        console.log("Desloguear");
+        console.log('Desloguear');
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('expiration');
         sessionStorage.removeItem('menu');
@@ -93,11 +91,11 @@ export class LoginService {
     }
 
     public isAValidString(value: string): boolean {
-        if (value !== undefined && value !== null && value != "") {
-            //console.log(true);
+        if (value !== undefined && value !== null && value !== '') {
+            // console.log(true);
             return true;
         }
-        //console.log(false);
+        // console.log(false);
         return false;
     }
 

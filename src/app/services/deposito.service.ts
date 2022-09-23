@@ -25,8 +25,8 @@ export class DepositoService {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
     }
 
-    public getDepositos(): Observable<Deposito[]> {
-        return this.http.get<Deposito[]>(this.baseUrl);
+    public getDepositos(all: boolean = false): Observable<Deposito[]> {
+        return this.http.get<Deposito[]>(this.baseUrl + `?all=${all}`);
     }
 
     public getDepositoById(idDeposito: number): Observable<Deposito> {
