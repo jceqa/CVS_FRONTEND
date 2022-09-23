@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Permiso } from '../models/permiso';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {Permiso} from '../models/permiso';
 
 @Injectable({
     providedIn: 'root'
@@ -10,11 +10,12 @@ import { Permiso } from '../models/permiso';
 export class PermisoService {
 
     constructor(private http: HttpClient,
-    ) { }
+    ) {
+    }
 
-    private baseUrl = "api/permiso/";
+    private baseUrl = 'api/permiso/';
 
     public getPermisosByRolId(rolId: number): Observable<Permiso[]> {
-        return this.http.get<Permiso[]>(this.baseUrl + `rol/${rolId}`)
+        return this.http.get<Permiso[]>(this.baseUrl + `rol/${rolId}`);
     }
 }

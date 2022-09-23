@@ -351,4 +351,8 @@ export class UtilService {
     public getUserId(): number {
         return parseInt(localStorage.getItem('userid'), 10);
     }
+
+    getNumber(value: string): number {
+        return parseInt(value.toString().replace(/[.]/g, ''), 10);
+    }
 }

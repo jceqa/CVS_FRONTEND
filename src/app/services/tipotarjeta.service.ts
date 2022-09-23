@@ -10,6 +10,8 @@ import {AccountService} from './account.service';
 
 export class TipoTarjetaService {
 
+    private baseUrl = 'api/tipotarjeta/';
+
     constructor(private http: HttpClient,
                 private accountService: AccountService
     ) {
@@ -19,13 +21,11 @@ export class TipoTarjetaService {
         return this.accountService.getAuthHeather();
     }
 
-    private baseUrl = 'api/tipo-tarjeta/';
-
     public buscarTipoTarjetas(cantRegistros: number, pag: number, texto): Observable<any> {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
     }
 
-    public getTipoTarjetas(all: boolean = false): Observable<TipoTarjeta[]> {
+    public getTipoTarjetas(all = false): Observable<TipoTarjeta[]> {
         return this.http.get<TipoTarjeta[]>(this.baseUrl + `?all=${all}`);
     }
 

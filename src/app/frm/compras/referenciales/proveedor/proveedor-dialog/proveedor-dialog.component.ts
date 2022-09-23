@@ -8,6 +8,7 @@ import {Ciudad} from '../../../../../models/ciudad';
 import {Impuesto} from '../../../../../models/impuesto';
 import {CiudadService} from '../../../../../services/ciudad.service';
 import {Proveedor} from '../../../../../models/proveedor';
+import {UtilService} from '../../../../../services/util.service';
 
 @Component({
     selector: 'app-proveedor-dialog',
@@ -35,6 +36,7 @@ export class ProveedorDialogComponent implements OnInit {
         private proveedorService: ProveedorService,
         private ciudadService: CiudadService,
         private fb: FormBuilder,
+        private utils: UtilService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -65,13 +67,16 @@ export class ProveedorDialogComponent implements OnInit {
             this.formType = FormType.NEW;
         }
 
+        this.utils.startLoading();
         this.ciudadService.getCiudades().subscribe(
             (data) => {
                 console.log(data);
                 this.ciudades = data;
+                this.utils.stopLoading();
             },
             err => {
                 console.log(err.error);
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -86,14 +91,15 @@ export class ProveedorDialogComponent implements OnInit {
     }
 
     getProveedorById(id: number): void {
-
-        // Realiza la llamada http para obtener el objeto
+        this.utils.startLoading();
         this.proveedorService.getProveedorById(id).subscribe(
             data => {
                 this.item = data as Proveedor;
                 this.setForm(this.item);
+                this.utils.stopLoading();
             }, (error) => {
                 console.error(error);
+                this.utils.stopLoading();
             });
     }
 
@@ -117,10 +123,10 @@ export class ProveedorDialogComponent implements OnInit {
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.ruc = this.form.get('ruc').value;
-        this.item.razonSocial = this.form.get('razon').value;
-        this.item.direccion = this.form.get('direccion').value;
-        this.item.correo = this.form.get('correo').value;
-        this.item.telefono = this.form.get('telefono').value;
+        this.item.razonSocial = this.form.get('razon').value.toString().toUpperCase().trim();
+        this.item.direccion = this.form.get('direccion').value.toString().toUpperCase().trim();
+        this.item.correo = this.form.get('correo').value.toString().toUpperCase().trim();
+        this.item.telefono = this.form.get('telefono').value.toString().toUpperCase().trim();
         this.item.ciudad = this.form.get('ciudad').value;
     }
 
@@ -152,12 +158,12 @@ export class ProveedorDialogComponent implements OnInit {
         this.item.id = 0;
         console.log(this.item);
 
-        // Llama al servicio que almacena el objeto {PriceListDraft}
+        this.utils.startLoading();
         this.proveedorService.guardarProveedor(this.item)
             .subscribe(data => {
                     console.log(data);
+                    this.utils.stopLoading();
                     this.dialogRef.close(data);
-
                     this.uiService.showSnackbar(
                         'Argregado exitosamente.',
                         'Cerrar',
@@ -165,9 +171,8 @@ export class ProveedorDialogComponent implements OnInit {
                     );
                 },
                 (error) => {
-
                     console.error('[ERROR]: ', error);
-
+                    this.utils.stopLoading();
                     this.uiService.showSnackbar(
                         'Ha ocurrido un error.',
                         'Cerrar',
@@ -186,22 +191,21 @@ export class ProveedorDialogComponent implements OnInit {
         this.setAtributes();
         console.log(this.item);
 
-        // Llama al servicio http que actualiza el objeto.
+        this.utils.startLoading();
         this.proveedorService.editarProveedor(this.item)
             .subscribe(data => {
                     console.log(data);
-
+                    this.utils.stopLoading();
                     this.uiService.showSnackbar(
                         'Modificado exitosamente.',
                         'Cerrar',
                         3000
                     );
-
                     this.dialogRef.close(data);
                 },
                 (error) => {
                     console.error('[ERROR]: ', error);
-
+                    this.utils.stopLoading();
                     this.uiService.showSnackbar(
                         'Ha ocurrido un error.',
                         'Cerrar',

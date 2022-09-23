@@ -8,7 +8,6 @@ import {PedidoCompra} from '../models/pedidoCompra';
     providedIn: 'root'
 })
 
-
 export class PedidoCompraService {
 
     constructor(private http: HttpClient,
@@ -38,5 +37,9 @@ export class PedidoCompraService {
 
     public anularPedidoCompra(pedidoCompra: PedidoCompra): Observable<any> {
         return this.http.put<any>(this.baseUrl + 'anular', pedidoCompra);
+    }
+
+    public getPedidosCompraPendientes(): Observable<PedidoCompra[]> {
+        return this.http.get<PedidoCompra[]>(this.baseUrl + 'pendientes');
     }
 }

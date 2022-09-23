@@ -24,6 +24,7 @@ export class TipoArticuloService {
     public buscarCiudades(cantRegistros: number, pag: number, texto): Observable<any> {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
     }
+
     public getTipoArticulos(all: boolean = false): Observable<TipoArticulo[]> {
         return this.http.get<TipoArticulo[]>(this.baseUrl + `?all=${all}`);
     }

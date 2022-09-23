@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { EntidadEmisora } from '../models/entidadEmisora';
-import { AccountService } from './account.service';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {EntidadEmisora} from '../models/entidadEmisora';
+import {AccountService} from './account.service';
 
 @Injectable({
     providedIn: 'root'
@@ -11,8 +11,9 @@ import { AccountService } from './account.service';
 export class EntidadEmisoraService {
 
     constructor(private http: HttpClient,
-        private accountService: AccountService
-    ) { }
+                private accountService: AccountService
+    ) {
+    }
 
     private get headers() {
         return this.accountService.getAuthHeather();
@@ -36,7 +37,7 @@ export class EntidadEmisoraService {
         return this.http.post<any>(this.baseUrl, entidademisora, {
             headers: this.headers,
             observe: 'response'
-          });
+        });
     }
 
     public editarEntidadEmisora(entidademisora: EntidadEmisora): Observable<any> {
