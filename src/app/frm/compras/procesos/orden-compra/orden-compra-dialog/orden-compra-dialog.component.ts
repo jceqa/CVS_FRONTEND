@@ -14,10 +14,11 @@ import {PresupuestoCompraService} from '../../../../../services/presupuestocompr
 import {map, startWith} from 'rxjs/operators';
 import {Estado} from '../../../../../models/estado';
 import {Usuario} from '../../../../../models/usuario';
-import {formatDate} from '@angular/common';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
 import {CondicionPago} from '../../../../../models/condicionPago';
 import {CondicionPagoService} from '../../../../../services/condicionpago.service';
+import {Proveedor} from '../../../../../models/proveedor';
+import {ProveedorService} from '../../../../../services/proveedor.service';
 
 @Component({
     selector: 'app-orden-compra-dialog',
@@ -26,8 +27,8 @@ import {CondicionPagoService} from '../../../../../services/condicionpago.servic
 })
 export class OrdenCompraDialogComponent implements OnInit {
 
-    presupuestosControl = new FormControl('');
-    presupuestosFiltered: Observable<PresupuestoCompra[]>;
+    proveedorControl = new FormControl('');
+    proveedorFiltered: Observable<Proveedor[]>;
 
     item: OrdenCompra;
     companyId = 0;
@@ -44,7 +45,9 @@ export class OrdenCompraDialogComponent implements OnInit {
     detalles: OrdenCompraDetalle[] = [];
 
     presupuestos: PresupuestoCompra[] = [];
-    presupuestoSelected: PresupuestoCompra;
+    proveedores: Proveedor[] = [];
+    presupuestosSelected: PresupuestoCompra[];
+    proveedorSelected: Proveedor;
 
     condicionesPago: CondicionPago[] = [];
     cantidadCuotas = [3, 6, 12, 18, 24];
@@ -62,6 +65,7 @@ export class OrdenCompraDialogComponent implements OnInit {
         private utils: UtilService,
         private presupuestoCompraService: PresupuestoCompraService,
         private condicionPagoService: CondicionPagoService,
+        private proveedorService: ProveedorService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -81,13 +85,16 @@ export class OrdenCompraDialogComponent implements OnInit {
 
         if (this.data.item.id) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
-            this.title = 'Editar';
+            // this.title = 'Editar';
+            this.title = '';
             this.editID = this.data.item.id;
             // this.getMarcaById(this.data.item.id);
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.form.get('observacion').disable();
-            this.total = this.item.presupuestoCompra.total;
+            this.item.presupuestosCompra.forEach(pc => {
+                this.total += pc.total;
+            });
         } else {
             // Si no existe es una nueva lista
             this.title = 'Nueva';
@@ -95,13 +102,13 @@ export class OrdenCompraDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        this.presupuestoCompraService.getPresupuestosCompraPendientes().subscribe(data => {
+        this.proveedorService.getProveedores().subscribe(data => {
             console.log(data);
-            this.presupuestos = data;
+            this.proveedores = data;
 
-            this.presupuestosFiltered = this.presupuestosControl.valueChanges.pipe(
+            this.proveedorFiltered = this.proveedorControl.valueChanges.pipe(
                 startWith(''),
-                map(value => this._filterPresupuesto(value || '')),
+                map(value => this._filterProveedor(value || '')),
             );
             this.utils.stopLoading();
         }, error => {
@@ -147,11 +154,12 @@ export class OrdenCompraDialogComponent implements OnInit {
         this.item.estado = 'ACTIVO';
         this.item.estadoOrdenCompra = new Estado(1);
         this.item.usuario = new Usuario(this.utils.getUserId());
-        this.item.presupuestoCompra = this.presupuestoSelected;
+        this.item.presupuestosCompra = this.presupuestosSelected;
         this.item.condicionPago = this.form.get('condicionPago').value;
         this.item.ordenCompraDetalle = this.detalles;
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
-        // this.item.total = this.total;
+        this.item.proveedor = this.proveedorSelected;
+        this.item.monto = this.total;
 
         if (this.condicionPagoType === 2) {
             this.item.intervalo = this.form.get('intervalo').value;
@@ -169,21 +177,28 @@ export class OrdenCompraDialogComponent implements OnInit {
     }
 
     selectedPresupuesto($event): void {
-        console.log($event.source.value);
-        this.presupuestoSelected = $event.source.value;
+        console.log($event.source._value);
+        this.presupuestosSelected = $event.source._value;
 
         this.detalles.length = 0;
+        this.total = 0;
 
-        this.total = this.presupuestoSelected.total;
+        this.presupuestosSelected.forEach(p => {
+            this.total += p.total;
 
-        this.presupuestoSelected.presupuestoCompraDetalles.forEach(pCD => {
-            this.detalles.push(
-                {
-                    estado: 'ACTIVO',
-                    id: 0,
-                    monto: pCD.monto * pCD.pedidoCompraDetalle.cantidad,
-                    presupuestoCompraDetalle: pCD
-                });
+            p.presupuestoCompraDetalles.forEach(pCD => {
+                /*const art = this.detalles.find(d => d.articulo.id === this.articuloSelected.id);
+                if (art) {
+                    art.cantidad += this.form.get('cantidadArticulo').value;*/
+
+                this.detalles.push(
+                    {
+                        estado: 'ACTIVO',
+                        id: 0,
+                        monto: pCD.monto * pCD.pedidoCompraDetalle.cantidad,
+                        presupuestoCompraDetalle: pCD
+                    });
+            });
         });
 
         this.dataSource = new MatTableDataSource<OrdenCompraDetalle>(
@@ -192,6 +207,21 @@ export class OrdenCompraDialogComponent implements OnInit {
 
         const montoCuota = this.total / this.utils.getNumber(this.form.get('cantidadCuota').value);
         this.form.get('montoCuota').setValue(montoCuota);
+    }
+
+    selectedProveedor($event): void {
+        console.log($event.source.value);
+        this.proveedorSelected = $event.source.value;
+
+        this.utils.startLoading();
+        this.presupuestoCompraService.getPresupuestosCompraPendientesByProveedor(this.proveedorSelected.id).subscribe(data => {
+            console.log(data);
+            this.presupuestos = data;
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
     }
 
     tipoPagoSelected($event): void {
@@ -209,13 +239,9 @@ export class OrdenCompraDialogComponent implements OnInit {
         }
     }
 
-    displayPresupuesto(value) {
+    displayProveedor(value) {
         if (value) {
-            return value.observacion + ' | '
-                + formatDate(value.fecha, 'dd/MM/yyyy', 'en-US') + ' | '
-                + value.usuario.nombre + ' | '
-                + value.proveedor.razonSocial + ' | '
-                + value.total.toString();
+            return value.ruc + ' | ' + value.razonSocial;
         }
     }
 
@@ -223,20 +249,11 @@ export class OrdenCompraDialogComponent implements OnInit {
         this.form.get(type).setValue($event.target.value);
     }
 
-    /*onKeydown($event, index) {
-        if ($event.key === 'Enter') {
-            this.setNumber($event, index);
-        }
-    }*/
-
-    // Metodo que se llama al oprimir el boton guardar
     ok(): void {
-        // Si es una edicion llama al metodo para editar
         if (this.formType === FormType.EDIT) {
             this.edit();
         }
 
-        // Si es una lista nueva llama al metodo para agregar
         if (this.formType === FormType.NEW) {
             this.add();
         }
@@ -250,9 +267,16 @@ export class OrdenCompraDialogComponent implements OnInit {
                 5000
             );
             return false;
-        } else if (!this.presupuestoSelected) {
+        } else if (!this.proveedorSelected) {
             this.uiService.showSnackbar(
-                'Debe seleccionar un Presupuesto de Compra.',
+                'Debe seleccionar un Proveedor.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        } else if (this.presupuestosSelected.length === 0) {
+            this.uiService.showSnackbar(
+                'Debe seleccionar al menos un Presupuesto de Compra.',
                 'Cerrar',
                 5000
             );
@@ -385,15 +409,12 @@ export class OrdenCompraDialogComponent implements OnInit {
         });
     }
 
-    private _filterPresupuesto(value: any): PresupuestoCompra[] {
+    private _filterProveedor(value: any): Proveedor[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.presupuestos.filter(presupuesto =>
-                presupuesto.observacion.toLowerCase().includes(filterValue) ||
-                presupuesto.usuario.nombre.toLowerCase().includes(filterValue) ||
-                presupuesto.proveedor.razonSocial.toLowerCase().includes(filterValue) ||
-                formatDate(presupuesto.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue) ||
-                presupuesto.total.toString().includes(filterValue))
+            this.proveedores.filter(proveedor =>
+                proveedor.ruc.toLowerCase().includes(filterValue) ||
+                proveedor.razonSocial.toLowerCase().includes(filterValue))
         );
     }
 }

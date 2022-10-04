@@ -71,6 +71,27 @@ import {OrdenCompraComponent} from './frm/compras/procesos/orden-compra/orden-co
 import {
     OrdenCompraDialogComponent
 } from './frm/compras/procesos/orden-compra/orden-compra-dialog/orden-compra-dialog.component';
+import {FacturaCompraComponent} from './frm/compras/procesos/factura-compra/factura-compra.component';
+import {
+    FacturaCompraDialogComponent
+} from './frm/compras/procesos/factura-compra/factura-compra-dialog/factura-compra-dialog.component';
+import {NotaRemisionComponent} from './frm/compras/procesos/nota-remision/nota-remision.component';
+import {
+    NotaRemisionDialogComponent
+} from './frm/compras/procesos/nota-remision/nota-remision-dialog/nota-remision-dialog.component';
+import {NotaDebitoCompraComponent} from './frm/compras/procesos/nota-debito-compra/nota-debito-compra.component';
+import {
+    NotaDebitoCompraDialogComponent
+} from './frm/compras/procesos/nota-debito-compra/nota-debito-compra-dialog/nota-debito-compra-dialog.component';
+import {LibroCompraComponent} from './frm/compras/procesos/libro-compra/libro-compra.component';
+import {
+    LibroCompraDialogComponent
+} from './frm/compras/procesos/libro-compra/libro-compra-dialog/libro-compra-dialog.component';
+import {NotaCreditoCompraComponent} from './frm/compras/procesos/nota-credito-compra/nota-credito-compra.component';
+import {CuentaAPagarComponent} from './frm/compras/procesos/cuenta-a-pagar/cuenta-a-pagar.component';
+import {
+    CuentaAPagarDialogComponent
+} from './frm/compras/procesos/cuenta-a-pagar/cuenta-a-pagar-dialog/cuenta-a-pagar-dialog.component';
 
 @NgModule({
     declarations: [
@@ -115,6 +136,18 @@ import {
         PresupuestoCompraDialogComponent,
         OrdenCompraComponent,
         OrdenCompraDialogComponent,
+        FacturaCompraComponent,
+        FacturaCompraDialogComponent,
+        NotaRemisionComponent,
+        NotaRemisionDialogComponent,
+        NotaDebitoCompraComponent,
+        NotaDebitoCompraDialogComponent,
+        LibroCompraComponent,
+        LibroCompraDialogComponent,
+        NotaCreditoCompraComponent,
+        NotaDebitoCompraDialogComponent,
+        CuentaAPagarComponent,
+        CuentaAPagarDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

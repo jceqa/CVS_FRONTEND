@@ -75,7 +75,8 @@ export class PresupuestoCompraDialogComponent implements OnInit {
 
         if (this.data.item.id) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
-            this.title = 'Editar';
+            // this.title = 'Editar';
+            this.title = '';
             this.editID = this.data.item.id;
             // this.getMarcaById(this.data.item.id);
             this.formType = FormType.EDIT;
@@ -128,7 +129,7 @@ export class PresupuestoCompraDialogComponent implements OnInit {
             });
             this.fecha = item.fecha;
             this.detalles = item.presupuestoCompraDetalles;
-            this.estadoPresupuesto = item.estadoPresupuesto.descripcion;
+            this.estadoPresupuesto = item.estadoPresupuestoCompra.descripcion;
             this.dataSource = new MatTableDataSource<PresupuestoCompraDetalle>(
                 this.detalles
             );
@@ -139,7 +140,7 @@ export class PresupuestoCompraDialogComponent implements OnInit {
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
-        this.item.estadoPresupuesto = new Estado(1);
+        this.item.estadoPresupuestoCompra = new Estado(1);
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';

@@ -28,8 +28,7 @@
         <div>
             <mat-form-field class="middle-width-field">
                 <mat-label>Sucursal</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listDepositos()"
-                [disabled]="this.formType === 1">
+                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listDepositos()">
                     <!--<mat-option [value]="0" selected="true">Seleccionar...</mat-option>-->
                     <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
                         {{ sucursal.descripcion }}
@@ -39,7 +38,7 @@
             &nbsp;
             <mat-form-field class="middle-width-field">
                 <mat-label>Deposito</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="deposito" [disabled]="this.formType === 1">
+                <mat-select [compareWith]="compareFunction" formControlName="deposito">
                     <!--<mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>-->
                     <mat-option *ngFor="let deposito of depositos" [value]="deposito">
                         {{ deposito.descripcion }}
@@ -51,7 +50,7 @@
 
         <div class="mt-2">
             <mat-form-field class="full-with-field">
-                <input [disabled]="this.formType === 1" id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
+                <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
@@ -159,7 +158,7 @@
 
         <button mat-button color="primary" (click)="dismiss()">
             <mat-icon>cancel</mat-icon>
-            Cancelar
+            Cerrar
         </button>
 
         <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid" *ngIf="this.formType !== 1">
@@ -167,7 +166,7 @@
             Aceptar
         </button>
 
-        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoPedido.id === 2" *ngIf="this.formType === 1">
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoPedidoCompra.id !== 1" *ngIf="this.formType === 1">
             <mat-icon>block</mat-icon>
             Anular
         </button>

@@ -17,6 +17,12 @@ import {ProveedorComponent} from './frm/compras/referenciales/proveedor/proveedo
 import {PedidoCompraComponent} from './frm/compras/procesos/pedido-compra/pedido-compra.component';
 import {PresupuestoCompraComponent} from './frm/compras/procesos/presupuesto-compra/presupuesto-compra.component';
 import {OrdenCompraComponent} from './frm/compras/procesos/orden-compra/orden-compra.component';
+import {FacturaCompraComponent} from './frm/compras/procesos/factura-compra/factura-compra.component';
+import {NotaRemisionComponent} from './frm/compras/procesos/nota-remision/nota-remision.component';
+import {NotaDebitoCompraComponent} from './frm/compras/procesos/nota-debito-compra/nota-debito-compra.component';
+import {LibroCompraComponent} from './frm/compras/procesos/libro-compra/libro-compra.component';
+import {NotaCreditoCompraComponent} from './frm/compras/procesos/nota-credito-compra/nota-credito-compra.component';
+import {CuentaAPagarComponent} from './frm/compras/procesos/cuenta-a-pagar/cuenta-a-pagar.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -35,6 +41,12 @@ const routes: Routes = [
     { path: 'pedidocompra', component: PedidoCompraComponent},
     { path: 'presupuestocompra', component: PresupuestoCompraComponent},
     { path: 'ordencompra', component: OrdenCompraComponent},
+    { path: 'facturacompra', component: FacturaCompraComponent},
+    { path: 'notaremision', component: NotaRemisionComponent},
+    { path: 'notadebitocompra', component: NotaDebitoCompraComponent},
+    { path: 'librocompra', component: LibroCompraComponent},
+    { path: 'notacreditocompra', component: NotaCreditoCompraComponent},
+    { path: 'cuentaapagar', component: CuentaAPagarComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

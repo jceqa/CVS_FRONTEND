@@ -16,7 +16,7 @@ import {PresupuestoCompraService} from '../../../../services/presupuestocompra.s
 })
 export class PresupuestoCompraComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'estado', 'total', 'actions'];
+    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'proveedor', 'estado', 'total', 'actions'];
     dataSource = new MatTableDataSource<PresupuestoCompra>();
 
     @ViewChild(MatPaginator)

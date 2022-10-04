@@ -7,7 +7,7 @@ export class PedidoCompra {
     id: number;
     fecha: Date;
     estado: string;
-    estadoPedido: Estado;
+    estadoPedidoCompra: Estado;
     detallePedidoCompras: PedidoCompraDetalle[];
     usuario: Usuario;
     deposito: Deposito;
