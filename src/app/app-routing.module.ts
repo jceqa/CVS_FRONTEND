@@ -17,6 +17,8 @@ import {ProveedorComponent} from './frm/compras/referenciales/proveedor/proveedo
 import {PedidoCompraComponent} from './frm/compras/procesos/pedido-compra/pedido-compra.component';
 import {PresupuestoCompraComponent} from './frm/compras/procesos/presupuesto-compra/presupuesto-compra.component';
 import {OrdenCompraComponent} from './frm/compras/procesos/orden-compra/orden-compra.component';
+import {ClienteComponent} from './frm/administracion/referenciales/cliente/cliente.component';
+import {PedidoVentaComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -35,6 +37,8 @@ const routes: Routes = [
     { path: 'pedidocompra', component: PedidoCompraComponent},
     { path: 'presupuestocompra', component: PresupuestoCompraComponent},
     { path: 'ordencompra', component: OrdenCompraComponent},
+    { path: 'cliente', component: ClienteComponent},
+    { path: 'pedidoventa', component: PedidoVentaComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

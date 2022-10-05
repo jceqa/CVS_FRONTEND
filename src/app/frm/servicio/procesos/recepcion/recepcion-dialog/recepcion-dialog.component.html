@@ -1,0 +1,175 @@
+<h4 mat-dialog-title>{{ title }} Recepcion de Equipos</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <!--<div class="mt-2" *ngIf="formType === 1">
+            <mat-form-field class="full-with-field" >
+                <input id="id" formControlName="id" matInput placeholder="Id" readonly />
+            </mat-form-field>
+        </div>-->
+
+
+        <div style="display: flex">
+            <div class="third-width-field">
+                <span>Nro Recepcion: {{ item.id }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Estado: {{ estadoRecepcion }}</span>
+            </div>
+        </div>
+
+        <div>
+            <div *ngIf="this.formType === 1">
+                <br/>
+                <span >Cliente: {{ item.cliente.ruc }} | {{ item.cliente.razon }}</span>
+            </div>
+
+            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+                <input type="text"
+                       placeholder="Cliente"
+                       matInput
+                       [formControl]="clienteControl"
+                       [matAutocomplete]="autoCliente"
+                       class="text">
+                <mat-autocomplete #autoCliente="matAutocomplete" [displayWith]="displayCliente">
+                    <mat-option *ngFor="let cliente of clienteFiltered | async" [value]="cliente"
+                                (onSelectionChange)="selectedCliente($event)">
+                        {{ cliente.ruc }} | {{ cliente.razon }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input [disabled]="this.formType === 1" id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h4>Detalles</h4>
+        <div class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field>
+                <input type="text"
+                       placeholder="Equipo"
+                       matInput
+                       [formControl]="myControl"
+                       [matAutocomplete]="auto"
+                       class="text">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="display">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+                                (onSelectionChange)="selected($event)">
+                        {{option.codigoGenerico}} | {{option.descripcion}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field>
+                <input type=number id="cantidad" formControlName="cantidadEquipo" matInput
+                       placeholder="Cantidad"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+            &nbsp;
+            <button matTooltip="Agregar Item" color="primary" mat-icon-button
+                    (click)="addItem()">
+                <mat-icon aria-label="Agregar Item">add_circle</mat-icon>
+            </button>
+
+        </div>
+
+        <div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Código</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span> {{ dato.equipo.codigoGenerico }} </span>
+                    </mat-cell>
+                    >
+                </ng-container>
+
+                <ng-container matColumnDef="item">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Item</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.equipo.descripcion }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cantidad">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Cantidad</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.cantidad }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let dato">
+
+                        <!--<button color="primary" mat-icon-button (click)="viewDetail(dato)">
+                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
+                        </button>-->
+
+                        <button matTooltip="Aumentar" color="primary" mat-icon-button
+                                (click)="incItem(dato)" *ngIf="formType !== 1">
+                            <mat-icon aria-label="Aumentar item">add_circle_outline</mat-icon>
+                        </button>
+
+                        <button matTooltip="Disminuir" color="primary" mat-icon-button
+                                (click)="descItem(dato)" [disabled]="dato.cantidad === 1" *ngIf="formType !== 1">
+                            <mat-icon aria-label="Disminuir item">remove_circle_outline</mat-icon>
+                        </button>
+
+                        <button matTooltip="Eliminar" color="warn" mat-icon-button
+                                (click)="deleteItem(dato)" *ngIf="formType !== 1">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+
+                        <!--<button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
+                            <mat-icon>refresh</mat-icon>
+                        </button>-->
+
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid" *ngIf="this.formType !== 1">
+            <mat-icon>save</mat-icon>
+            Aceptar
+        </button>
+
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoRecepcion.id === 2" *ngIf="this.formType === 1">
+            <mat-icon>block</mat-icon>
+            Anular
+        </button>
+
+    </mat-dialog-actions>
+
+</form>

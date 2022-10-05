@@ -71,6 +71,11 @@ import {OrdenCompraComponent} from './frm/compras/procesos/orden-compra/orden-co
 import {
     OrdenCompraDialogComponent
 } from './frm/compras/procesos/orden-compra/orden-compra-dialog/orden-compra-dialog.component';
+import {ClienteComponent} from './frm/administracion/referenciales/cliente/cliente.component';
+import {ClienteDialogComponent} from './frm/administracion/referenciales/cliente/cliente-dialog/cliente-dialog.component';
+import {RecepcionDialogComponent} from './frm/servicio/procesos/recepcion/recepcion-dialog/recepcion-dialog.component';
+import {PedidoVentaComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta.component';
+import {PedidoVentaDialogComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta-dialog/pedido-venta-dialog.component';
 
 @NgModule({
     declarations: [
@@ -115,6 +120,11 @@ import {
         PresupuestoCompraDialogComponent,
         OrdenCompraComponent,
         OrdenCompraDialogComponent,
+        ClienteComponent,
+        ClienteDialogComponent,
+        RecepcionDialogComponent,
+        PedidoVentaComponent,
+        PedidoVentaDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

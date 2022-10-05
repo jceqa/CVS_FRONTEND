@@ -1,37 +1,35 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
-import {PedidoCompra} from '../../../../../models/pedidoCompra';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
 import {UtilService} from '../../../../../services/util.service';
-import {PedidoCompraService} from '../../../../../services/pedidocompra.service';
-import {Sucursal} from '../../../../../models/sucursal';
-import {Deposito} from '../../../../../models/deposito';
+import {ClienteService} from '../../../../../services/cliente.service';
+import {Cliente} from '../../../../../models/cliente';
 import {MatTableDataSource} from '@angular/material/table';
-import {PedidoCompraDetalle} from '../../../../../models/pedidoCompraDetalle';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {Articulo} from '../../../../../models/articulo';
-import {ArticuloService} from '../../../../../services/articulo.service';
-import {SucursalService} from '../../../../../services/sucursal.service';
-import {DepositoService} from '../../../../../services/deposito.service';
+import {Equipo} from '../../../../../models/equipo';
+import {EquipoService} from '../../../../../services/equipo.service';
 import {Usuario} from '../../../../../models/usuario';
+import {Recepcion} from '../../../../../models/recepcion';
+import {RecepcionService} from '../../../../../services/recepcion.service';
+import {RecepcionDetalle} from '../../../../../models/recepcionDetalle';
 import {Estado} from '../../../../../models/estado';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-pedido-compra-dialog',
-    templateUrl: './pedido-compra-dialog.component.html',
-    styleUrls: ['./pedido-compra-dialog.component.scss']
+    selector: 'app-recepcion-dialog',
+    templateUrl: './recepcion-dialog.component.html',
+    styleUrls: ['./recepcion-dialog.component.scss']
 })
-export class PedidoCompraDialogComponent implements OnInit {
+export class RecepcionDialogComponent implements OnInit {
 
     myControl = new FormControl('');
-    options: Articulo[] = [];
-    filteredOptions: Observable<Articulo[]>;
+    options: Equipo[] = [];
+    filteredOptions: Observable<Equipo[]>;
 
-    item: PedidoCompra;
+    item: Recepcion;
     companyId = 0;
     form: FormGroup;
 
@@ -42,40 +40,37 @@ export class PedidoCompraDialogComponent implements OnInit {
 
     fecha = new Date();
 
-    articuloSelected: Articulo = null;
-    sucursales: Sucursal[] = [];
-    depositos: Deposito[] = [];
+    equipoSelected: Equipo = null;
+    clientes: Cliente[] = [];
 
     displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'actions'];
-    dataSource = new MatTableDataSource<PedidoCompraDetalle>();
-    detalles: PedidoCompraDetalle[] = [];
+    dataSource = new MatTableDataSource<RecepcionDetalle>();
+    detalles: RecepcionDetalle[] = [];
 
-    estadoPedido = '';
+    estadoRecepcion = '';
 
     constructor(
-        private dialogRef: MatDialogRef<PedidoCompraDialogComponent>,
+        private dialogRef: MatDialogRef<RecepcionDialogComponent>,
         private uiService: UIService,
-        private pedidoCompraService: PedidoCompraService,
-        private articuloService: ArticuloService,
+        private recepcionService: RecepcionService,
+        private equipoService: EquipoService,
         private utils: UtilService,
-        private sucursalService: SucursalService,
-        private depositoService: DepositoService,
+        private clienteService: ClienteService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
         }
     }
-    // define los imput del form, obtiene los valores que se introducen en el frontend
+
     ngOnInit(): void {
         this.form = new FormGroup({
             id: new FormControl('', []),
             observacion: new FormControl('', [Validators.required]),
-            sucursal: new FormControl('', [Validators.required]),
-            deposito: new FormControl('', [Validators.required]),
+            cliente: new FormControl('', [Validators.required]),
             // codigoArticulo: new FormControl(''),
             // descripcionArticulo: new FormControl(''),
-            cantidadArticulo: new FormControl(0),
+            cantidadEquipo: new FormControl(0),
         });
 
         if (this.data.item.id) {
@@ -93,7 +88,7 @@ export class PedidoCompraDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        this.articuloService.getArticulos().subscribe(data => {
+        this.equipoService.listEquipos().subscribe(data => {
             console.log(data);
             this.options = data;
 
@@ -108,9 +103,9 @@ export class PedidoCompraDialogComponent implements OnInit {
         });
 
         this.utils.startLoading();
-        this.sucursalService.getSucursalByUserId(this.utils.getUserId()).subscribe(data => {
+        this.clienteService.getClientes().subscribe(data => {
             console.log(data);
-            this.sucursales = data;
+            this.clientes = data;
             this.utils.stopLoading();
         }, error => {
             console.log(error);
@@ -118,10 +113,11 @@ export class PedidoCompraDialogComponent implements OnInit {
         });
     }
 
-    private _filter(value: any): Articulo[] {
+    private _filter(value: any): Equipo[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.options.filter(option => option.codigoGenerico.toString().includes(filterValue) ||
+            this.options.filter(option => option.modelo.toString().includes(filterValue) ||
+                option.serie.toString().includes(filterValue) ||
                 option.descripcion.toLowerCase().includes(filterValue))
         );
     }
@@ -131,23 +127,23 @@ export class PedidoCompraDialogComponent implements OnInit {
         return (o1 && o2 && o1.id === o2.id);
     }
 
-    setForm(item: PedidoCompra) {
+    setForm(item: Recepcion) {
         console.log(item);
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({
                 id: item.id,
                 observacion: item.observacion,
                 // deposito: item.deposito,
-                sucursal: item.deposito.sucursal,
+                cliente: item.cliente,
             });
             this.fecha = item.fecha;
-            this.detalles = item.detallePedidoCompras;
-            this.estadoPedido = item.estadoPedido.descripcion;
-            this.dataSource = new MatTableDataSource<PedidoCompraDetalle>(
+            this.detalles = item.recepcionDetalle;
+            this.estadoRecepcion = item.estadoRecepcion.descripcion;
+            this.dataSource = new MatTableDataSource<RecepcionDetalle>(
                 this.detalles
             );
 
-            this.listDepositos();
+            this.listClientes();
         }
     }
 
@@ -155,24 +151,24 @@ export class PedidoCompraDialogComponent implements OnInit {
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
-        this.item.deposito = this.form.get('deposito').value;
-        this.item.estadoPedido = new Estado(1);
+        this.item.cliente = this.form.get('cliente').value;
+        this.item.estadoRecepcion = new Estado(1);
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
-        this.item.detallePedidoCompras = this.detalles;
+        this.item.recepcionDetalle = this.detalles;
     }
 
-    listDepositos() {
-        this.form.get('deposito').setValue('');
+    listClientes() {
+        this.form.get('cliente').setValue('');
         this.utils.startLoading();
-        this.depositoService.listDepositosBySucursal(this.form.get('sucursal').value.id).subscribe(
+        this.clienteService.getClientes().subscribe(
             data => {
                 console.log(data);
-                this.depositos = data;
+                this.clientes = data;
                 this.utils.stopLoading();
                 if (this.formType === FormType.EDIT) {
-                    this.form.get('deposito').setValue(this.item.deposito);
+                    this.form.get('deposito').setValue(this.item.cliente);
                 }
                 this.utils.stopLoading();
             }, error => {
@@ -192,7 +188,7 @@ export class PedidoCompraDialogComponent implements OnInit {
 
     selected($event): void {
         console.log($event.source.value);
-        this.articuloSelected = $event.source.value;
+        this.equipoSelected = $event.source.value;
     }
 
     display(value) {
@@ -202,17 +198,17 @@ export class PedidoCompraDialogComponent implements OnInit {
     }
 
     limpiarCampos() {
-        this.articuloSelected = null;
+        this.equipoSelected = null;
         this.myControl.setValue('');
         this.form.get('cantidadArticulo').setValue(0);
     }
 
     addItem() {
-        if (this.articuloSelected !== null) {
-            if (this.form.get('cantidadArticulo').value > 0) {
-                const art = this.detalles.find(d => d.articulo.id === this.articuloSelected.id);
+        if (this.equipoSelected !== null) {
+            if (this.form.get('cantidadEquipo').value > 0) {
+                const art = this.detalles.find(d => d.equipo.id === this.equipoSelected.id);
                 if (art) {
-                    art.cantidad += this.form.get('cantidadArticulo').value;
+                    art.cantidad += this.form.get('cantidadEquipo').value;
                     /*const index = this.detalles.indexOf(art);
                     this.detalles.splice(index, 1, {
                         'id': 0,
@@ -223,19 +219,19 @@ export class PedidoCompraDialogComponent implements OnInit {
                 } else {
                     this.detalles.push({
                         'id': 0,
-                        'articulo': this.articuloSelected,
+                        'equipo': this.equipoSelected,
                         'cantidad': this.form.get('cantidadArticulo').value,
                         'estado': 'ACTIVO'
                     });
                 }
                 console.log(this.detalles);
-                this.dataSource = new MatTableDataSource<PedidoCompraDetalle>(
+                this.dataSource = new MatTableDataSource<RecepcionDetalle>(
                     this.detalles
                 );
                 this.limpiarCampos();
             } else {
                 this.uiService.showSnackbar(
-                    'La cantidad de articulos debe ser mayor a 0.',
+                    'La cantidad de equipos debe ser mayor a 0.',
                     'Cerrar',
                     3000
                 );
@@ -258,8 +254,8 @@ export class PedidoCompraDialogComponent implements OnInit {
     }
 
     deleteItem(dato) {
-        this.detalles = this.detalles.filter(d => d.articulo.id !== dato.articulo.id);
-        this.dataSource = new MatTableDataSource<PedidoCompraDetalle>(
+        this.detalles = this.detalles.filter(d => d.equipo.id !== dato.equipo.id);
+        this.dataSource = new MatTableDataSource<RecepcionDetalle>(
             this.detalles
         );
     }
@@ -285,12 +281,12 @@ export class PedidoCompraDialogComponent implements OnInit {
             if (this.utils.tieneLetras(this.item.observacion)) {
                 // Llama al servicio que almacena el objeto {PriceListDraft}
                 this.utils.startLoading();
-                this.pedidoCompraService.guardarPedidoCompra(this.item)
+                this.recepcionService.guardarRecepcion(this.item)
                     .subscribe(data => {
                             console.log(data);
                             this.utils.stopLoading();
                             this.uiService.showSnackbar(
-                                'Argregado exitosamente.',
+                                'Agregado exitosamente.',
                                 'Cerrar',
                                 3000
                             );
@@ -332,7 +328,7 @@ export class PedidoCompraDialogComponent implements OnInit {
 
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.observacion)) {
-            this.pedidoCompraService.editarPedidoCompra(this.item).subscribe(data => {
+            this.recepcionService.editarRecepcion(this.item).subscribe(data => {
                 console.log(data);
                 this.uiService.showSnackbar(
                     'Modificado exitosamente.',
@@ -359,9 +355,9 @@ export class PedidoCompraDialogComponent implements OnInit {
         }
     }
 
-    anular(dato: PedidoCompra): void {
+    anular(dato: Recepcion): void {
         this.utils.startLoading();
-        this.pedidoCompraService.anularPedidoCompra(dato).subscribe(
+        this.recepcionService.anularRecepcion(dato).subscribe(
             data => {
                 console.log(data);
                 this.utils.stopLoading();
@@ -388,8 +384,8 @@ export class PedidoCompraDialogComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Pedido Compra',
-                msg: '¿Está seguro que desea anular este Pedido de Compra?'
+                title: 'Anular Recepcion',
+                msg: '¿Está seguro que desea anular esta Recepcion?'
             }
         });
 

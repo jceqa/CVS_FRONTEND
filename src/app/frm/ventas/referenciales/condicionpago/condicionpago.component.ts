@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { CondicionPagoService } from '../../../../services/condicionPago.service';
+import { CondicionPagoService } from '../../../../services/condicionpago.service';
 import { CondicionPago } from '../../../../models/condicionPago';
 import { MatDialog } from '@angular/material/dialog';
 import { CondicionPagoDialogComponent } from './condicionPago-dialog/condicionPago-dialog.component';

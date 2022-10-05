@@ -5,5 +5,5 @@ export class Equipo {
     descripcion: string;
     serie: string;
     modelo: string;
-    marca : Marca;
+    marca: Marca;
 }

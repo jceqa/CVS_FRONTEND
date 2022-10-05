@@ -1,15 +1,15 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
-import {PedidoCompra} from '../../../../../models/pedidoCompra';
+import {PedidoVenta} from '../../../../../models/pedidoVenta';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
 import {UtilService} from '../../../../../services/util.service';
-import {PedidoCompraService} from '../../../../../services/pedidocompra.service';
+import {PedidoVentaService} from '../../../../../services/pedidoventa.service';
 import {Sucursal} from '../../../../../models/sucursal';
 import {Deposito} from '../../../../../models/deposito';
 import {MatTableDataSource} from '@angular/material/table';
-import {PedidoCompraDetalle} from '../../../../../models/pedidoCompraDetalle';
+import {PedidoVentaDetalle} from '../../../../../models/pedidoVentaDetalle';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {Articulo} from '../../../../../models/articulo';
@@ -25,13 +25,13 @@ import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dial
     templateUrl: './pedido-compra-dialog.component.html',
     styleUrls: ['./pedido-compra-dialog.component.scss']
 })
-export class PedidoCompraDialogComponent implements OnInit {
+export class PedidoVentaDialogComponent implements OnInit {
 
     myControl = new FormControl('');
     options: Articulo[] = [];
     filteredOptions: Observable<Articulo[]>;
 
-    item: PedidoCompra;
+    item: PedidoVenta;
     companyId = 0;
     form: FormGroup;
 
@@ -47,15 +47,15 @@ export class PedidoCompraDialogComponent implements OnInit {
     depositos: Deposito[] = [];
 
     displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'actions'];
-    dataSource = new MatTableDataSource<PedidoCompraDetalle>();
-    detalles: PedidoCompraDetalle[] = [];
+    dataSource = new MatTableDataSource<PedidoVentaDetalle>();
+    detalles: PedidoVentaDetalle[] = [];
 
     estadoPedido = '';
 
     constructor(
-        private dialogRef: MatDialogRef<PedidoCompraDialogComponent>,
+        private dialogRef: MatDialogRef<PedidoVentaDialogComponent>,
         private uiService: UIService,
-        private pedidoCompraService: PedidoCompraService,
+        private pedidoVentaService: PedidoVentaService,
         private articuloService: ArticuloService,
         private utils: UtilService,
         private sucursalService: SucursalService,
@@ -131,7 +131,7 @@ export class PedidoCompraDialogComponent implements OnInit {
         return (o1 && o2 && o1.id === o2.id);
     }
 
-    setForm(item: PedidoCompra) {
+    setForm(item: PedidoVenta) {
         console.log(item);
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({
@@ -141,9 +141,9 @@ export class PedidoCompraDialogComponent implements OnInit {
                 sucursal: item.deposito.sucursal,
             });
             this.fecha = item.fecha;
-            this.detalles = item.detallePedidoCompras;
+            this.detalles = item.detallePedidoVentas;
             this.estadoPedido = item.estadoPedido.descripcion;
-            this.dataSource = new MatTableDataSource<PedidoCompraDetalle>(
+            this.dataSource = new MatTableDataSource<PedidoVentaDetalle>(
                 this.detalles
             );
 
@@ -160,7 +160,7 @@ export class PedidoCompraDialogComponent implements OnInit {
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
-        this.item.detallePedidoCompras = this.detalles;
+        this.item.detallePedidoVentas = this.detalles;
     }
 
     listDepositos() {
@@ -229,7 +229,7 @@ export class PedidoCompraDialogComponent implements OnInit {
                     });
                 }
                 console.log(this.detalles);
-                this.dataSource = new MatTableDataSource<PedidoCompraDetalle>(
+                this.dataSource = new MatTableDataSource<PedidoVentaDetalle>(
                     this.detalles
                 );
                 this.limpiarCampos();
@@ -259,7 +259,7 @@ export class PedidoCompraDialogComponent implements OnInit {
 
     deleteItem(dato) {
         this.detalles = this.detalles.filter(d => d.articulo.id !== dato.articulo.id);
-        this.dataSource = new MatTableDataSource<PedidoCompraDetalle>(
+        this.dataSource = new MatTableDataSource<PedidoVentaDetalle>(
             this.detalles
         );
     }
@@ -285,12 +285,12 @@ export class PedidoCompraDialogComponent implements OnInit {
             if (this.utils.tieneLetras(this.item.observacion)) {
                 // Llama al servicio que almacena el objeto {PriceListDraft}
                 this.utils.startLoading();
-                this.pedidoCompraService.guardarPedidoCompra(this.item)
+                this.pedidoVentaService.guardarPedidoVenta(this.item)
                     .subscribe(data => {
                             console.log(data);
                             this.utils.stopLoading();
                             this.uiService.showSnackbar(
-                                'Argregado exitosamente.',
+                                'Agregado exitosamente.',
                                 'Cerrar',
                                 3000
                             );
@@ -332,7 +332,7 @@ export class PedidoCompraDialogComponent implements OnInit {
 
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.observacion)) {
-            this.pedidoCompraService.editarPedidoCompra(this.item).subscribe(data => {
+            this.pedidoVentaService.editarPedidoVenta(this.item).subscribe(data => {
                 console.log(data);
                 this.uiService.showSnackbar(
                     'Modificado exitosamente.',
@@ -359,9 +359,9 @@ export class PedidoCompraDialogComponent implements OnInit {
         }
     }
 
-    anular(dato: PedidoCompra): void {
+    anular(dato: PedidoVenta): void {
         this.utils.startLoading();
-        this.pedidoCompraService.anularPedidoCompra(dato).subscribe(
+        this.pedidoVentaService.anularPedidoVenta(dato).subscribe(
             data => {
                 console.log(data);
                 this.utils.stopLoading();
@@ -388,8 +388,8 @@ export class PedidoCompraDialogComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Pedido Compra',
-                msg: '¿Está seguro que desea anular este Pedido de Compra?'
+                title: 'Anular Pedido de Venta',
+                msg: '¿Está seguro que desea anular este Pedido de Venta?'
             }
         });
 

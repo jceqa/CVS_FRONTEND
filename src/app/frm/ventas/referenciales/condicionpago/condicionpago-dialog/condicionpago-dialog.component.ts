@@ -3,7 +3,7 @@ import { CondicionPago } from '../../../../../models/condicionPago';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { FormType } from '../../../../../models/enum';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CondicionPagoService } from '../../../../../services/condicionPago.service';
+import { CondicionPagoService } from '../../../../../services/condicionpago.service';
 import { UIService } from '../../../../../services/ui.service';
 
 @Component({
