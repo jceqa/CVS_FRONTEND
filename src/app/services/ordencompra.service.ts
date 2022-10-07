@@ -38,4 +38,8 @@ export class OrdenCompraService {
     public anularOrdenCompra(ordenCompra: OrdenCompra): Observable<any> {
         return this.http.put<any>(this.baseUrl + 'anular', ordenCompra);
     }
+
+    public getOrdenCompraPendientes(): Observable<OrdenCompra[]> {
+        return this.http.get<OrdenCompra[]>(this.baseUrl + 'pendientes');
+    }
 }

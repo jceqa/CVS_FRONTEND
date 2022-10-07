@@ -37,16 +37,16 @@ import {CiudadComponent} from './frm/compras/referenciales/ciudad/ciudad.compone
 import {CiudadDialogComponent} from './frm/compras/referenciales/ciudad/ciudad-dialog/ciudad-dialog.component';
 import {ImpuestoComponent} from './frm/compras/referenciales/impuesto/impuesto.component';
 import {ImpuestoDialogComponent} from './frm/compras/referenciales/impuesto/impuesto-dialog/impuesto-dialog.component';
-import {TipoArticuloComponent} from './frm/compras/referenciales/tipoArticulo/tipoArticulo.component';
-import {TipoArticuloDialogComponent} from './frm/compras/referenciales/tipoArticulo/tipoArticulo-dialog/tipoArticulo-dialog.component';
+import {TipoArticuloComponent} from './frm/compras/referenciales/tipo-articulo/tipo-articulo.component';
+import {TipoArticuloDialogComponent} from './frm/compras/referenciales/tipo-articulo/tipo-articulo-dialog/tipo-articulo-dialog.component';
 import {CargoComponent} from './frm/administracion/referenciales/cargo/cargo.component';
 import {CargoDialogComponent} from './frm/administracion/referenciales/cargo/cargo-dialog/cargo-dialog.component';
 import {EstadoComponent} from './frm/administracion/referenciales/estado/estado.component';
 import {EstadoDialogComponent} from './frm/administracion/referenciales/estado/estado-dialog/estado-dialog.component';
 import {EntidadEmisoraComponent} from './frm/ventas/referenciales/entidademisora/entidademisora.component';
 import {EntidadEmisoraDialogComponent} from './frm/ventas/referenciales/entidademisora/entidademisora-dialog/entidademisora-dialog.component';
-import {CondicionPagoComponent} from './frm/ventas/referenciales/condicionPago/condicionPago.component';
-import {CondicionPagoDialogComponent} from './frm/ventas/referenciales/condicionPago/condicionPago-dialog/condicionPago-dialog.component';
+import {CondicionPagoComponent} from './frm/ventas/referenciales/condicion-pago/condicion-pago.component';
+import {CondicionPagoDialogComponent} from './frm/ventas/referenciales/condicion-pago/condicion-pago-dialog/condicion-pago-dialog.component';
 import {TipoTarjetaComponent} from './frm/ventas/referenciales/tipotarjeta/tipotarjeta.component';
 import {TipoTarjetaDialogComponent} from './frm/ventas/referenciales/tipotarjeta/tipotarjeta-dialog/tipotarjeta-dialog.component';
 import {ArticuloComponent} from './frm/compras/referenciales/articulo/articulo.component';
@@ -71,6 +71,33 @@ import {OrdenCompraComponent} from './frm/compras/procesos/orden-compra/orden-co
 import {
     OrdenCompraDialogComponent
 } from './frm/compras/procesos/orden-compra/orden-compra-dialog/orden-compra-dialog.component';
+import {FacturaCompraComponent} from './frm/compras/procesos/factura-compra/factura-compra.component';
+import {
+    FacturaCompraDialogComponent
+} from './frm/compras/procesos/factura-compra/factura-compra-dialog/factura-compra-dialog.component';
+import {NotaRemisionComponent} from './frm/compras/procesos/nota-remision/nota-remision.component';
+import {
+    NotaRemisionDialogComponent
+} from './frm/compras/procesos/nota-remision/nota-remision-dialog/nota-remision-dialog.component';
+import {NotaDebitoCompraComponent} from './frm/compras/procesos/nota-debito-compra/nota-debito-compra.component';
+import {
+    NotaDebitoCompraDialogComponent
+} from './frm/compras/procesos/nota-debito-compra/nota-debito-compra-dialog/nota-debito-compra-dialog.component';
+import {LibroCompraComponent} from './frm/compras/procesos/libro-compra/libro-compra.component';
+import {
+    LibroCompraDialogComponent
+} from './frm/compras/procesos/libro-compra/libro-compra-dialog/libro-compra-dialog.component';
+import {NotaCreditoCompraComponent} from './frm/compras/procesos/nota-credito-compra/nota-credito-compra.component';
+import {CuentaAPagarComponent} from './frm/compras/procesos/cuenta-a-pagar/cuenta-a-pagar.component';
+import {
+    CuentaAPagarDialogComponent
+} from './frm/compras/procesos/cuenta-a-pagar/cuenta-a-pagar-dialog/cuenta-a-pagar-dialog.component';
+import {AperturaCierreCajaComponent} from './frm/ventas/procesos/apertura-cierre-caja/apertura-cierre-caja.component';
+import {
+    AperturaCierreCajaDialogComponent
+} from './frm/ventas/procesos/apertura-cierre-caja/apertura-cierre-caja-dialog/apertura-cierre-caja-dialog.component';
+import {CajaComponent} from './frm/ventas/referenciales/caja/caja.component';
+import {CajaDialogComponent} from './frm/ventas/referenciales/caja/caja-dialog/caja-dialog.component';
 import {ClienteComponent} from './frm/administracion/referenciales/cliente/cliente.component';
 import {ClienteDialogComponent} from './frm/administracion/referenciales/cliente/cliente-dialog/cliente-dialog.component';
 import {RecepcionDialogComponent} from './frm/servicio/procesos/recepcion/recepcion-dialog/recepcion-dialog.component';
@@ -120,6 +147,22 @@ import {PedidoVentaDialogComponent} from './frm/ventas/procesos/pedido-venta/ped
         PresupuestoCompraDialogComponent,
         OrdenCompraComponent,
         OrdenCompraDialogComponent,
+        FacturaCompraComponent,
+        FacturaCompraDialogComponent,
+        NotaRemisionComponent,
+        NotaRemisionDialogComponent,
+        NotaDebitoCompraComponent,
+        NotaDebitoCompraDialogComponent,
+        LibroCompraComponent,
+        LibroCompraDialogComponent,
+        NotaCreditoCompraComponent,
+        NotaDebitoCompraDialogComponent,
+        CuentaAPagarComponent,
+        CuentaAPagarDialogComponent,
+        AperturaCierreCajaComponent,
+        AperturaCierreCajaDialogComponent,
+        CajaComponent,
+        CajaDialogComponent,
         ClienteComponent,
         ClienteDialogComponent,
         RecepcionDialogComponent,

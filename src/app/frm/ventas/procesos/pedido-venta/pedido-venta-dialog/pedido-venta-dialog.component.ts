@@ -21,9 +21,9 @@ import {Estado} from '../../../../../models/estado';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-pedido-compra-dialog',
-    templateUrl: './pedido-compra-dialog.component.html',
-    styleUrls: ['./pedido-compra-dialog.component.scss']
+    selector: 'app-pedido-venta-dialog',
+    templateUrl: './pedido-venta-dialog.component.html',
+    styleUrls: ['./pedido-venta-dialog.component.scss']
 })
 export class PedidoVentaDialogComponent implements OnInit {
 

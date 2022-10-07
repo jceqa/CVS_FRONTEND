@@ -1,57 +1,57 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { CondicionPagoService } from '../../../../services/condicionpago.service';
-import { CondicionPago } from '../../../../models/condicionPago';
-import { MatDialog } from '@angular/material/dialog';
-import { CondicionPagoDialogComponent } from './condicionPago-dialog/condicionPago-dialog.component';
-import { UIService } from '../../../../services/ui.service';
-import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {Caja} from '../../../../models/caja';
+import {MatPaginator} from '@angular/material/paginator';
+import {CajaService} from '../../../../services/caja.service';
+import {MatDialog} from '@angular/material/dialog';
+import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
-
+import {CajaDialogComponent} from '../../../ventas/referenciales/caja/caja-dialog/caja-dialog.component';
+import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-condicionpago',
-    templateUrl: './condicionPago.component.html',
-    styleUrls: ['./condicionPago.component.css']
+  selector: 'app-caja',
+  templateUrl: './caja.component.html',
+  styleUrls: ['./caja.component.sass']
 })
-export class CondicionPagoComponent implements OnInit {
+export class CajaComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'descripcion', 'actions'];
+    displayedColumns: string[] = ['id', 'descripcion', 'numero', 'sucursal', 'actions'];
 
-    dataSource = new MatTableDataSource<CondicionPago>();
+    dataSource = new MatTableDataSource<Caja>();
 
     @ViewChild(MatPaginator)
     paginator!: MatPaginator;
 
-    condicionpagos: CondicionPago[] = [];
+    cajas: Caja[] = [];
 
     pagina = 1;
     numeroResultados = 5;
 
     all = false;
+
     constructor(
-        private condicionPagoService: CondicionPagoService,
+        private cajaService: CajaService,
         private dialog: MatDialog,
         private uiService: UIService,
         private util: UtilService
     ) { }
 
     ngOnInit(): void {
-        this.cargarCondicionPagos();
+        this.cargarCajas();
     }
 
-    cargarCondicionPagos() {
+    cargarCajas() {
         // this.store.dispatch(new UI.StartLoading());
         // this.util.localStorageSetItem('loading', 'true');
         this.util.startLoading();
-        this.condicionPagoService.getCondicionPagos(this.all).subscribe(
+        this.cajaService.getCajas(this.all).subscribe(
             (data) => {
                 console.log(data);
-                this.condicionpagos = data;
+                this.cajas = data;
 
-                this.dataSource = new MatTableDataSource<CondicionPago>(
-                    this.condicionpagos
+                this.dataSource = new MatTableDataSource<Caja>(
+                    this.cajas
                 );
                 this.dataSource.paginator = this.paginator;
                 // this.store.dispatch(new UI.StopLoading());
@@ -74,14 +74,14 @@ export class CondicionPagoComponent implements OnInit {
 
     addItem(): void {
 
-        const item = new CondicionPago();
+        const item = new Caja();
 
         this.editItem(item);
 
     }
 
-    editItem(item: CondicionPago): void {
-        const dialogRef = this.dialog.open(CondicionPagoDialogComponent, {
+    editItem(item: Caja): void {
+        const dialogRef = this.dialog.open(CajaDialogComponent, {
             minWidth: '60%',
             // maxWidth: '600px',
             disableClose: true,
@@ -92,16 +92,16 @@ export class CondicionPagoComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargarCondicionPagos();
+                this.cargarCajas();
             }
         });
     }
 
     deleteItem(id: number): void {
-        this.condicionPagoService.eliminarCondicionPago(id).subscribe(
+        this.cajaService.eliminarCaja(id).subscribe(
             result => {
                 console.log(result);
-                this.cargarCondicionPagos();
+                this.cargarCajas();
 
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
@@ -120,12 +120,12 @@ export class CondicionPagoComponent implements OnInit {
         );
     }
 
-    reactivateItem(condicionpago: CondicionPago): void {
-        condicionpago.estado = 'ACTIVO';
-        this.condicionPagoService.editarCondicionPago(condicionpago).subscribe(
+    reactivateItem(caja: Caja): void {
+        caja.estado = 'ACTIVO';
+        this.cajaService.editarCaja(caja).subscribe(
             result => {
                 console.log(result);
-                this.cargarCondicionPagos();
+                this.cargarCajas();
                 this.uiService.showSnackbar(
                     'Reactivado correctamente.',
                     'Cerrar',
@@ -143,39 +143,40 @@ export class CondicionPagoComponent implements OnInit {
         );
     }
 
-    delete(event: any, condicionpago: CondicionPago): void {
+    delete(event: any, caja: Caja): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Eliminar esta Condicion de pago',
-                msg: '¿Está seguro que desea eliminar esta condicion de pago?'
+                title: 'Eliminar Caja',
+                msg: '¿Está seguro que desea eliminar esta caja?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.deleteItem(condicionpago.id);
+                this.deleteItem(caja.id);
             }
         });
     }
 
-    reactivate(event: any, condicionpago: CondicionPago): void {
+    reactivate(event: any, caja: Caja): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Reactivar condicion de pago',
-                msg: '¿Está seguro que desea reactivar esta condicion de pago?'
+                title: 'Reactivar Caja',
+                msg: '¿Está seguro que desea reactivar esta caja?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.reactivateItem(condicionpago);
+                this.reactivateItem(caja);
             }
         });
     }
+
 }

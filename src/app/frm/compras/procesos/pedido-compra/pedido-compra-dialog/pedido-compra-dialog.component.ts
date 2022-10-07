@@ -73,19 +73,19 @@ export class PedidoCompraDialogComponent implements OnInit {
             observacion: new FormControl('', [Validators.required]),
             sucursal: new FormControl('', [Validators.required]),
             deposito: new FormControl('', [Validators.required]),
-            // codigoArticulo: new FormControl(''),
-            // descripcionArticulo: new FormControl(''),
             cantidadArticulo: new FormControl(0),
         });
 
         if (this.data.item.id) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
-            this.title = 'Editar';
+            // this.title = 'Editar';
+            this.title = '';
             this.editID = this.data.item.id;
-            // this.getMarcaById(this.data.item.id);
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.form.get('observacion').disable();
+            this.form.get('sucursal').disable();
+            this.form.get('deposito').disable();
         } else {
             // Si no existe es una nueva lista
             this.title = 'Nuevo';
@@ -142,7 +142,7 @@ export class PedidoCompraDialogComponent implements OnInit {
             });
             this.fecha = item.fecha;
             this.detalles = item.detallePedidoCompras;
-            this.estadoPedido = item.estadoPedido.descripcion;
+            this.estadoPedido = item.estadoPedidoCompra.descripcion;
             this.dataSource = new MatTableDataSource<PedidoCompraDetalle>(
                 this.detalles
             );
@@ -156,7 +156,7 @@ export class PedidoCompraDialogComponent implements OnInit {
         this.item.id = this.form.get('id').value;
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
         this.item.deposito = this.form.get('deposito').value;
-        this.item.estadoPedido = new Estado(1);
+        this.item.estadoPedidoCompra = new Estado(1);
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';

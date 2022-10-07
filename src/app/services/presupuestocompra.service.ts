@@ -42,4 +42,8 @@ export class PresupuestoCompraService {
     public getPresupuestosCompraPendientes(): Observable<PresupuestoCompra[]> {
         return this.http.get<PresupuestoCompra[]>(this.baseUrl + 'pendientes');
     }
+
+    public getPresupuestosCompraPendientesByProveedor(idProveedor: number): Observable<PresupuestoCompra[]> {
+        return this.http.get<PresupuestoCompra[]>(this.baseUrl + `pendientes/${idProveedor}`);
+    }
 }

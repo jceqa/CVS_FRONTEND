@@ -1,0 +1,242 @@
+<h4 mat-dialog-title>{{ title }} Factura de Compra</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <div style="display: flex">
+            <div class="third-width-field">
+                <span>Nro Orden: {{ item.id }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Estado: {{ estadoFactura }}</span>
+            </div>
+        </div>
+
+        <div>
+            <!--<div *ngIf="this.formType === 1">
+                <br/>
+                <span >Proveedor: {{ item.proveedor.ruc }} | {{ item.proveedor.razonSocial }}</span>
+            </div>-->
+
+            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+                <input type="text"
+                       placeholder="Orden Compra"
+                       matInput
+                       [formControl]="ordenCompraControl"
+                       [matAutocomplete]="autoOrdenCompra"
+                       class="text">
+                <mat-autocomplete #autoOrdenCompra="matAutocomplete" [displayWith]="displayOrdenCompra">
+                    <mat-option *ngFor="let ordenCompra of ordenCompraFiltered | async" [value]="ordenCompra"
+                                (onSelectionChange)="selectedOrdenCompra($event)">
+                        {{ ordenCompra.observacion }} | {{ ordenCompra.fecha | date: 'dd/MM/yyyy' }} |
+                        {{ ordenCompra.proveedor.razonSocial }} | {{ ordenCompra.usuario.nombre }} |
+                        {{ ordenCompra.monto | myCurrency }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <!--<div>
+            <div *ngIf="this.formType === 1">
+                <br/>
+                <span >Proveedor: {{ item.proveedor.ruc }} | {{ item.proveedor.razonSocial }}</span>
+            </div>
+
+            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+                <input type="text"
+                       placeholder="Proveedor"
+                       matInput
+                       [formControl]="proveedorControl"
+                       [matAutocomplete]="autoProvedor"
+                       class="text">
+                <mat-autocomplete #autoProvedor="matAutocomplete" [displayWith]="displayProveedor">
+                    <mat-option *ngFor="let proveedor of proveedorFiltered | async" [value]="proveedor"
+                                (onSelectionChange)="selectedProveedor($event)">
+                        {{ proveedor.ruc }} | {{ proveedor.razonSocial }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>-->
+
+        <!--<div *ngIf="this.formType === 1" >
+            <h4>Presupuestos</h4>
+            <div *ngFor="let presupuesto of item.presupuestosCompra">
+                <span>Presupuesto de Compra: {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ presupuesto.usuario.nombre }} |  {{ presupuesto.proveedor.razonSocial }} |
+                    {{ presupuesto.total }}</span>
+                <br/>
+                <br/>
+            </div>
+        </div>
+
+        <div *ngIf="this.formType !== 1 && proveedores.length > 0">
+            <h4>Presupuestos</h4>
+            <mat-selection-list #shoes (selectionChange)="selectedPresupuesto($event)">
+                <mat-list-option *ngFor="let presupuesto of presupuestos" [value]="presupuesto">
+                    {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ presupuesto.usuario.nombre }} | {{ presupuesto.proveedor.razonSocial }} | {{ presupuesto.total | myCurrency }}
+                </mat-list-option>
+            </mat-selection-list>
+        </div>-->
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input id="descripcion" formControlName="observacion" required matInput
+                       placeholder="Observación"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-with-field">
+                <input id="numero_factura" formControlName="numeroFactura" required matInput
+                       placeholder="Número Factura"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="ordenCompraSelected">
+            <div>
+                <span>Condición Pago: {{ ordenCompraSelected.condicionPago.descripcion }}</span>
+            </div>
+            <br/>
+            <div style="display: flex" *ngIf="this.ordenCompraSelected.condicionPago.id === 2">
+                <div class="third-width-field">
+                    <span>Cantidad Cuotas: {{ ordenCompraSelected.cantidadCuota }}</span>
+                </div>
+                &nbsp;
+                <div class="third-width-field">
+                    <span>Intervalo (días): {{ ordenCompraSelected.intervalo }}</span>
+                </div>
+                &nbsp;
+                <div class="third-width-field">
+                    <span>Monto Cuota: {{ ordenCompraSelected.montoCuota | myCurrency }}</span>
+                </div>
+            </div>
+            <br/>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h4>Detalles</h4>
+        <div align="end">
+            <h3>Total: {{ total | myCurrency }}</h3>
+            <h4>Total I.V.A. : {{ totalIVA | myCurrency }}</h4>
+        </div>
+
+        <div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Código</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span> {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.codigoGenerico }} </span>
+                    </mat-cell>
+                    >
+                </ng-container>
+
+                <ng-container matColumnDef="item">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Item</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.descripcion }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cantidad">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Cantidad</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="precio">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Precio</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.monto | myCurrency }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="exenta">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Exenta</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 3">
+                            {{  dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
+                        dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="iva5">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>I.V.A. 5%</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 1">
+                            {{  dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
+                        dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="iva10">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>I.V.A. 10%</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 2">
+                            {{  dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
+                        dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <!--<ng-container matColumnDef="total">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Sub Total</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
+                    dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}
+                    </mat-cell>
+                </ng-container>-->
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid" *ngIf="this.formType !== 1">
+            <mat-icon>save</mat-icon>
+            Aceptar
+        </button>
+
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoFacturaCompra.id === 2"
+                *ngIf="this.formType === 1">
+            <mat-icon>block</mat-icon>
+            Anular
+        </button>
+
+    </mat-dialog-actions>
+
+</form>

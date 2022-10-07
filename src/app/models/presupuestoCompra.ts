@@ -10,7 +10,7 @@ export class PresupuestoCompra {
     estado: string;
     observacion: string;
     total: number;
-    estadoPresupuesto: Estado;
+    estadoPresupuestoCompra: Estado;
     usuario: Usuario;
     pedidoCompra: PedidoCompra;
     presupuestoCompraDetalles: PresupuestoCompraDetalle[];

@@ -1,20 +1,22 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { TipoArticulo } from '../../../../../models/tipoArticulo';
-import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { FormType } from '../../../../../models/enum';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TipoArticuloService } from '../../../../../services/tipoarticulo.service';
-import { UIService } from '../../../../../services/ui.service';
-import { UtilService } from '../../../../../services/util.service';
+import {Component, Inject, OnInit} from '@angular/core';
+import {Caja} from '../../../../../models/caja';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormType} from '../../../../../models/enum';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {UIService} from '../../../../../services/ui.service';
+import {CajaService} from '../../../../../services/caja.service';
+import {UtilService} from '../../../../../services/util.service';
+import {Sucursal} from '../../../../../models/sucursal';
+import {SucursalService} from '../../../../../services/sucursal.service';
 
 @Component({
-    selector: 'app-tipoarticulo-dialog',
-    templateUrl: './tipoarticulo-dialog.component.html',
-    styleUrls: ['./tipoarticulo-dialog.component.css']
+  selector: 'app-caja-dialog',
+  templateUrl: './caja-dialog.component.html',
+  styleUrls: ['./caja-dialog.component.sass']
 })
-export class TipoArticuloDialogComponent implements OnInit {
+export class CajaDialogComponent implements OnInit {
 
-    item: TipoArticulo;
+    item: Caja;
     companyId = 0;
     form: FormGroup;
 
@@ -23,11 +25,14 @@ export class TipoArticuloDialogComponent implements OnInit {
     title: String;
     editID: number;
 
+    sucursales: Sucursal[] = [];
+
     constructor(
         // private store: Store<fromRoot.State>,
-        private dialogRef: MatDialogRef<TipoArticuloDialogComponent>,
+        private dialogRef: MatDialogRef<CajaDialogComponent>,
         private uiService: UIService,
-        private tipoarticuloService: TipoArticuloService,
+        private cajaService: CajaService,
+        private sucursalService: SucursalService,
         private utils: UtilService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -39,28 +44,42 @@ export class TipoArticuloDialogComponent implements OnInit {
         this.form = new FormGroup({
             id: new FormControl('', []),
             descripcion: new FormControl('', [Validators.required]),
+            numero: new FormControl('', [Validators.required]),
+            sucursal: new FormControl('', [Validators.required]),
         });
 
-        if (this.data.item.id && this.data != null) {
+        if (this.data.item.id) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
             this.title = 'Editar';
             this.editID = this.data.item.id;
-            this.getTipoArticuloById(this.data.item.id);
+            this.getCajaById(this.data.item.id);
             this.formType = FormType.EDIT;
+            // this.form.get('sucursal').disable();
             // this.setForm(this.item);
         } else {
             // Si no existe es una nueva lista
             this.title = 'Nueva';
             this.formType = FormType.NEW;
         }
+
+
+        this.utils.startLoading();
+        this.sucursalService.getSucursalByUserId(this.utils.getUserId()).subscribe(data => {
+            console.log(data);
+            this.sucursales = data;
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
     }
 
-    getTipoArticuloById(id: number): void {
+    getCajaById(id: number): void {
 
         // Realiza la llamada http para obtener el objeto
-        this.tipoarticuloService.getTipoArticuloById(id).subscribe(
+        this.cajaService.getCajaById(id).subscribe(
             data => {
-                this.item = data as TipoArticulo;
+                this.item = data as Caja;
                 this.setForm(this.item);
             }, (error) => {
                 console.error(error);
@@ -68,12 +87,14 @@ export class TipoArticuloDialogComponent implements OnInit {
     }
 
     // Rellena los campos del formulario con los valores dados
-    setForm(item: TipoArticulo) {
+    setForm(item: Caja) {
         console.log(item);
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({
                 id: item.id,
-                descripcion: item.descripcion
+                descripcion: item.descripcion,
+                numero: item.numero,
+                sucursal: item.sucursal,
             });
         }
     }
@@ -82,6 +103,12 @@ export class TipoArticuloDialogComponent implements OnInit {
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
+        this.item.numero = this.utils.getNumber(this.form.get('numero').value);
+        this.item.sucursal = this.form.get('sucursal').value;
+    }
+
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
     }
 
     dismiss(result?: any) {
@@ -110,13 +137,14 @@ export class TipoArticuloDialogComponent implements OnInit {
 
         this.setAtributes();
         this.item.id = 0;
+        this.utils.startLoading();
         if (this.utils.tieneLetras(this.item.descripcion)) {
             // Llama al servicio que almacena el objeto {PriceListDraft}
-            this.tipoarticuloService.guardarTipoArticulo(this.item)
+            this.cajaService.guardarCaja(this.item)
                 .subscribe(data => {
                         console.log(data);
                         this.dialogRef.close(data);
-
+                        this.utils.stopLoading();
                         this.uiService.showSnackbar(
                             'Agregado exitosamente.',
                             'Cerrar',
@@ -126,7 +154,7 @@ export class TipoArticuloDialogComponent implements OnInit {
                     (error) => {
 
                         console.error('[ERROR]: ', error);
-
+                        this.utils.stopLoading();
                         this.uiService.showSnackbar(
                             error.error,
                             'Cerrar',
@@ -144,17 +172,17 @@ export class TipoArticuloDialogComponent implements OnInit {
         }
     }
 
-
     // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
 
         // Asigna los valores del formulario al objeto a almacenar
         this.setAtributes();
-
+        this.utils.startLoading();
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.descripcion)) {
-            this.tipoarticuloService.editarTipoArticulo(this.item).subscribe(data => {
+            this.cajaService.editarCaja(this.item).subscribe(data => {
                 console.log(data);
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Modificado exitosamente.',
                     'Cerrar',
@@ -164,7 +192,7 @@ export class TipoArticuloDialogComponent implements OnInit {
                 this.dialogRef.close(data);
             }, (error) => {
                 console.error('[ERROR]: ', error);
-
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',

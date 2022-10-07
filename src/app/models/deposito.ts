@@ -5,4 +5,8 @@ export class Deposito {
     descripcion: string;
     sucursal: Sucursal;
     estado: string;
+
+    constructor(id = 0) {
+        this.id = id;
+    }
 }

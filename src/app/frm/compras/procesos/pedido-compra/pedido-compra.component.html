@@ -34,7 +34,8 @@
             <div class="end" *ngIf="false">
                 <mat-checkbox [(ngModel)]="all" (change)="cargar()" disabled>Ver Inactivos</mat-checkbox>
             </div>
-            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+            <div class="table-responsive">
+                <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
                 <ng-container matColumnDef="id">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Id</strong></h4>
@@ -67,7 +68,7 @@
                         <h4><strong>Estado</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.estadoPedido.descripcion }}
+                        {{ dato.estadoPedidoCompra.descripcion }}
                     </mat-cell>
                 </ng-container>
 
@@ -88,7 +89,7 @@
                             <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                         </button>
 
-                        <button [disabled]="dato.estadoPedido.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                        <button [disabled]="dato.estadoPedidoCompra.id !== 1" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
                             <mat-icon aria-label="Editar item">block</mat-icon>
                         </button>
 
@@ -106,9 +107,9 @@
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>
-            <mat-paginator #painator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
-            </mat-paginator>
-
+                <mat-paginator #painator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+                </mat-paginator>
+            </div>
         </mat-card-content>
     </mat-card>
 </div>

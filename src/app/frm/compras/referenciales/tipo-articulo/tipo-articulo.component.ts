@@ -4,14 +4,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { TipoArticuloService } from '../../../../services/tipoarticulo.service';
 import { TipoArticulo } from '../../../../models/tipoArticulo';
 import { MatDialog } from '@angular/material/dialog';
-import { TipoArticuloDialogComponent } from './tipoArticulo-dialog/tipoArticulo-dialog.component';
+import { TipoArticuloDialogComponent } from './tipo-articulo-dialog/tipo-articulo-dialog.component';
 import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-tipoarticulo.component.ts',
-    templateUrl: './tipoarticulo.component.html',
-    styleUrls: ['./tipoarticulo.component.css']
+    selector: 'app-tipo-articulo.component.ts',
+    templateUrl: './tipo-articulo.component.html',
+    styleUrls: ['./tipo-articulo.component.css']
 })
 export class TipoArticuloComponent implements OnInit {
 

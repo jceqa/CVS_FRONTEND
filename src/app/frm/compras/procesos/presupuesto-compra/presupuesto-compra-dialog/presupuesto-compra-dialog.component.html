@@ -73,7 +73,7 @@
 
         <div class="mt-2">
             <mat-form-field class="full-with-field">
-                <input [disabled]="this.formType === 1" id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
+                <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
@@ -203,7 +203,7 @@
 
         <button mat-button color="primary" (click)="dismiss()">
             <mat-icon>cancel</mat-icon>
-            Cancelar
+            Cerrar
         </button>
 
         <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid" *ngIf="this.formType !== 1">
@@ -211,7 +211,7 @@
             Aceptar
         </button>
 
-        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoPresupuesto.id === 2" *ngIf="this.formType === 1">
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoPresupuestoCompra.id !== 1" *ngIf="this.formType === 1">
             <mat-icon>block</mat-icon>
             Anular
         </button>
