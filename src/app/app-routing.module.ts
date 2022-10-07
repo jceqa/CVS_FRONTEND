@@ -24,6 +24,7 @@ import {LibroCompraComponent} from './frm/compras/procesos/libro-compra/libro-co
 import {NotaCreditoCompraComponent} from './frm/compras/procesos/nota-credito-compra/nota-credito-compra.component';
 import {CuentaAPagarComponent} from './frm/compras/procesos/cuenta-a-pagar/cuenta-a-pagar.component';
 import {AperturaCierreCajaComponent} from './frm/ventas/procesos/apertura-cierre-caja/apertura-cierre-caja.component';
+import {CajaComponent} from './frm/ventas/referenciales/caja/caja.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -49,6 +50,7 @@ const routes: Routes = [
     { path: 'notacreditocompra', component: NotaCreditoCompraComponent},
     { path: 'cuentaapagar', component: CuentaAPagarComponent},
     { path: 'aperturacierrecaja', component: AperturaCierreCajaComponent},
+    { path: 'caja', component: CajaComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

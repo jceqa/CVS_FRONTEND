@@ -1,6 +1,6 @@
 <div style="margin: 8px;">
     <mat-toolbar>
-        <span>Pedidos de Compras</span>
+        <span>Apertura y Cierre de Cajas</span>
         <span class="line-spacer"></span>
 
         <button color="primary" mat-button (click)="cargar()">
@@ -45,39 +45,57 @@
                         </mat-cell>>
                     </ng-container>
 
-                    <ng-container matColumnDef="observacion">
+                    <ng-container matColumnDef="caja">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Observación</strong></h4>
+                            <h4><strong>Caja</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            <i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.observacion }}</i>
+                            <i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.caja.descripcion }}</i>
                         </mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="fecha">
+                    <ng-container matColumnDef="sucursal">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Fecha</strong></h4>
+                            <h4><strong>Sucursal</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.fecha | date : 'dd/MM/yyyy' }}
+                            <i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.caja.sucursal.descripcion }}</i>
                         </mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="estado">
+                    <ng-container matColumnDef="fechaHoraApertura">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Estado</strong></h4>
+                            <h4><strong>Fecha Apertura</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.estadoPedidoCompra.descripcion }}
+                            {{ dato.fechaHoraApertura | date : 'dd/MM/yyyy HH:mm' }}
                         </mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="deposito">
+                    <ng-container matColumnDef="fechaHoraCierre">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Deposito</strong></h4>
+                            <h4><strong>Fecha Cierre</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.deposito.descripcion }}
+                            {{ dato.fechaHoraCierre | date : 'dd/MM/yyyy HH:mm' }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="montoApertura">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                            <h4><strong>M. Apertura</strong></h4>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let dato" class="texto-tabla">
+                            {{ dato.montoApertura | myCurrency }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="montoCierre">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                            <h4><strong>M. Cierre</strong></h4>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let dato" class="texto-tabla">
+                            {{ dato.montoCierre | myCurrency }}
                         </mat-cell>
                     </ng-container>
 
@@ -89,7 +107,7 @@
                                 <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                             </button>
 
-                            <button [disabled]="dato.estadoPedidoCompra.id !== 1" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                            <button [disabled]="true" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
                                 <mat-icon aria-label="Editar item">block</mat-icon>
                             </button>
 

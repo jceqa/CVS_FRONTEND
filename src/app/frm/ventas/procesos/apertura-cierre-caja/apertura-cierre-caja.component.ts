@@ -18,7 +18,7 @@ import {
 })
 export class AperturaCierreCajaComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'estado', 'deposito', 'actions'];
+    displayedColumns: string[] = ['id', 'caja', 'sucursal', 'fechaHoraApertura', 'fechaHoraCierre', 'montoApertura', 'montoCierre','actions'];
     dataSource = new MatTableDataSource<AperturaCierreCaja>();
 
     @ViewChild(MatPaginator)

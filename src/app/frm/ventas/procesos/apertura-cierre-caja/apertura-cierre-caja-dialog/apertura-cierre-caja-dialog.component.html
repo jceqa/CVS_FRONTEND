@@ -1,5 +1,4 @@
-<p>apertura-cierre-caja-dialog works!</p>
-<h4 mat-dialog-title>{{ title }} Pedido de Compra</h4>
+<h4 mat-dialog-title>{{ title }} de Caja</h4>
 
 <form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
 
@@ -14,7 +13,7 @@
 
         <div style="display: flex">
             <div class="third-width-field">
-                <span>Nro Pedido: {{ item.id }}</span>
+                <span></span>
             </div>
             &nbsp;
             <div class="third-width-field">
@@ -22,135 +21,26 @@
             </div>
             &nbsp;
             <div class="third-width-field">
-                <span>Estado: {{ estadoPedido }}</span>
+                <span></span>
             </div>
         </div>
-
+        &nbsp;
         <div>
             <mat-form-field class="middle-width-field">
-                <mat-label>Sucursal</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listDepositos()">
+                <mat-label>Caja</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="caja">
                     <!--<mat-option [value]="0" selected="true">Seleccionar...</mat-option>-->
-                    <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
-                        {{ sucursal.descripcion }}
+                    <mat-option *ngFor="let caja of cajas" [value]="caja">
+                        {{ caja.descripcion }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             &nbsp;
             <mat-form-field class="middle-width-field">
-                <mat-label>Deposito</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="deposito">
-                    <!--<mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>-->
-                    <mat-option *ngFor="let deposito of depositos" [value]="deposito">
-                        {{ deposito.descripcion }}
-                    </mat-option>
-                </mat-select>
+                <input id="montoApertura" formControlName="montoApertura" required matInput placeholder="Monto Apertura"
+                       autocomplete="off" myCurrencyFormatter (change)="setNumber($event, 'montoApertura')"/>
             </mat-form-field>
 
-        </div>
-
-        <div class="mt-2">
-            <mat-form-field class="full-with-field">
-                <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
-                       autocomplete="off" class="text"/>
-            </mat-form-field>
-        </div>
-
-        <mat-divider></mat-divider>
-
-        <h4>Detalles</h4>
-        <div class="full-with-field" *ngIf="this.formType !== 1">
-            <mat-form-field>
-                <input type="text"
-                       placeholder="Artículo"
-                       matInput
-                       [formControl]="myControl"
-                       [matAutocomplete]="auto"
-                       class="text">
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="display">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
-                                (onSelectionChange)="selected($event)">
-                        {{option.codigoGenerico}} | {{option.descripcion}}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            &nbsp;
-            <mat-form-field>
-                <input type=number id="cantidad" formControlName="cantidadArticulo" matInput
-                       placeholder="Cantidad"
-                       autocomplete="off" class="text"/>
-            </mat-form-field>
-            &nbsp;
-            <button matTooltip="Agregar Item" color="primary" mat-icon-button
-                    (click)="addItem()">
-                <mat-icon aria-label="Agregar Item">add_circle</mat-icon>
-            </button>
-
-        </div>
-
-        <div>
-            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
-                <ng-container matColumnDef="codigo">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Código</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span> {{ dato.articulo.codigoGenerico }} </span>
-                    </mat-cell>
-                    >
-                </ng-container>
-
-                <ng-container matColumnDef="item">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Item</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.articulo.descripcion }}
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="cantidad">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Cantidad</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.cantidad }}
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="actions">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let dato">
-
-                        <!--<button color="primary" mat-icon-button (click)="viewDetail(dato)">
-                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
-                        </button>-->
-
-                        <button matTooltip="Aumentar" color="primary" mat-icon-button
-                                (click)="incItem(dato)" *ngIf="formType !== 1">
-                            <mat-icon aria-label="Aumentar item">add_circle_outline</mat-icon>
-                        </button>
-
-                        <button matTooltip="Disminuir" color="primary" mat-icon-button
-                                (click)="descItem(dato)" [disabled]="dato.cantidad === 1" *ngIf="formType !== 1">
-                            <mat-icon aria-label="Disminuir item">remove_circle_outline</mat-icon>
-                        </button>
-
-                        <button matTooltip="Eliminar" color="warn" mat-icon-button
-                                (click)="deleteItem(dato)" *ngIf="formType !== 1">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-
-                        <!--<button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
-                            <mat-icon>refresh</mat-icon>
-                        </button>-->
-
-                    </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
         </div>
 
     </mat-dialog-content>
@@ -167,7 +57,7 @@
             Aceptar
         </button>
 
-        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoPedidoCompra.id !== 1" *ngIf="this.formType === 1">
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estado !== 'INACTIVO'" *ngIf="this.formType === 1">
             <mat-icon>block</mat-icon>
             Anular
         </button>

@@ -1,5 +1,9 @@
+import {Sucursal} from './sucursal';
+
 export class Caja {
     id: number;
-    descrpicion: string;
+    descripcion: string;
     estado: string;
+    numero: number;
+    sucursal: Sucursal;
 }

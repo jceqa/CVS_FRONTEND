@@ -96,6 +96,8 @@ import {AperturaCierreCajaComponent} from './frm/ventas/procesos/apertura-cierre
 import {
     AperturaCierreCajaDialogComponent
 } from './frm/ventas/procesos/apertura-cierre-caja/apertura-cierre-caja-dialog/apertura-cierre-caja-dialog.component';
+import {CajaComponent} from './frm/ventas/referenciales/caja/caja.component';
+import {CajaDialogComponent} from './frm/ventas/referenciales/caja/caja-dialog/caja-dialog.component';
 
 @NgModule({
     declarations: [
@@ -154,6 +156,8 @@ import {
         CuentaAPagarDialogComponent,
         AperturaCierreCajaComponent,
         AperturaCierreCajaDialogComponent,
+        CajaComponent,
+        CajaDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective
