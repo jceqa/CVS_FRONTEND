@@ -8,8 +8,8 @@ import { UIService } from '../../../../../services/ui.service';
 
 @Component({
     selector: 'app-condicion-pago-dialog',
-    templateUrl: './condicionPago-dialog.component.html',
-    styleUrls: ['./condicionPago-dialog.component.css']
+    templateUrl: './condicion-pago-dialog.component.html',
+    styleUrls: ['./condicion-pago-dialog.component.css']
 })
 export class CondicionPagoDialogComponent implements OnInit {
 

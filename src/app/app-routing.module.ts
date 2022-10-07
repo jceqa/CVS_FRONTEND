@@ -8,7 +8,7 @@ import { MarcaComponent } from './frm/compras/referenciales/marca/marca.componen
 import { EquipoComponent } from './frm/servicio/referenciales/equipo/equipo.component';
 import { CiudadComponent } from './frm/compras/referenciales/ciudad/ciudad.component';
 import { ImpuestoComponent } from './frm/compras/referenciales/impuesto/impuesto.component';
-import { TipoArticuloComponent } from './frm/compras/referenciales/tipoArticulo/tipoArticulo.component';
+import { TipoArticuloComponent } from './frm/compras/referenciales/tipo-articulo/tipo-articulo.component';
 import { CargoComponent } from './frm/administracion/referenciales/cargo/cargo.component';
 import { EstadoComponent } from './frm/administracion/referenciales/estado/estado.component';
 import {ArticuloComponent} from './frm/compras/referenciales/articulo/articulo.component';
@@ -31,7 +31,7 @@ const routes: Routes = [
     { path: 'equipo', component: EquipoComponent },
     { path: 'ciudad', component: CiudadComponent },
     { path: 'impuesto', component: ImpuestoComponent },
-    { path: 'tipoarticulo', component: TipoArticuloComponent },
+    { path: 'tipoArticulo', component: TipoArticuloComponent },
     { path: 'cargo', component: CargoComponent },
     { path: 'estado', component: EstadoComponent },
     { path: 'impuesto', component: ImpuestoComponent },

@@ -19,7 +19,7 @@ export class TipoArticuloService {
         return this.accountService.getAuthHeather();
     }
 
-    private baseUrl = 'api/tipoarticulo/';
+    private baseUrl = 'api/tipo-articulo/';
 
     public buscarCiudades(cantRegistros: number, pag: number, texto): Observable<any> {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);

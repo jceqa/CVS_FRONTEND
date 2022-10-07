@@ -8,9 +8,9 @@ import { UIService } from '../../../../../services/ui.service';
 import { UtilService } from '../../../../../services/util.service';
 
 @Component({
-    selector: 'app-tipoarticulo-dialog',
-    templateUrl: './tipoarticulo-dialog.component.html',
-    styleUrls: ['./tipoarticulo-dialog.component.css']
+    selector: 'app-tipo-articulo-dialog',
+    templateUrl: './tipo-articulo-dialog.component.html',
+    styleUrls: ['./tipo-articulo-dialog.component.css']
 })
 export class TipoArticuloDialogComponent implements OnInit {
 
