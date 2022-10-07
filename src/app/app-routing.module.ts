@@ -23,6 +23,7 @@ import {NotaDebitoCompraComponent} from './frm/compras/procesos/nota-debito-comp
 import {LibroCompraComponent} from './frm/compras/procesos/libro-compra/libro-compra.component';
 import {NotaCreditoCompraComponent} from './frm/compras/procesos/nota-credito-compra/nota-credito-compra.component';
 import {CuentaAPagarComponent} from './frm/compras/procesos/cuenta-a-pagar/cuenta-a-pagar.component';
+import {AperturaCierreCajaComponent} from './frm/ventas/procesos/apertura-cierre-caja/apertura-cierre-caja.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -47,6 +48,7 @@ const routes: Routes = [
     { path: 'librocompra', component: LibroCompraComponent},
     { path: 'notacreditocompra', component: NotaCreditoCompraComponent},
     { path: 'cuentaapagar', component: CuentaAPagarComponent},
+    { path: 'aperturacierrecaja', component: AperturaCierreCajaComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

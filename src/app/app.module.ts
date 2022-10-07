@@ -92,6 +92,10 @@ import {CuentaAPagarComponent} from './frm/compras/procesos/cuenta-a-pagar/cuent
 import {
     CuentaAPagarDialogComponent
 } from './frm/compras/procesos/cuenta-a-pagar/cuenta-a-pagar-dialog/cuenta-a-pagar-dialog.component';
+import {AperturaCierreCajaComponent} from './frm/ventas/procesos/apertura-cierre-caja/apertura-cierre-caja.component';
+import {
+    AperturaCierreCajaDialogComponent
+} from './frm/ventas/procesos/apertura-cierre-caja/apertura-cierre-caja-dialog/apertura-cierre-caja-dialog.component';
 
 @NgModule({
     declarations: [
@@ -148,6 +152,8 @@ import {
         NotaDebitoCompraDialogComponent,
         CuentaAPagarComponent,
         CuentaAPagarDialogComponent,
+        AperturaCierreCajaComponent,
+        AperturaCierreCajaDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective
