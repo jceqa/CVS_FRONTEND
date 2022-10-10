@@ -103,6 +103,8 @@ import {ClienteDialogComponent} from './frm/administracion/referenciales/cliente
 import {RecepcionDialogComponent} from './frm/servicio/procesos/recepcion/recepcion-dialog/recepcion-dialog.component';
 import {PedidoVentaComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta.component';
 import {PedidoVentaDialogComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta-dialog/pedido-venta-dialog.component';
+import {AjusteComponent} from './frm/compras/procesos/ajuste/ajuste.component';
+import {AjusteDialogComponent} from './frm/compras/procesos/ajuste/ajuste-dialog/ajuste-dialog.component';
 
 @NgModule({
     declarations: [
@@ -168,6 +170,8 @@ import {PedidoVentaDialogComponent} from './frm/ventas/procesos/pedido-venta/ped
         RecepcionDialogComponent,
         PedidoVentaComponent,
         PedidoVentaDialogComponent,
+        AjusteComponent,
+        AjusteDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

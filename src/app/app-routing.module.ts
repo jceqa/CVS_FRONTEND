@@ -27,6 +27,7 @@ import {AperturaCierreCajaComponent} from './frm/ventas/procesos/apertura-cierre
 import {CajaComponent} from './frm/ventas/referenciales/caja/caja.component';
 import {ClienteComponent} from './frm/administracion/referenciales/cliente/cliente.component';
 import {PedidoVentaComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta.component';
+import {AjusteComponent} from './frm/compras/procesos/ajuste/ajuste.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -55,6 +56,7 @@ const routes: Routes = [
     { path: 'caja', component: CajaComponent},
     { path: 'cliente', component: ClienteComponent},
     { path: 'pedidoventa', component: PedidoVentaComponent},
+    { path: 'ajuste', component: AjusteComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];
