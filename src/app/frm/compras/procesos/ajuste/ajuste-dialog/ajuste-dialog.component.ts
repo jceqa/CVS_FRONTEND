@@ -6,6 +6,16 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
 import {AjusteService} from '../../../../../services/ajuste.service';
 import {UtilService} from '../../../../../services/util.service';
+import {Sucursal} from '../../../../../models/sucursal';
+import {Deposito} from '../../../../../models/deposito';
+import {SucursalService} from '../../../../../services/sucursal.service';
+import {DepositoService} from '../../../../../services/deposito.service';
+import {Articulo} from '../../../../../models/articulo';
+import {map, startWith} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {MatTableDataSource} from '@angular/material/table';
+import {Stock} from '../../../../../models/stock';
+import {StockService} from '../../../../../services/stock.service';
 
 @Component({
   selector: 'app-ajuste-dialog',
@@ -23,11 +33,29 @@ export class AjusteDialogComponent implements OnInit {
     title: String;
     editID: number;
 
+    fecha = new Date();
+
+    articuloSelected: Articulo = null;
+    sucursales: Sucursal[] = [];
+    depositos: Deposito[] = [];
+
+    options: Articulo[] = [];
+    filteredOptions: Observable<Articulo[]>;
+
+    myControl = new FormControl('');
+
+    displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'nuevaCantidad'];
+    dataSource = new MatTableDataSource<Stock>();
+    detalles: Stock[] = [];
+
     constructor(
         // private store: Store<fromRoot.State>,
         private dialogRef: MatDialogRef<AjusteDialogComponent>,
         private uiService: UIService,
         private ajusteService: AjusteService,
+        private sucursalService: SucursalService,
+        private depositoService: DepositoService,
+        private stockService: StockService,
         private utils: UtilService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -39,6 +67,10 @@ export class AjusteDialogComponent implements OnInit {
         this.form = new FormGroup({
             id: new FormControl('', []),
             descripcion: new FormControl('', [Validators.required]),
+            sucursal: new FormControl('', [Validators.required]),
+            deposito: new FormControl('', [Validators.required]),
+            tipoAjuste: new FormControl('', [Validators.required]),
+            cantidadArticulo: new FormControl('', [Validators.required]),
         });
 
         if (this.data.item.id) {
@@ -48,11 +80,24 @@ export class AjusteDialogComponent implements OnInit {
             this.getAjusteById(this.data.item.id);
             this.formType = FormType.EDIT;
             // this.setForm(this.item);
+            this.form.get('observacion').disable();
+            this.form.get('sucursal').disable();
+            this.form.get('deposito').disable();
         } else {
             // Si no existe es una nueva lista
-            this.title = 'Nueva';
+            this.title = 'Nuevo';
             this.formType = FormType.NEW;
         }
+
+        this.utils.startLoading();
+        this.sucursalService.getSucursalByUserId(this.utils.getUserId()).subscribe(data => {
+            console.log(data);
+            this.sucursales = data;
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
     }
 
     getAjusteById(id: number): void {
@@ -73,9 +118,68 @@ export class AjusteDialogComponent implements OnInit {
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({
                 id: item.id,
-                descripcion: item.descripcion
+                descripcion: item.descripcion,
+                deposito: item.stock.deposito,
+                sucursal: item.stock.deposito.sucursal,
             });
         }
+
+        this.dataSource = new MatTableDataSource<Stock>(
+            this.detalles
+        );
+    }
+
+    listDepositos() {
+        this.form.get('deposito').setValue('');
+        this.utils.startLoading();
+        this.depositoService.listDepositosBySucursal(this.form.get('sucursal').value.id).subscribe(
+            data => {
+                console.log(data);
+                this.depositos = data;
+                this.utils.stopLoading();
+                if (this.formType === FormType.EDIT) {
+                    this.form.get('deposito').setValue(this.item.stock.deposito);
+                }
+                this.utils.stopLoading();
+            }, error => {
+                console.log(error);
+                this.utils.stopLoading();
+            }
+        );
+    }
+
+    listStock() {
+        // this.form.get('deposito').setValue('');
+        this.utils.startLoading();
+        this.stockService.listStockByDeposito(this.form.get('deposito').value.id).subscribe(result => {
+            console.log(result);
+            result.forEach(r => {
+               this.options.push(r.articulo);
+            });
+            // this.options = result;
+
+            this.filteredOptions = this.myControl.valueChanges.pipe(
+                startWith(''),
+                map(value => this._filter(value || '')),
+            );
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
+        this.utils.stopLoading();
+    }
+
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
+    }
+
+    private _filter(value: any): Articulo[] {
+        const filterValue = value.toString().toLowerCase();
+        return (
+            this.options.filter(option => option.codigoGenerico.toString().includes(filterValue) ||
+                option.descripcion.toLowerCase().includes(filterValue))
+        );
     }
 
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
@@ -86,6 +190,17 @@ export class AjusteDialogComponent implements OnInit {
 
     dismiss(result?: any) {
         this.dialogRef.close(result);
+    }
+
+    display(value) {
+        if (value) {
+            return value.codigoGenerico.toString() + ' - ' + value.descripcion;
+        }
+    }
+
+    selected($event): void {
+        console.log($event.source.value);
+        this.articuloSelected = $event.source.value;
     }
 
     uploadListItem(dato) {

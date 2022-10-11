@@ -41,34 +41,58 @@ export class PedidoCompraComponent implements OnInit {
     }
 
     cargar() {
-        // this.store.dispatch(new UI.StartLoading());
-        // this.util.localStorageSetItem('loading', 'true');
         this.util.startLoading();
-        this.pedidoCompraService.getPedidosCompra(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.pedidosCompra = data;
-
-                this.dataSource = new MatTableDataSource<PedidoCompra>(
-                    this.pedidosCompra
-                );
-                this.dataSource.paginator = this.paginator;
-                // this.store.dispatch(new UI.StopLoading());
-                // this.util.localStorageSetItem('loading', 'false');
-                this.util.stopLoading();
-            },
-            err => {
-                // this.store.dispatch(new UI.StopLoading());
-                // this.util.localStorageSetItem('loading', 'false');
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+        if (this.all) {
+            this.pedidoCompraService.getPedidosCompra(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.pedidosCompra = data;
+                    this.dataSource = new MatTableDataSource<PedidoCompra>(
+                        this.pedidosCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    // this.store.dispatch(new UI.StopLoading());
+                    // this.util.localStorageSetItem('loading', 'false');
+                    this.util.stopLoading();
+                },
+                err => {
+                    // this.store.dispatch(new UI.StopLoading());
+                    // this.util.localStorageSetItem('loading', 'false');
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        } else {
+            this.pedidoCompraService.getPedidosCompraPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.pedidosCompra = data;
+                    this.dataSource = new MatTableDataSource<PedidoCompra>(
+                        this.pedidosCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    // this.store.dispatch(new UI.StopLoading());
+                    // this.util.localStorageSetItem('loading', 'false');
+                    this.util.stopLoading();
+                },
+                err => {
+                    // this.store.dispatch(new UI.StopLoading());
+                    // this.util.localStorageSetItem('loading', 'false');
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        }
     }
 
     add(): void {

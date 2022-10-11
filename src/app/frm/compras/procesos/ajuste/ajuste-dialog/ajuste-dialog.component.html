@@ -4,9 +4,43 @@
 
     <mat-dialog-content>
 
+        <div style="display: flex">
+            <div class="third-width-field">
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+            </div>
+        </div>
+
         <div class="mt-2" *ngIf="formType === 1">
             <mat-form-field class="full-with-field" >
                 <input id="id" formControlName="id" matInput placeholder="Id" readonly />
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field class="middle-width-field">
+                <mat-label>Sucursal</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listDepositos()">
+                    <!--<mat-option [value]="0" selected="true">Seleccionar...</mat-option>-->
+                    <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
+                        {{ sucursal.descripcion }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="middle-width-field">
+                <mat-label>Deposito</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="deposito" (selectionChange)="listStock()">
+                    <!--<mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>-->
+                    <mat-option *ngFor="let deposito of depositos" [value]="deposito">
+                        {{ deposito.descripcion }}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
 
@@ -15,6 +49,85 @@
                 <input id="descripcion" formControlName="descripcion" required matInput placeholder="Descripcion"
                        autocomplete="off" class="text"/>
             </mat-form-field>
+        </div>
+
+        <div *ngIf="this.formType !== 1">
+            <mat-form-field class="full-with-field" >
+                <input type="text"
+                       placeholder="Artículo"
+                       matInput
+                       [formControl]="myControl"
+                       [matAutocomplete]="auto"
+                       class="text">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="display">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+                                (onSelectionChange)="selected($event)">
+                        {{option.codigoGenerico}} | {{option.descripcion}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field class="middle-width-field">
+                <mat-label>Tipo Ajuste</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="tipoAjuste">
+                    <!--<mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>-->
+                    <mat-option *ngFor="let deposito of depositos" [value]="deposito">
+                        {{ deposito.descripcion }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="middle-width-field">
+                <input type=number id="cantidad" formControlName="cantidadArticulo" matInput
+                       placeholder="Cantidad"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Código</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span> {{ dato.articulo.codigoGenerico }} </span>
+                    </mat-cell>
+                    >
+                </ng-container>
+
+                <ng-container matColumnDef="item">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Item</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.articulo.descripcion }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cantidad">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Cantidad</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.cantidad }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="nuevaCantidad">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Nueva Cantidad</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.cantidad }}
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
         </div>
 
     </mat-dialog-content>

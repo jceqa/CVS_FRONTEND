@@ -43,27 +43,51 @@ export class NotaRemisionComponent implements OnInit {
 
     cargar() {
         this.util.startLoading();
-        this.notaRemisionService.getNotasRemision(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.facturasCompra = data;
+        if (this.all) {
+            this.notaRemisionService.getNotasRemision(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
 
-                this.dataSource = new MatTableDataSource<NotaRemision>(
-                    this.facturasCompra
-                );
-                this.dataSource.paginator = this.paginator;
-                this.util.stopLoading();
-            },
-            err => {
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+                    this.dataSource = new MatTableDataSource<NotaRemision>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        } else {
+            this.notaRemisionService.listNotaRemisionPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
+
+                    this.dataSource = new MatTableDataSource<NotaRemision>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        }
     }
 
     add(): void {

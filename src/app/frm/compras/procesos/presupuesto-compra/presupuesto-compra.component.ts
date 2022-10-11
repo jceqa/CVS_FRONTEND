@@ -42,27 +42,49 @@ export class PresupuestoCompraComponent implements OnInit {
 
     cargar() {
         this.util.startLoading();
-        this.presupuestoCompraService.getPresupuestosCompra(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.presupuestosCompra = data;
-
-                this.dataSource = new MatTableDataSource<PresupuestoCompra>(
-                    this.presupuestosCompra
-                );
-                this.dataSource.paginator = this.paginator;
-                this.util.stopLoading();
-            },
-            err => {
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+        if (this.all) {
+            this.presupuestoCompraService.getPresupuestosCompra(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.presupuestosCompra = data;
+                    this.dataSource = new MatTableDataSource<PresupuestoCompra>(
+                        this.presupuestosCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        } else {
+            this.presupuestoCompraService.getPresupuestosCompraPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.presupuestosCompra = data;
+                    this.dataSource = new MatTableDataSource<PresupuestoCompra>(
+                        this.presupuestosCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        }
     }
 
     add(): void {

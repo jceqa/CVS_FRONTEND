@@ -9,7 +9,7 @@ import {UtilService} from '../../../../services/util.service';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 import {
     NotaCreditoCompraDialogComponent
-} from '../nota-credito-compra/nota-credito-compra-dialog/nota-credito-compra-dialog.component';
+} from './nota-credito-compra-dialog/nota-credito-compra-dialog.component';
 
 @Component({
     selector: 'app-nota-credito-compra',
@@ -45,27 +45,49 @@ export class NotaCreditoCompraComponent implements OnInit {
 
     cargar() {
         this.util.startLoading();
-        this.notaCreditoCompraService.getNotasCreditoCompra(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.facturasCompra = data;
-
-                this.dataSource = new MatTableDataSource<NotaCreditoCompra>(
-                    this.facturasCompra
-                );
-                this.dataSource.paginator = this.paginator;
-                this.util.stopLoading();
-            },
-            err => {
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+        if (this.all) {
+            this.notaCreditoCompraService.getNotasCreditoCompra(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
+                    this.dataSource = new MatTableDataSource<NotaCreditoCompra>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        } else {
+            this.notaCreditoCompraService.getNotaCreditoCompraPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
+                    this.dataSource = new MatTableDataSource<NotaCreditoCompra>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        }
     }
 
     add(): void {

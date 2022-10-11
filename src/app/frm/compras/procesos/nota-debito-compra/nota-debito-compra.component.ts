@@ -42,27 +42,49 @@ export class NotaDebitoCompraComponent implements OnInit {
 
     cargar() {
         this.util.startLoading();
-        this.notaDebitoCompraService.getNotasDebitoCompra(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.facturasCompra = data;
-
-                this.dataSource = new MatTableDataSource<NotaDebitoCompra>(
-                    this.facturasCompra
-                );
-                this.dataSource.paginator = this.paginator;
-                this.util.stopLoading();
-            },
-            err => {
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+        if ( this.all) {
+            this.notaDebitoCompraService.getNotasDebitoCompra(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
+                    this.dataSource = new MatTableDataSource<NotaDebitoCompra>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        } else {
+            this.notaDebitoCompraService.getNotaDebitoCompraPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
+                    this.dataSource = new MatTableDataSource<NotaDebitoCompra>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        }
     }
 
     add(): void {

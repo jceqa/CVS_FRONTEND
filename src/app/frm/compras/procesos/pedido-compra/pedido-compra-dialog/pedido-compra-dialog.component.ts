@@ -126,7 +126,6 @@ export class PedidoCompraDialogComponent implements OnInit {
         );
     }
 
-
     compareFunction(o1: any, o2: any) {
         return (o1 && o2 && o1.id === o2.id);
     }

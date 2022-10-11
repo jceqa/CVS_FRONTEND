@@ -31,8 +31,8 @@
     </mat-toolbar>
     <mat-card>
         <mat-card-content>
-            <div class="end" *ngIf="false">
-                <mat-checkbox [(ngModel)]="all" (change)="cargar()" disabled>Ver Inactivos</mat-checkbox>
+            <div class="end">
+                <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Todos</mat-checkbox>
             </div>
             <div class="table-responsive">
                 <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
