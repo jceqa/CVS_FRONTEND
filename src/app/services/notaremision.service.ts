@@ -42,4 +42,8 @@ export class NotaRemisionService {
     public listNotaRemisionPendientes(): Observable<NotaRemision[]> {
         return this.http.get<NotaRemision[]>(this.baseUrl + 'pendientes');
     }
+
+    public processNotaRemision(notaRemision: NotaRemision): Observable<any> {
+        return this.http.put<any>(this.baseUrl + 'procesar', notaRemision);
+    }
 }

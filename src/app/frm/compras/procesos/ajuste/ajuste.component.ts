@@ -8,7 +8,6 @@ import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 import {AjusteDialogComponent} from './ajuste-dialog/ajuste-dialog.component';
-
 @Component({
   selector: 'app-ajuste',
   templateUrl: './ajuste.component.html',
@@ -16,7 +15,7 @@ import {AjusteDialogComponent} from './ajuste-dialog/ajuste-dialog.component';
 })
 export class AjusteComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'descripcion', 'actions'];
+    displayedColumns: string[] = ['id', 'descripcion', 'estado', 'fecha', 'articulo', 'actions'];
 
     dataSource = new MatTableDataSource<Ajuste>();
 
@@ -38,10 +37,10 @@ export class AjusteComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.cargarAjustes();
+        this.cargar();
     }
 
-    cargarAjustes() {
+    cargar() {
         // this.store.dispatch(new UI.StartLoading());
         // this.util.localStorageSetItem('loading', 'true');
         this.util.startLoading();
@@ -72,15 +71,15 @@ export class AjusteComponent implements OnInit {
         );
     }
 
-    addItem(): void {
+    add(): void {
 
         const item = new Ajuste();
 
-        this.editItem(item);
+        this.openDialog(item);
 
     }
 
-    editItem(item: Ajuste): void {
+    edit(item: Ajuste): void {
         const dialogRef = this.dialog.open(AjusteDialogComponent, {
             minWidth: '60%',
             // maxWidth: '600px',
@@ -92,7 +91,7 @@ export class AjusteComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargarAjustes();
+                this.cargar();
             }
         });
     }
@@ -101,7 +100,7 @@ export class AjusteComponent implements OnInit {
         this.ajusteService.eliminarAjuste(id).subscribe(
             result => {
                 console.log(result);
-                this.cargarAjustes();
+                this.cargar();
 
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
@@ -125,7 +124,7 @@ export class AjusteComponent implements OnInit {
         this.ajusteService.editarAjuste(ajuste).subscribe(
             result => {
                 console.log(result);
-                this.cargarAjustes();
+                this.cargar();
                 this.uiService.showSnackbar(
                     'Reactivado correctamente.',
                     'Cerrar',
@@ -175,6 +174,109 @@ export class AjusteComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.reactivateItem(ajuste);
+            }
+        });
+    }
+
+    openDialog(item: Ajuste): void {
+        const dialogRef = this.dialog.open(AjusteDialogComponent, {
+            minWidth: '70%',
+            // maxWidth: '600px',
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                item: item
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            // debugger;
+            if (result) {
+                this.cargar();
+            }
+        });
+    }
+
+    anular(dato: Ajuste): void {
+        this.util.startLoading();
+        this.ajusteService.anularAjuste(dato).subscribe(
+            result => {
+                console.log(result);
+                this.cargar();
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    'Anulado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    anularDialog(event: any, ajuste: Ajuste): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Anular Ajuste',
+                msg: '¿Está seguro que desea anular este Ajuste?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.anular(ajuste);
+            }
+        });
+    }
+
+    procesar(dato: Ajuste): void {
+        this.util.startLoading();
+        this.ajusteService.processAjuste(dato).subscribe(
+            result => {
+                console.log(result);
+                this.cargar();
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    'Procesado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    error.error ? error.error : 'Ha ocurrido un error',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    procesarDialog(event: any, ajuste: Ajuste): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Procesar Ajuste',
+                msg: '¿Está seguro que desea procesar este Ajuste?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.procesar(ajuste);
             }
         });
     }

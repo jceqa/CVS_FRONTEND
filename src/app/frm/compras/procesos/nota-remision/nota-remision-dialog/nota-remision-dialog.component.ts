@@ -10,7 +10,7 @@ import {UIService} from '../../../../../services/ui.service';
 import {NotaRemisionService} from '../../../../../services/notaremision.service';
 import {UtilService} from '../../../../../services/util.service';
 import {Estado} from '../../../../../models/estado';
-// import {Usuario} from '../../../../../models/usuario';
+import {Usuario} from '../../../../../models/usuario';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
 import {Deposito} from '../../../../../models/deposito';
 import {DepositoService} from '../../../../../services/deposito.service';
@@ -157,22 +157,15 @@ export class NotaRemisionDialogComponent implements OnInit {
 
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.fecha = this.fecha;
-        this.item.estado = 'ACTIVO';
-        this.item.estadoNotaRemision = new Estado(1);
-        // this.item.usuario = new Usuario(this.utils.getUserId());
-        // this.item.presupuestosCompra = this.presupuestosSelected;
-        // this.item.condicionPago = this.form.get('condicionPago').value;
-        this.item.notaRemisionDetalle = this.detalles;
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
-        // this.item.proveedor = this.proveedorSelected;
-        // this.item.monto = this.total;
-
-        /*if (this.condicionPagoType === 2) {
-            this.item.intervalo = this.form.get('intervalo').value;
-            this.item.montoCuota = this.utils.getNumber(this.form.get('montoCuota').value);
-            this.item.cantidadCuota = this.form.get('cantidadCuota').value;
-        }*/
+        this.item.estado = 'ACTIVO';
+        this.item.tipo = 'MANUAL';
+        this.item.fecha = this.fecha;
+        this.item.estadoNotaRemision = new Estado(1);
+        this.item.usuario = new Usuario(this.utils.getUserId());
+        this.item.origen = this.form.get('origen').value;
+        this.item.destino = this.form.get('destino').value;
+        this.item.notaRemisionDetalle = this.detalles;
     }
 
     dismiss(result?: any) {
@@ -180,18 +173,21 @@ export class NotaRemisionDialogComponent implements OnInit {
     }
 
     selected($event): void {
-        console.log($event.source.value);
-        this.utils.startLoading();
-        this.stockService.listStockByDeposito($event.source.value.id).subscribe(
-            data => {
-                console.log(data);
-                this.stocks = data;
-                this.utils.stopLoading();
-            }, error => {
-                this.utils.stopLoading();
-                console.log(error);
-            }
-        );
+        if ($event.isUserInput) {
+            console.log($event.source.value);
+            this.utils.startLoading();
+            // this.stocks.length = 0;
+            this.stockService.listStockByDeposito($event.source.value.id).subscribe(
+                data => {
+                    console.log(data);
+                    this.stocks = data;
+                    this.utils.stopLoading();
+                }, error => {
+                    this.utils.stopLoading();
+                    console.log(error);
+                }
+            );
+        }
     }
 
     display(value) {
@@ -235,37 +231,21 @@ export class NotaRemisionDialogComponent implements OnInit {
                 5000
             );
             return false;
-        } /*else if (!this.proveedorSelected) {
+        }  else if (this.detalles.length === 0) {
             this.uiService.showSnackbar(
-                'Debe seleccionar un Proveedor.',
+                'Debe seleccionar al menos un item.',
                 'Cerrar',
                 5000
             );
             return false;
-        } else if (this.presupuestosSelected.length === 0) {
+        } else if (this.form.get('origen').value.id === this.form.get('destino').value.id) {
             this.uiService.showSnackbar(
-                'Debe seleccionar al menos un Presupuesto de Compra.',
+                'El origen no puede ser igual al destino.',
                 'Cerrar',
                 5000
             );
             return false;
-        } else if (this.condicionPagoType === 2) {
-            if ( this.form.get('cantidadCuota').value === '') {
-                this.uiService.showSnackbar(
-                    'Debe especificar la cantidad de cuotas.',
-                    'Cerrar',
-                    5000
-                );
-                return false;
-            } else if ( this.form.get('intervalo').value === '') {
-                this.uiService.showSnackbar(
-                    'Debe especificar intervalo entre las cuotas.',
-                    'Cerrar',
-                    5000
-                );
-                return false;
-            }
-        }*/
+        }
         return true;
     }
 
@@ -307,7 +287,7 @@ export class NotaRemisionDialogComponent implements OnInit {
         this.setAtributes();
 
         // Llama al servicio http que actualiza el objeto.
-        if (this.utils.tieneLetras(this.item.observacion)) {
+        if (this.validarCampos()) {
             this.notaRemisionService.editarNotaRemision(this.item).subscribe(data => {
                 console.log(data);
                 this.uiService.showSnackbar(
@@ -378,8 +358,6 @@ export class NotaRemisionDialogComponent implements OnInit {
     }
 
     addItem() {
-        // if (this.articuloSelected !== null) {
-            // if (this.form.get('cantidadArticulo').value > 0) {
         this.stockSelected.forEach(stock => {
             const art = this.detalles.find(d => d.articulo.id === stock.articulo.id);
             if (!art) {
@@ -391,26 +369,11 @@ export class NotaRemisionDialogComponent implements OnInit {
                     'pedidoCompraDetalle': null
                 });
             }
-            // this.limpiarCampos();
         });
         console.log(this.detalles);
         this.dataSource = new MatTableDataSource<NotaRemisionDetalle>(
             this.detalles
         );
-            /*} else {
-                this.uiService.showSnackbar(
-                    'La cantidad de articulos debe ser mayor a 0.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        } else {
-            this.uiService.showSnackbar(
-                'Debe seleccionar un articulo.',
-                'Cerrar',
-                3000
-            );
-        }*/
     }
 
     incItem(dato) {
@@ -426,9 +389,22 @@ export class NotaRemisionDialogComponent implements OnInit {
         return stock.existencia <= dato.cantidad;
     }
 
-    limpiarCampos() {
-        this.articuloSelected = null;
-        this.myControl.setValue('');
-        this.form.get('cantidadArticulo').setValue(0);
+    process() {
+        this.utils.startLoading();
+        this.notaRemisionService.processNotaRemision(this.item).subscribe(
+            data => {
+                console.log(data);
+                this.utils.stopLoading();
+                this.uiService.showSnackbar(
+                    'Procesado Exitosamente.',
+                    'Cerrar',
+                    3000
+                );
+                this.dialogRef.close(true);
+            }, error => {
+                console.log(error);
+                this.utils.stopLoading();
+            }
+        );
     }
 }

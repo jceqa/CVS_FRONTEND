@@ -25,7 +25,7 @@
         <div>
             <mat-form-field class="middle-width-field">
                 <mat-label>Sucursal</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listDepositos()">
+                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listDepositos()" required>
                     <!--<mat-option [value]="0" selected="true">Seleccionar...</mat-option>-->
                     <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
                         {{ sucursal.descripcion }}
@@ -35,8 +35,7 @@
             &nbsp;
             <mat-form-field class="middle-width-field">
                 <mat-label>Deposito</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="deposito" (selectionChange)="listStock()">
-                    <!--<mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>-->
+                <mat-select [compareWith]="compareFunction" formControlName="deposito" (selectionChange)="listStock()" required>
                     <mat-option *ngFor="let deposito of depositos" [value]="deposito">
                         {{ deposito.descripcion }}
                     </mat-option>
@@ -71,17 +70,17 @@
         <div>
             <mat-form-field class="middle-width-field">
                 <mat-label>Tipo Ajuste</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="tipoAjuste">
+                <mat-select [compareWith]="compareFunction" formControlName="tipoAjuste" required (selectionChange)="calculateCantidad()">
                     <!--<mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>-->
-                    <mat-option *ngFor="let deposito of depositos" [value]="deposito">
-                        {{ deposito.descripcion }}
+                    <mat-option *ngFor="let tipoAjuste of tiposAjuste" [value]="tipoAjuste">
+                        {{ tipoAjuste }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             &nbsp;
             <mat-form-field class="middle-width-field">
                 <input type=number id="cantidad" formControlName="cantidadArticulo" matInput
-                       placeholder="Cantidad"
+                       placeholder="Cantidad" required (change)="calculateCantidad()"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
@@ -112,7 +111,7 @@
                         <h4><strong>Cantidad</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.cantidad }}
+                        {{ dato.existencia }}
                     </mat-cell>
                 </ng-container>
 
@@ -121,7 +120,7 @@
                         <h4><strong>Nueva Cantidad</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.cantidad }}
+                        {{ nuevaCantidad }}
                     </mat-cell>
                 </ng-container>
 

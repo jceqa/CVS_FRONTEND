@@ -47,4 +47,12 @@ export class AjusteService {
         return this.http.delete<any>(this.baseUrl + `${idAjuste}`);
     }
 
+    public anularAjuste(ajuste: Ajuste): Observable<any> {
+        return this.http.put<any>(this.baseUrl + 'anular', ajuste);
+    }
+
+    public processAjuste(ajuste: Ajuste): Observable<any> {
+        return this.http.put<any>(this.baseUrl + 'procesar', ajuste);
+    }
+
 }

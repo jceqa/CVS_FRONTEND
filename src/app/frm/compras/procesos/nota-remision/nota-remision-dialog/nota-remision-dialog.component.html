@@ -65,7 +65,7 @@
 
         <div *ngIf="this.formType !== 1 && stocks.length > 0">
             <mat-selection-list #stock (selectionChange)="selectedStock($event)">
-                <mat-list-option *ngFor="let stock of stocks" [value]="stock">
+                <mat-list-option *ngFor="let stock of stocks" [value]="stock" [disabled]="stock.existencia === 0">
                     {{ stock.articulo.id }} | {{ stock.articulo.descripcion }} | {{ stock.existencia }}
                 </mat-list-option>
             </mat-selection-list>
@@ -153,9 +153,14 @@
             Aceptar
         </button>
 
-        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoNotaRemision.id !== 1" *ngIf="this.formType === 1">
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoNotaRemision.id !== 1 || item.tipo === 'AUTOMATICA'" *ngIf="this.formType === 1">
             <mat-icon>block</mat-icon>
             Anular
+        </button>
+
+        <button mat-button color="success" (click)="process()" *ngIf="this.estadoNotaRemision !== ''" [disabled]="item.estadoNotaRemision.id !== 1">
+            <mat-icon>done_all</mat-icon>
+            Procesar
         </button>
 
     </mat-dialog-actions>

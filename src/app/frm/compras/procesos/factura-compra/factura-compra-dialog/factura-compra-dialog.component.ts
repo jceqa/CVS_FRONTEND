@@ -195,6 +195,7 @@ export class FacturaCompraDialogComponent implements OnInit {
             notaRemision.origen = new Deposito(1);
             notaRemision.destino = pedido.deposito;
             notaRemision.notaRemisionDetalle = [];
+            notaRemision.usuario = new Usuario(this.utils.getUserId());
 
             pedido.detallePedidoCompras.forEach(dPC => {
                 const detalle = new NotaRemisionDetalle();

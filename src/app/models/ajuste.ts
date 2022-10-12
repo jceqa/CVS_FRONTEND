@@ -1,4 +1,5 @@
 import {Stock} from './stock';
+import {Estado} from './estado';
 
 export class Ajuste {
     id: number;
@@ -8,4 +9,5 @@ export class Ajuste {
     cantidad: number;
     tipo: string;
     stock: Stock;
+    estadoAjuste: Estado;
 }

@@ -16,6 +16,7 @@ import {Observable} from 'rxjs';
 import {MatTableDataSource} from '@angular/material/table';
 import {Stock} from '../../../../../models/stock';
 import {StockService} from '../../../../../services/stock.service';
+import {Estado} from '../../../../../models/estado';
 
 @Component({
   selector: 'app-ajuste-dialog',
@@ -47,6 +48,11 @@ export class AjusteDialogComponent implements OnInit {
     displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'nuevaCantidad'];
     dataSource = new MatTableDataSource<Stock>();
     detalles: Stock[] = [];
+    tiposAjuste = ['AUMENTO', 'DESCUENTO'];
+    stocks: Stock[] = [];
+    stockSelected: Stock;
+
+    nuevaCantidad = 0;
 
     constructor(
         // private store: Store<fromRoot.State>,
@@ -156,7 +162,7 @@ export class AjusteDialogComponent implements OnInit {
             result.forEach(r => {
                this.options.push(r.articulo);
             });
-            // this.options = result;
+            this.stocks = result;
 
             this.filteredOptions = this.myControl.valueChanges.pipe(
                 startWith(''),
@@ -182,10 +188,16 @@ export class AjusteDialogComponent implements OnInit {
         );
     }
 
-    // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
+    // Asigna los valores del formulario al objeto
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
+        this.item.estado = 'ACTIVO';
+        this.item.fecha = this.fecha;
+        this.item.cantidad = this.nuevaCantidad;
+        this.item.tipo = this.form.get('tipoAjuste').value.toString().toUpperCase().trim();
+        this.item.stock = this.stockSelected;
+        this.item.estadoAjuste = new Estado(1);
     }
 
     dismiss(result?: any) {
@@ -201,6 +213,13 @@ export class AjusteDialogComponent implements OnInit {
     selected($event): void {
         console.log($event.source.value);
         this.articuloSelected = $event.source.value;
+        this.detalles.length = 0;
+        this.stockSelected = this.stocks.find(s => s.articulo.id === this.articuloSelected.id);
+        this.nuevaCantidad = this.stockSelected.existencia;
+        this.detalles.push(this.stockSelected);
+        this.dataSource = new MatTableDataSource<Stock>(
+            this.detalles
+        );
     }
 
     uploadListItem(dato) {
@@ -220,18 +239,16 @@ export class AjusteDialogComponent implements OnInit {
         }
     }
 
-    // Metodo para agregar una nueva lista de precios
     add(): void {
-
         this.setAtributes();
         this.item.id = 0;
-        if (this.utils.tieneLetras(this.item.descripcion)) {
-            // Llama al servicio que almacena el objeto {PriceListDraft}
+        if (this.validarCampos()) {
+            this.utils.startLoading();
             this.ajusteService.guardarAjuste(this.item)
                 .subscribe(data => {
                         console.log(data);
                         this.dialogRef.close(data);
-
+                        this.utils.stopLoading();
                         this.uiService.showSnackbar(
                             'Agregado exitosamente.',
                             'Cerrar',
@@ -239,9 +256,8 @@ export class AjusteDialogComponent implements OnInit {
                         );
                     },
                     (error) => {
-
                         console.error('[ERROR]: ', error);
-
+                        this.utils.stopLoading();
                         this.uiService.showSnackbar(
                             error.error,
                             'Cerrar',
@@ -250,21 +266,13 @@ export class AjusteDialogComponent implements OnInit {
 
                     }
                 );
-        } else {
-            this.uiService.showSnackbar(
-                'La descripción no puede ser solo númerica.',
-                'Cerrar',
-                5000
-            );
         }
     }
 
     // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
-
         // Asigna los valores del formulario al objeto a almacenar
         this.setAtributes();
-
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.descripcion)) {
             this.ajusteService.editarAjuste(this.item).subscribe(data => {
@@ -293,5 +301,49 @@ export class AjusteDialogComponent implements OnInit {
             );
         }
     }
+
+    calculateCantidad() {
+        if (!Number.isNaN(parseInt(this.form.get('cantidadArticulo').value.toString(), 10)) && this.stockSelected) {
+            if (this.form.get('tipoAjuste').value.toString() === 'AUMENTO' ) {
+               this.nuevaCantidad = this.stockSelected.existencia +  parseInt(this.form.get('cantidadArticulo').value.toString(), 10);
+            } else if (this.form.get('tipoAjuste').value.toString() === 'DESCUENTO' ) {
+                this.nuevaCantidad = this.stockSelected.existencia -  parseInt(this.form.get('cantidadArticulo').value.toString(), 10);
+            }
+        }
+    }
+
+    validarCampos(): boolean {
+        if (!this.utils.tieneLetras(this.item.descripcion)) {
+            this.uiService.showSnackbar(
+                'La descripcion no puede ser solo númerica.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        }  else if (this.detalles.length === 0) {
+            this.uiService.showSnackbar(
+                'Debe seleccionar al menos un item.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        } else if (parseInt(this.form.get('cantidadArticulo').value.toString(), 10) <= 0) {
+            this.uiService.showSnackbar(
+                'La cantidad a ajustar debe ser mayor a 0.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        } else if ( this.nuevaCantidad <= 0) {
+            this.uiService.showSnackbar(
+                'La nueva existencia debe ser mayor a 0.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        }
+        return true;
+    }
+
 
 }

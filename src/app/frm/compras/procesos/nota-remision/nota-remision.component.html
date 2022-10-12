@@ -92,9 +92,13 @@
                                 <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                             </button>
 
-                            <!--<button [disabled]="dato.estadoNotaRemision.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
-                                <mat-icon aria-label="Editar item">block</mat-icon>
-                            </button>-->
+                            <button [disabled]="dato.estadoNotaRemision.id === 2 || dato.tipo === 'AUTOMATICA'" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                                <mat-icon aria-label="Anular item">block</mat-icon>
+                            </button>
+
+                            <button [disabled]="dato.estadoNotaRemision.id !== 1" matTooltip="Procesar" color="success"  mat-icon-button (click)="procesarDialog($event, dato)" >
+                                <mat-icon aria-label="Procesar">done_all</mat-icon>
+                            </button>
 
                             <!--<button matTooltip="Eliminar" *ngIf="dato.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">
                                 <mat-icon>delete</mat-icon>
