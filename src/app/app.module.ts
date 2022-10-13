@@ -38,25 +38,39 @@ import {CiudadDialogComponent} from './frm/compras/referenciales/ciudad/ciudad-d
 import {ImpuestoComponent} from './frm/compras/referenciales/impuesto/impuesto.component';
 import {ImpuestoDialogComponent} from './frm/compras/referenciales/impuesto/impuesto-dialog/impuesto-dialog.component';
 import {TipoArticuloComponent} from './frm/compras/referenciales/tipo-articulo/tipo-articulo.component';
-import {TipoArticuloDialogComponent} from './frm/compras/referenciales/tipo-articulo/tipo-articulo-dialog/tipo-articulo-dialog.component';
+import {
+    TipoArticuloDialogComponent
+} from './frm/compras/referenciales/tipo-articulo/tipo-articulo-dialog/tipo-articulo-dialog.component';
 import {CargoComponent} from './frm/administracion/referenciales/cargo/cargo.component';
 import {CargoDialogComponent} from './frm/administracion/referenciales/cargo/cargo-dialog/cargo-dialog.component';
 import {EstadoComponent} from './frm/administracion/referenciales/estado/estado.component';
 import {EstadoDialogComponent} from './frm/administracion/referenciales/estado/estado-dialog/estado-dialog.component';
 import {EntidadEmisoraComponent} from './frm/ventas/referenciales/entidademisora/entidademisora.component';
-import {EntidadEmisoraDialogComponent} from './frm/ventas/referenciales/entidademisora/entidademisora-dialog/entidademisora-dialog.component';
+import {
+    EntidadEmisoraDialogComponent
+} from './frm/ventas/referenciales/entidademisora/entidademisora-dialog/entidademisora-dialog.component';
 import {CondicionPagoComponent} from './frm/ventas/referenciales/condicion-pago/condicion-pago.component';
-import {CondicionPagoDialogComponent} from './frm/ventas/referenciales/condicion-pago/condicion-pago-dialog/condicion-pago-dialog.component';
+import {
+    CondicionPagoDialogComponent
+} from './frm/ventas/referenciales/condicion-pago/condicion-pago-dialog/condicion-pago-dialog.component';
 import {TipoTarjetaComponent} from './frm/ventas/referenciales/tipotarjeta/tipotarjeta.component';
-import {TipoTarjetaDialogComponent} from './frm/ventas/referenciales/tipotarjeta/tipotarjeta-dialog/tipotarjeta-dialog.component';
+import {
+    TipoTarjetaDialogComponent
+} from './frm/ventas/referenciales/tipotarjeta/tipotarjeta-dialog/tipotarjeta-dialog.component';
 import {ArticuloComponent} from './frm/compras/referenciales/articulo/articulo.component';
 import {ArticuloDialogComponent} from './frm/compras/referenciales/articulo/articulo-dialog/articulo-dialog.component';
 import {SucursalComponent} from './frm/administracion/referenciales/sucursal/sucursal.component';
-import {SucursalDialogComponent} from './frm/administracion/referenciales/sucursal/sucursal-dialog/sucursal-dialog.component';
+import {
+    SucursalDialogComponent
+} from './frm/administracion/referenciales/sucursal/sucursal-dialog/sucursal-dialog.component';
 import {DepositoComponent} from './frm/administracion/referenciales/deposito/deposito.component';
-import {DepositoDialogComponent} from './frm/administracion/referenciales/deposito/deposito-dialog/deposito-dialog.component';
+import {
+    DepositoDialogComponent
+} from './frm/administracion/referenciales/deposito/deposito-dialog/deposito-dialog.component';
 import {ProveedorComponent} from './frm/compras/referenciales/proveedor/proveedor.component';
-import {ProveedorDialogComponent} from './frm/compras/referenciales/proveedor/proveedor-dialog/proveedor-dialog.component';
+import {
+    ProveedorDialogComponent
+} from './frm/compras/referenciales/proveedor/proveedor-dialog/proveedor-dialog.component';
 import {MyCurrencyPipe} from './pipes/my-currency-pipe';
 import {MyCurrencyFormatterDirective} from './directives/my-currency-formatter-directive';
 import {PedidoCompraComponent} from './frm/compras/procesos/pedido-compra/pedido-compra.component';
@@ -99,10 +113,16 @@ import {
 import {CajaComponent} from './frm/ventas/referenciales/caja/caja.component';
 import {CajaDialogComponent} from './frm/ventas/referenciales/caja/caja-dialog/caja-dialog.component';
 import {ClienteComponent} from './frm/administracion/referenciales/cliente/cliente.component';
-import {ClienteDialogComponent} from './frm/administracion/referenciales/cliente/cliente-dialog/cliente-dialog.component';
+import {
+    ClienteDialogComponent
+} from './frm/administracion/referenciales/cliente/cliente-dialog/cliente-dialog.component';
 import {RecepcionDialogComponent} from './frm/servicio/procesos/recepcion/recepcion-dialog/recepcion-dialog.component';
 import {PedidoVentaComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta.component';
-import {PedidoVentaDialogComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta-dialog/pedido-venta-dialog.component';
+import {
+    PedidoVentaDialogComponent
+} from './frm/ventas/procesos/pedido-venta/pedido-venta-dialog/pedido-venta-dialog.component';
+import {ServicioDialogComponent} from './frm/servicio/referenciales/servicio/servicio-dialog/servicio-dialog.component';
+import {PromoDescuentoDialogComponent} from './frm/servicio/referenciales/promo-descuento/promo-descuento-dialog/promo-descuento-dialog.component';
 
 @NgModule({
     declarations: [
@@ -168,6 +188,8 @@ import {PedidoVentaDialogComponent} from './frm/ventas/procesos/pedido-venta/ped
         RecepcionDialogComponent,
         PedidoVentaComponent,
         PedidoVentaDialogComponent,
+        ServicioDialogComponent,
+        PromoDescuentoDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

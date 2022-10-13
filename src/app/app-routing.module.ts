@@ -27,6 +27,11 @@ import {AperturaCierreCajaComponent} from './frm/ventas/procesos/apertura-cierre
 import {CajaComponent} from './frm/ventas/referenciales/caja/caja.component';
 import {ClienteComponent} from './frm/administracion/referenciales/cliente/cliente.component';
 import {PedidoVentaComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta.component';
+import {ServicioComponent} from './frm/servicio/referenciales/servicio/servicio.component';
+import { PromoDescuentoComponent } from './frm/servicio/referenciales/promo-descuento/promo-descuento.component';
+import {
+    PromoDescuentoDialogComponent
+} from './frm/servicio/referenciales/promo-descuento/promo-descuento-dialog/promo-descuento-dialog.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -54,6 +59,8 @@ const routes: Routes = [
     { path: 'aperturacierrecaja', component: AperturaCierreCajaComponent},
     { path: 'caja', component: CajaComponent},
     { path: 'cliente', component: ClienteComponent},
+    { path: 'servicio', component: ServicioComponent},
+    { path: 'promo-descuento', component: PromoDescuentoDialogComponent},
     { path: 'pedidoventa', component: PedidoVentaComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
