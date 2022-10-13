@@ -88,11 +88,8 @@ export class OrdenCompraComponent implements OnInit {
     }
 
     add(): void {
-
         const item = new OrdenCompra();
-
         this.openDialog(item);
-
     }
 
     anular(dato: OrdenCompra): void {
@@ -155,5 +152,4 @@ export class OrdenCompraComponent implements OnInit {
             }
         });
     }
-
 }

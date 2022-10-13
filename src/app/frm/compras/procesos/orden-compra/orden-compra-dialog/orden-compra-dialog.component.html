@@ -1,18 +1,16 @@
 <h4 mat-dialog-title>{{ title }} Orden de Compra</h4>
 
 <form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
-
     <mat-dialog-content>
-
         <div style="display: flex">
             <div class="third-width-field">
                 <span>Nro Orden: {{ item.id }}</span>
             </div>
-            &nbsp;
+            &nbsp
             <div class="third-width-field">
                 <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
             </div>
-            &nbsp;
+            &nbsp
             <div class="third-width-field">
                 <span>Estado: {{ estadoOrden }}</span>
             </div>
@@ -141,7 +139,6 @@
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
                         <span> {{ dato.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.codigoGenerico }} </span>
                     </mat-cell>
-                    >
                 </ng-container>
 
                 <ng-container matColumnDef="item">
@@ -169,7 +166,6 @@
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
                         {{ dato.presupuestoCompraDetalle.monto | myCurrency }}
                     </mat-cell>
-
                 </ng-container>
 
                 <ng-container matColumnDef="total">
@@ -189,7 +185,6 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="end" class="mt-4">
-
         <button mat-button color="primary" (click)="dismiss()">
             <mat-icon>cancel</mat-icon>
             Cerrar
@@ -204,7 +199,5 @@
             <mat-icon>block</mat-icon>
             Anular
         </button>
-
     </mat-dialog-actions>
-
 </form>

@@ -3,14 +3,6 @@
 <form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
 
     <mat-dialog-content>
-
-        <!--<div class="mt-2" *ngIf="formType === 1">
-            <mat-form-field class="full-with-field" >
-                <input id="id" formControlName="id" matInput placeholder="Id" readonly />
-            </mat-form-field>
-        </div>-->
-
-
         <div style="display: flex">
             <div class="third-width-field">
                 <span>Nro Presupuesto: {{ item.id }}</span>
@@ -81,33 +73,6 @@
         <mat-divider></mat-divider>
 
         <h4>Detalles</h4>
-        <!-- <div class="full-with-field" *ngIf="this.formType !== 1">
-            <mat-form-field>
-                <input type="text"
-                       placeholder="Artículo"
-                       matInput
-                       [formControl]="myControl"
-                       [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="display">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
-                                (onSelectionChange)="selected($event)">
-                        {{option.codigoGenerico}} | {{option.descripcion}}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            &nbsp;
-            <mat-form-field>
-                <input type=number id="cantidad" formControlName="cantidadArticulo" matInput
-                       placeholder="Cantidad"
-                       autocomplete="off" class="text"/>
-            </mat-form-field>
-            &nbsp;
-            <button matTooltip="Agregar Item" color="primary" mat-icon-button
-                    (click)="addItem()">
-                <mat-icon aria-label="Agregar Item">add_circle</mat-icon>
-            </button>
-
-        </div> -->
         <div align="end">
             <h3>Total: {{total | myCurrency}}</h3>
         </div>
@@ -121,7 +86,6 @@
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
                         <span> {{ dato.pedidoCompraDetalle.articulo.codigoGenerico }} </span>
                     </mat-cell>
-                    >
                 </ng-container>
 
                 <ng-container matColumnDef="item">
@@ -150,7 +114,6 @@
                             <input id="precioCompra" matInput [value]="dato.monto"
                                    autocomplete="off" myCurrencyFormatter (blur)="setNumber($event, index)"
                                    (keydown)="onKeydown($event, index)"/>
-
                     </mat-cell>
                 </ng-container>
 
@@ -163,40 +126,10 @@
                     </mat-cell>
                 </ng-container>
 
-                <!--<ng-container matColumnDef="actions">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let dato">
-
-                        <<button color="primary" mat-icon-button (click)="viewDetail(dato)">
-                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
-                        </button>
-
-                        <button matTooltip="Aumentar" color="primary" mat-icon-button
-                                (click)="incItem(dato)" *ngIf="formType !== 1">
-                            <mat-icon aria-label="Aumentar item">add_circle_outline</mat-icon>
-                        </button>
-
-                        <button matTooltip="Disminuir" color="primary" mat-icon-button
-                                (click)="descItem(dato)" [disabled]="dato.cantidad === 1" *ngIf="formType !== 1">
-                            <mat-icon aria-label="Disminuir item">remove_circle_outline</mat-icon>
-                        </button>
-
-                        <button matTooltip="Eliminar" color="warn" mat-icon-button
-                                (click)="deleteItem(dato)" *ngIf="formType !== 1">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-
-                        <button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-cell>
-                </ng-container>-->
-
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>
         </div>
-
     </mat-dialog-content>
 
     <mat-dialog-actions align="end" class="mt-4">
@@ -215,7 +148,5 @@
             <mat-icon>block</mat-icon>
             Anular
         </button>
-
     </mat-dialog-actions>
-
 </form>

@@ -91,11 +91,8 @@ export class NotaRemisionComponent implements OnInit {
     }
 
     add(): void {
-
         const item = new NotaRemision();
-
         this.openDialog(item);
-
     }
 
     anular(dato: NotaRemision): void {

@@ -19,11 +19,6 @@
         </div>
 
         <div>
-            <!--<div *ngIf="this.formType === 1">
-                <br/>
-                <span >Proveedor: {{ item.proveedor.ruc }} | {{ item.proveedor.razonSocial }}</span>
-            </div>-->
-
             <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Orden Compra"
@@ -41,49 +36,6 @@
                 </mat-autocomplete>
             </mat-form-field>
         </div>
-
-        <!--<div>
-            <div *ngIf="this.formType === 1">
-                <br/>
-                <span >Proveedor: {{ item.proveedor.ruc }} | {{ item.proveedor.razonSocial }}</span>
-            </div>
-
-            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
-                <input type="text"
-                       placeholder="Proveedor"
-                       matInput
-                       [formControl]="proveedorControl"
-                       [matAutocomplete]="autoProvedor"
-                       class="text">
-                <mat-autocomplete #autoProvedor="matAutocomplete" [displayWith]="displayProveedor">
-                    <mat-option *ngFor="let proveedor of proveedorFiltered | async" [value]="proveedor"
-                                (onSelectionChange)="selectedProveedor($event)">
-                        {{ proveedor.ruc }} | {{ proveedor.razonSocial }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </div>-->
-
-        <!--<div *ngIf="this.formType === 1" >
-            <h4>Presupuestos</h4>
-            <div *ngFor="let presupuesto of item.presupuestosCompra">
-                <span>Presupuesto de Compra: {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
-                    {{ presupuesto.usuario.nombre }} |  {{ presupuesto.proveedor.razonSocial }} |
-                    {{ presupuesto.total }}</span>
-                <br/>
-                <br/>
-            </div>
-        </div>
-
-        <div *ngIf="this.formType !== 1 && proveedores.length > 0">
-            <h4>Presupuestos</h4>
-            <mat-selection-list #shoes (selectionChange)="selectedPresupuesto($event)">
-                <mat-list-option *ngFor="let presupuesto of presupuestos" [value]="presupuesto">
-                    {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
-                    {{ presupuesto.usuario.nombre }} | {{ presupuesto.proveedor.razonSocial }} | {{ presupuesto.total | myCurrency }}
-                </mat-list-option>
-            </mat-selection-list>
-        </div>-->
 
         <div class="mt-2">
             <mat-form-field class="full-with-field">
@@ -139,7 +91,6 @@
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
                         <span> {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.codigoGenerico }} </span>
                     </mat-cell>
-                    >
                 </ng-container>
 
                 <ng-container matColumnDef="item">

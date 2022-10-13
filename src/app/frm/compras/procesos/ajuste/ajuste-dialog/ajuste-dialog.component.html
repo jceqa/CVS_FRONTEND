@@ -1,9 +1,6 @@
 <h4 mat-dialog-title>{{title}} Ajuste</h4>
-
 <form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
-
     <mat-dialog-content>
-
         <div style="display: flex">
             <div class="third-width-field">
             </div>
@@ -128,11 +125,9 @@
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>
         </div>
-
     </mat-dialog-content>
 
     <mat-dialog-actions align="end" class="mt-4">
-
         <button mat-button color="primary" (click)="dismiss()">
             <mat-icon>cancel</mat-icon> Cancelar
         </button>
@@ -151,7 +146,5 @@
             <mat-icon>done_all</mat-icon>
             Procesar
         </button>
-
     </mat-dialog-actions>
-
 </form>

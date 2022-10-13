@@ -96,9 +96,6 @@ export class NotaRemisionDialogComponent implements OnInit {
                 console.log(data);
                 this.depositos = data;
                 this.utils.stopLoading();
-                /*if (this.formType === FormType.EDIT) {
-                    this.form.get('deposito').setValue(this.item.stock.deposito);
-                }*/
                 this.utils.stopLoading();
             }, error => {
                 console.log(error);
@@ -176,7 +173,6 @@ export class NotaRemisionDialogComponent implements OnInit {
         if ($event.isUserInput) {
             console.log($event.source.value);
             this.utils.startLoading();
-            // this.stocks.length = 0;
             this.stockService.listStockByDeposito($event.source.value.id).subscribe(
                 data => {
                     console.log(data);
@@ -214,10 +210,6 @@ export class NotaRemisionDialogComponent implements OnInit {
     }
 
     ok(): void {
-        if (this.formType === FormType.EDIT) {
-            this.edit();
-        }
-
         if (this.formType === FormType.NEW) {
             this.add();
         }
@@ -277,41 +269,6 @@ export class NotaRemisionDialogComponent implements OnInit {
 
                     }
                 );
-        }
-    }
-
-    // Metodo que modifica un objeto {PriceListDraft} en base de datos
-    edit(): void {
-
-        // Asigna los valores del formulario al objeto a almacenar
-        this.setAtributes();
-
-        // Llama al servicio http que actualiza el objeto.
-        if (this.validarCampos()) {
-            this.notaRemisionService.editarNotaRemision(this.item).subscribe(data => {
-                console.log(data);
-                this.uiService.showSnackbar(
-                    'Modificado exitosamente.',
-                    'Cerrar',
-                    3000
-                );
-
-                this.dialogRef.close(data);
-            }, (error) => {
-                console.error('[ERROR]: ', error);
-
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            });
-        } else {
-            this.uiService.showSnackbar(
-                'La descripción no puede ser solo númerica.',
-                'Cerrar',
-                5000
-            );
         }
     }
 

@@ -51,13 +51,9 @@ export class PedidoCompraComponent implements OnInit {
                         this.pedidosCompra
                     );
                     this.dataSource.paginator = this.paginator;
-                    // this.store.dispatch(new UI.StopLoading());
-                    // this.util.localStorageSetItem('loading', 'false');
                     this.util.stopLoading();
                 },
                 err => {
-                    // this.store.dispatch(new UI.StopLoading());
-                    // this.util.localStorageSetItem('loading', 'false');
                     this.util.stopLoading();
                     console.log(err.error);
                     this.uiService.showSnackbar(
@@ -76,13 +72,9 @@ export class PedidoCompraComponent implements OnInit {
                         this.pedidosCompra
                     );
                     this.dataSource.paginator = this.paginator;
-                    // this.store.dispatch(new UI.StopLoading());
-                    // this.util.localStorageSetItem('loading', 'false');
                     this.util.stopLoading();
                 },
                 err => {
-                    // this.store.dispatch(new UI.StopLoading());
-                    // this.util.localStorageSetItem('loading', 'false');
                     this.util.stopLoading();
                     console.log(err.error);
                     this.uiService.showSnackbar(
@@ -96,11 +88,8 @@ export class PedidoCompraComponent implements OnInit {
     }
 
     add(): void {
-
         const item = new PedidoCompra();
-
         this.openDialog(item);
-
     }
 
     anular(dato: PedidoCompra): void {
@@ -156,11 +145,9 @@ export class PedidoCompraComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            // debugger;
             if (result) {
                 this.cargar();
             }
         });
     }
-
 }

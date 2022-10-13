@@ -1,1 +1,112 @@
-<p>libro-compra-dialog works!</p>
+<h4 mat-dialog-title>{{ title }} Libro de Compra</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <div style="display: flex">
+            <div class="middle-width-field">
+                <span>Nro Libro: {{ item.id }}</span>
+            </div>
+            &nbsp;
+            <div class="middle-width-field">
+                <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
+            </div>
+        </div>
+
+        &nbsp;
+        <mat-divider></mat-divider>
+
+        <h4>Detalles</h4>
+        <div align="end">
+            <h3>Total: {{ total | myCurrency }}</h3>
+            <h4>Total I.V.A. : {{ totalIVA | myCurrency }}</h4>
+        </div>
+
+        <div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Código</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span> {{ dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.codigoGenerico }} </span>
+                    </mat-cell>
+                    >
+                </ng-container>
+
+                <ng-container matColumnDef="item">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Item</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.descripcion }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cantidad">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Cantidad</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="precio">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Precio</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.monto | myCurrency }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="exenta">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Exenta</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 3">
+                            {{  dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.monto *
+                        dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="iva5">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>I.V.A. 5%</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 1">
+                            {{  dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.monto *
+                        dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="iva10">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>I.V.A. 10%</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 2">
+                            {{  dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.monto *
+                        dato.facturaCompraDetalle.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon>
+            Cerrar
+        </button>
+    </mat-dialog-actions>
+
+</form>

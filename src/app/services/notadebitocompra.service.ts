@@ -42,4 +42,8 @@ export class NotaDebitoCompraService {
     public getNotaDebitoCompraPendientes(): Observable<NotaDebitoCompra[]> {
         return this.http.get<NotaDebitoCompra[]>(this.baseUrl + 'pendientes');
     }
+
+    public processNotaDebitoCompra(notaDebitoCompra: NotaDebitoCompra): Observable<any> {
+        return this.http.put<any>(this.baseUrl + 'procesar', notaDebitoCompra);
+    }
 }

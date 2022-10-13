@@ -16,7 +16,7 @@ import {NotaDebitoCompraDialogComponent} from './nota-debito-compra-dialog/nota-
 })
 export class NotaDebitoCompraComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'numero', 'fechaVencimiento', 'estado', 'monto', 'actions'];
+    displayedColumns: string[] = ['id', 'observacion', 'fechaVencimiento', 'estado', 'monto', 'actions'];
     dataSource = new MatTableDataSource<NotaDebitoCompra>();
 
     @ViewChild(MatPaginator)
@@ -154,5 +154,47 @@ export class NotaDebitoCompraComponent implements OnInit {
                 this.cargar();
             }
         });
+    }
+
+    procesarDialog(event: any, notaDebitoCompra: NotaDebitoCompra): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Procesar Nota de Debito de Compra',
+                msg: '¿Está seguro que desea procesar esta Nota de Debito de Compra?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.procesar(notaDebitoCompra);
+            }
+        });
+    }
+
+    procesar(dato: NotaDebitoCompra): void {
+        this.util.startLoading();
+        this.notaDebitoCompraService.processNotaDebitoCompra(dato).subscribe(
+            result => {
+                console.log(result);
+                this.cargar();
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    'Procesado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    error.error ? error.error : 'Ha ocurrido un error',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
     }
 }

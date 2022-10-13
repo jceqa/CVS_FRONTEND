@@ -212,13 +212,6 @@ export class PedidoCompraDialogComponent implements OnInit {
                 const art = this.detalles.find(d => d.articulo.id === this.articuloSelected.id);
                 if (art) {
                     art.cantidad += this.form.get('cantidadArticulo').value;
-                    /*const index = this.detalles.indexOf(art);
-                    this.detalles.splice(index, 1, {
-                        'id': 0,
-                        'articulo': this.articuloSelected,
-                        'cantidad': this.form.get('cantidadArticulo').value + this.detalles[index].cantidad,
-                        'estado': 'ACTIVO'
-                    });*/
                 } else {
                     this.detalles.push({
                         'id': 0,
@@ -298,7 +291,6 @@ export class PedidoCompraDialogComponent implements OnInit {
                         (error) => {
                             this.utils.stopLoading();
                             console.error('[ERROR]: ', error);
-
                             this.uiService.showSnackbar(
                                 error.error,
                                 'Cerrar',
@@ -325,10 +317,8 @@ export class PedidoCompraDialogComponent implements OnInit {
 
     // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
-
         // Asigna los valores del formulario al objeto a almacenar
         this.setAtributes();
-
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.observacion)) {
             this.pedidoCompraService.editarPedidoCompra(this.item).subscribe(data => {
@@ -338,11 +328,9 @@ export class PedidoCompraDialogComponent implements OnInit {
                     'Cerrar',
                     3000
                 );
-
                 this.dialogRef.close(data);
             }, (error) => {
                 console.error('[ERROR]: ', error);
-
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -399,5 +387,4 @@ export class PedidoCompraDialogComponent implements OnInit {
             }
         });
     }
-
 }

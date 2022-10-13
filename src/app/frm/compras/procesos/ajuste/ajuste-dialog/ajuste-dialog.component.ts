@@ -56,7 +56,6 @@ export class AjusteDialogComponent implements OnInit {
     estadoAjuste = '';
 
     constructor(
-        // private store: Store<fromRoot.State>,
         private dialogRef: MatDialogRef<AjusteDialogComponent>,
         private uiService: UIService,
         private ajusteService: AjusteService,
@@ -85,7 +84,6 @@ export class AjusteDialogComponent implements OnInit {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
             this.title = 'Editar';
             this.editID = this.data.item.id;
-            // this.getAjusteById(this.data.item.id);
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.form.get('descripcion').disable();
@@ -109,18 +107,6 @@ export class AjusteDialogComponent implements OnInit {
             this.utils.stopLoading();
         });
     }
-
-    /*getAjusteById(id: number): void {
-
-        // Realiza la llamada http para obtener el objeto
-        this.ajusteService.getAjusteById(id).subscribe(
-            data => {
-                this.item = data as Ajuste;
-                this.setForm(this.item);
-            }, (error) => {
-                console.error(error);
-            });
-    }*/
 
     // Rellena los campos del formulario con los valores dados
     setForm(item: Ajuste) {
@@ -169,7 +155,6 @@ export class AjusteDialogComponent implements OnInit {
     }
 
     listStock() {
-        // this.form.get('deposito').setValue('');
         this.utils.startLoading();
         this.stockService.listStockByDeposito(this.form.get('deposito').value.id).subscribe(result => {
             console.log(result);
@@ -242,11 +227,6 @@ export class AjusteDialogComponent implements OnInit {
 
     // Metodo que se llama al oprimir el boton guardar
     ok(): void {
-        // Si es una edicion llama al metodo para editar
-        if (this.formType === FormType.EDIT) {
-            this.edit();
-        }
-
         // Si es una lista nueva llama al metodo para agregar
         if (this.formType === FormType.NEW) {
             this.add();
@@ -280,39 +260,6 @@ export class AjusteDialogComponent implements OnInit {
 
                     }
                 );
-        }
-    }
-
-    // Metodo que modifica un objeto {PriceListDraft} en base de datos
-    edit(): void {
-        // Asigna los valores del formulario al objeto a almacenar
-        this.setAtributes();
-        // Llama al servicio http que actualiza el objeto.
-        if (this.utils.tieneLetras(this.item.descripcion)) {
-            this.ajusteService.editarAjuste(this.item).subscribe(data => {
-                console.log(data);
-                this.uiService.showSnackbar(
-                    'Modificado exitosamente.',
-                    'Cerrar',
-                    3000
-                );
-
-                this.dialogRef.close(data);
-            }, (error) => {
-                console.error('[ERROR]: ', error);
-
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            });
-        } else {
-            this.uiService.showSnackbar(
-                'La descripción no puede ser solo númerica.',
-                'Cerrar',
-                5000
-            );
         }
     }
 
@@ -419,5 +366,4 @@ export class AjusteDialogComponent implements OnInit {
             }
         );
     }
-
 }
