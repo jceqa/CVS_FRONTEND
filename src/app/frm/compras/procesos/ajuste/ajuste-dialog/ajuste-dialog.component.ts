@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {Ajuste} from '../../../../../models/ajuste';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
 import {AjusteService} from '../../../../../services/ajuste.service';
 import {UtilService} from '../../../../../services/util.service';
@@ -17,7 +17,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {Stock} from '../../../../../models/stock';
 import {StockService} from '../../../../../services/stock.service';
 import {Estado} from '../../../../../models/estado';
-
+import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-ajuste-dialog',
   templateUrl: './ajuste-dialog.component.html',
@@ -53,6 +53,7 @@ export class AjusteDialogComponent implements OnInit {
     stockSelected: Stock;
 
     nuevaCantidad = 0;
+    estadoAjuste = '';
 
     constructor(
         // private store: Store<fromRoot.State>,
@@ -63,6 +64,7 @@ export class AjusteDialogComponent implements OnInit {
         private depositoService: DepositoService,
         private stockService: StockService,
         private utils: UtilService,
+        private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -83,12 +85,14 @@ export class AjusteDialogComponent implements OnInit {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
             this.title = 'Editar';
             this.editID = this.data.item.id;
-            this.getAjusteById(this.data.item.id);
+            // this.getAjusteById(this.data.item.id);
             this.formType = FormType.EDIT;
-            // this.setForm(this.item);
-            this.form.get('observacion').disable();
+            this.setForm(this.item);
+            this.form.get('descripcion').disable();
             this.form.get('sucursal').disable();
             this.form.get('deposito').disable();
+            this.form.get('tipoAjuste').disable();
+            this.form.get('cantidadArticulo').disable();
         } else {
             // Si no existe es una nueva lista
             this.title = 'Nuevo';
@@ -106,7 +110,7 @@ export class AjusteDialogComponent implements OnInit {
         });
     }
 
-    getAjusteById(id: number): void {
+    /*getAjusteById(id: number): void {
 
         // Realiza la llamada http para obtener el objeto
         this.ajusteService.getAjusteById(id).subscribe(
@@ -116,7 +120,7 @@ export class AjusteDialogComponent implements OnInit {
             }, (error) => {
                 console.error(error);
             });
-    }
+    }*/
 
     // Rellena los campos del formulario con los valores dados
     setForm(item: Ajuste) {
@@ -127,12 +131,22 @@ export class AjusteDialogComponent implements OnInit {
                 descripcion: item.descripcion,
                 deposito: item.stock.deposito,
                 sucursal: item.stock.deposito.sucursal,
+                tipoAjuste: item.tipo,
+                cantidadArticulo: item.cantidad
             });
+            this.estadoAjuste = item.estadoAjuste.descripcion;
         }
 
+        this.detalles.push(this.item.stock);
         this.dataSource = new MatTableDataSource<Stock>(
             this.detalles
         );
+
+        if (this.item.tipo === 'AUMENTO') {
+            this.nuevaCantidad = this.item.stock.existencia + this.item.cantidad;
+        } else if (this.item.tipo === 'DESCUENTO') {
+            this.nuevaCantidad = this.item.stock.existencia - this.item.cantidad;
+        }
     }
 
     listDepositos() {
@@ -194,7 +208,7 @@ export class AjusteDialogComponent implements OnInit {
         this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
         this.item.estado = 'ACTIVO';
         this.item.fecha = this.fecha;
-        this.item.cantidad = this.nuevaCantidad;
+        this.item.cantidad = parseInt(this.form.get('cantidadArticulo').value.toString(), 10);
         this.item.tipo = this.form.get('tipoAjuste').value.toString().toUpperCase().trim();
         this.item.stock = this.stockSelected;
         this.item.estadoAjuste = new Estado(1);
@@ -345,5 +359,65 @@ export class AjusteDialogComponent implements OnInit {
         return true;
     }
 
+    anularDialog(event: any): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Anular Ajuste',
+                msg: '¿Está seguro que desea anular este Ajuste?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.anular(this.item);
+            }
+        });
+    }
+
+    anular(dato: Ajuste): void {
+        this.utils.startLoading();
+        this.ajusteService.anularAjuste(dato).subscribe(
+            data => {
+                console.log(data);
+                this.utils.stopLoading();
+                this.uiService.showSnackbar(
+                    'Anulado Exitosamente.',
+                    'Cerrar',
+                    3000
+                );
+                this.dialogRef.close(true);
+            }, error => {
+                console.log(error);
+                this.utils.stopLoading();
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    process() {
+        this.utils.startLoading();
+        this.ajusteService.processAjuste(this.item).subscribe(
+            data => {
+                console.log(data);
+                this.utils.stopLoading();
+                this.uiService.showSnackbar(
+                    'Procesado Exitosamente.',
+                    'Cerrar',
+                    3000
+                );
+                this.dialogRef.close(true);
+            }, error => {
+                console.log(error);
+                this.utils.stopLoading();
+            }
+        );
+    }
 
 }

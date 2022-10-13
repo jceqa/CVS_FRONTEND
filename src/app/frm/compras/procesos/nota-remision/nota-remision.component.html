@@ -92,7 +92,7 @@
                                 <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                             </button>
 
-                            <button [disabled]="dato.estadoNotaRemision.id === 2 || dato.tipo === 'AUTOMATICA'" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                            <button [disabled]="dato.estadoNotaRemision.id !== 1 || dato.tipo === 'AUTOMATICA'" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
                                 <mat-icon aria-label="Anular item">block</mat-icon>
                             </button>
 

@@ -55,4 +55,8 @@ export class AjusteService {
         return this.http.put<any>(this.baseUrl + 'procesar', ajuste);
     }
 
+    public listAjustesPendientes(): Observable<Ajuste[]> {
+        return this.http.get<Ajuste[]>(this.baseUrl + 'pendientes');
+    }
+
 }

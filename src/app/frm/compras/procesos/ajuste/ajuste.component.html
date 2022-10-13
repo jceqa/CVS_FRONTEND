@@ -31,7 +31,7 @@
     </mat-toolbar>
     <mat-card>
         <mat-card-content>
-            <div class="end" *ngIf="false">
+            <div class="end">
                 <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Todos</mat-checkbox>
             </div>
             <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
@@ -82,7 +82,7 @@
                             <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                         </button>
 
-                        <button [disabled]="dato.estadoAjuste.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                        <button [disabled]="dato.estadoAjuste.id !== 1" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
                             <mat-icon aria-label="Anular item">block</mat-icon>
                         </button>
 

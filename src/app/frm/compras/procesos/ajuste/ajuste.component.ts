@@ -41,34 +41,48 @@ export class AjusteComponent implements OnInit {
     }
 
     cargar() {
-        // this.store.dispatch(new UI.StartLoading());
-        // this.util.localStorageSetItem('loading', 'true');
         this.util.startLoading();
-        this.ajusteService.getAjustes(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.ajustes = data;
-
-                this.dataSource = new MatTableDataSource<Ajuste>(
-                    this.ajustes
-                );
-                this.dataSource.paginator = this.paginator;
-                // this.store.dispatch(new UI.StopLoading());
-                // this.util.localStorageSetItem('loading', 'false');
-                this.util.stopLoading();
-            },
-            err => {
-                // this.store.dispatch(new UI.StopLoading());
-                // this.util.localStorageSetItem('loading', 'false');
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+        if (this.all) {
+            this.ajusteService.getAjustes(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.ajustes = data;
+                    this.dataSource = new MatTableDataSource<Ajuste>(
+                        this.ajustes
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                });
+        } else {
+            this.ajusteService.listAjustesPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.ajustes = data;
+                    this.dataSource = new MatTableDataSource<Ajuste>(
+                        this.ajustes
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                });
+        }
     }
 
     add(): void {
