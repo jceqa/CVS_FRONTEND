@@ -43,35 +43,56 @@ export class NotaRemisionComponent implements OnInit {
 
     cargar() {
         this.util.startLoading();
-        this.notaRemisionService.getNotasRemision(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.facturasCompra = data;
+        if (this.all) {
+            this.notaRemisionService.getNotasRemision(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
 
-                this.dataSource = new MatTableDataSource<NotaRemision>(
-                    this.facturasCompra
-                );
-                this.dataSource.paginator = this.paginator;
-                this.util.stopLoading();
-            },
-            err => {
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+                    this.dataSource = new MatTableDataSource<NotaRemision>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        } else {
+            this.notaRemisionService.listNotaRemisionPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
+
+                    this.dataSource = new MatTableDataSource<NotaRemision>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        }
     }
 
     add(): void {
-
         const item = new NotaRemision();
-
         this.openDialog(item);
-
     }
 
     anular(dato: NotaRemision): void {
@@ -103,8 +124,8 @@ export class NotaRemisionComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Factura Compra',
-                msg: '¿Está seguro que desea anular esta Factura de Compra?'
+                title: 'Anular Nota Remision',
+                msg: '¿Está seguro que desea anular esta Nota de Remisión?'
             }
         });
 
@@ -112,6 +133,48 @@ export class NotaRemisionComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.anular(notaRemision);
+            }
+        });
+    }
+
+    procesar(dato: NotaRemision): void {
+        this.util.startLoading();
+        this.notaRemisionService.processNotaRemision(dato).subscribe(
+            result => {
+                console.log(result);
+                this.cargar();
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    'Procesado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    error.error ? error.error : 'Ha ocurrido un error',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    procesarDialog(event: any, notaRemision: NotaRemision): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Procesar Nota de Remisión',
+                msg: '¿Está seguro que desea procesar esta Nota de Remisión?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.procesar(notaRemision);
             }
         });
     }

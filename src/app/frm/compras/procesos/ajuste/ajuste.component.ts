@@ -1,28 +1,28 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
+import {Ajuste} from '../../../../models/ajuste';
 import {MatPaginator} from '@angular/material/paginator';
-import {PedidoCompra} from '../../../../models/pedidoCompra';
+import {AjusteService} from '../../../../services/ajuste.service';
 import {MatDialog} from '@angular/material/dialog';
 import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
-import {PedidoCompraService} from '../../../../services/pedidocompra.service';
-import {PedidoCompraDialogComponent} from './pedido-compra-dialog/pedido-compra-dialog.component';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
-
+import {AjusteDialogComponent} from './ajuste-dialog/ajuste-dialog.component';
 @Component({
-    selector: 'app-pedido-compra',
-    templateUrl: './pedido-compra.component.html',
-    styleUrls: ['./pedido-compra.component.scss']
+  selector: 'app-ajuste',
+  templateUrl: './ajuste.component.html',
+  styleUrls: ['./ajuste.component.scss']
 })
-export class PedidoCompraComponent implements OnInit {
+export class AjusteComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'estado', 'deposito', 'actions'];
-    dataSource = new MatTableDataSource<PedidoCompra>();
+    displayedColumns: string[] = ['id', 'descripcion', 'estado', 'fecha', 'articulo', 'actions'];
+
+    dataSource = new MatTableDataSource<Ajuste>();
 
     @ViewChild(MatPaginator)
     paginator!: MatPaginator;
 
-    pedidosCompra: PedidoCompra[] = [];
+    ajustes: Ajuste[] = [];
 
     pagina = 1;
     numeroResultados = 5;
@@ -30,7 +30,7 @@ export class PedidoCompraComponent implements OnInit {
     all = false;
 
     constructor(
-        private pedidoCompraService: PedidoCompraService,
+        private ajusteService: AjusteService,
         private dialog: MatDialog,
         private uiService: UIService,
         private util: UtilService
@@ -43,12 +43,12 @@ export class PedidoCompraComponent implements OnInit {
     cargar() {
         this.util.startLoading();
         if (this.all) {
-            this.pedidoCompraService.getPedidosCompra(this.all).subscribe(
+            this.ajusteService.getAjustes(this.all).subscribe(
                 (data) => {
                     console.log(data);
-                    this.pedidosCompra = data;
-                    this.dataSource = new MatTableDataSource<PedidoCompra>(
-                        this.pedidosCompra
+                    this.ajustes = data;
+                    this.dataSource = new MatTableDataSource<Ajuste>(
+                        this.ajustes
                     );
                     this.dataSource.paginator = this.paginator;
                     this.util.stopLoading();
@@ -61,15 +61,14 @@ export class PedidoCompraComponent implements OnInit {
                         'Cerrar',
                         3000
                     );
-                }
-            );
+                });
         } else {
-            this.pedidoCompraService.getPedidosCompraPendientes().subscribe(
+            this.ajusteService.listAjustesPendientes().subscribe(
                 (data) => {
                     console.log(data);
-                    this.pedidosCompra = data;
-                    this.dataSource = new MatTableDataSource<PedidoCompra>(
-                        this.pedidosCompra
+                    this.ajustes = data;
+                    this.dataSource = new MatTableDataSource<Ajuste>(
+                        this.ajustes
                     );
                     this.dataSource.paginator = this.paginator;
                     this.util.stopLoading();
@@ -82,19 +81,37 @@ export class PedidoCompraComponent implements OnInit {
                         'Cerrar',
                         3000
                     );
-                }
-            );
+                });
         }
     }
 
     add(): void {
-        const item = new PedidoCompra();
+        const item = new Ajuste();
         this.openDialog(item);
     }
 
-    anular(dato: PedidoCompra): void {
+    openDialog(item: Ajuste): void {
+        const dialogRef = this.dialog.open(AjusteDialogComponent, {
+            minWidth: '70%',
+            // maxWidth: '600px',
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                item: item
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            // debugger;
+            if (result) {
+                this.cargar();
+            }
+        });
+    }
+
+    anular(dato: Ajuste): void {
         this.util.startLoading();
-        this.pedidoCompraService.anularPedidoCompra(dato).subscribe(
+        this.ajusteService.anularAjuste(dato).subscribe(
             result => {
                 console.log(result);
                 this.cargar();
@@ -116,37 +133,62 @@ export class PedidoCompraComponent implements OnInit {
         );
     }
 
-    anularDialog(event: any, pedidoCompra: PedidoCompra): void {
+    anularDialog(event: any, ajuste: Ajuste): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Pedido Compra',
-                msg: '¿Está seguro que desea anular este Pedido de Compra?'
+                title: 'Anular Ajuste',
+                msg: '¿Está seguro que desea anular este Ajuste?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.anular(pedidoCompra);
+                this.anular(ajuste);
             }
         });
     }
 
-    openDialog(item: PedidoCompra): void {
-        const dialogRef = this.dialog.open(PedidoCompraDialogComponent, {
-            minWidth: '70%',
-            // maxWidth: '600px',
-            disableClose: true,
+    procesar(dato: Ajuste): void {
+        this.util.startLoading();
+        this.ajusteService.processAjuste(dato).subscribe(
+            result => {
+                console.log(result);
+                this.cargar();
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    'Procesado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+                this.util.stopLoading();
+                this.uiService.showSnackbar(
+                    error.error ? error.error : 'Ha ocurrido un error',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    procesarDialog(event: any, ajuste: Ajuste): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
             data: {
-                item: item
+                title: 'Procesar Ajuste',
+                msg: '¿Está seguro que desea procesar este Ajuste?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.cargar();
+            console.log(result);
+            if (result.data) {
+                this.procesar(ajuste);
             }
         });
     }

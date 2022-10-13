@@ -18,7 +18,7 @@ export class CondicionPagoService {
         return this.accountService.getAuthHeather();
       }
 
-    private baseUrl = 'api/condicion-pago/';
+    private baseUrl = 'api/condicionpago/';
 
     public buscarCondicionPagos(cantRegistros: number, pag: number, texto): Observable<any> {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);

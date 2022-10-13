@@ -32,6 +32,7 @@ import { PromoDescuentoComponent } from './frm/servicio/referenciales/promo-desc
 import {
     PromoDescuentoDialogComponent
 } from './frm/servicio/referenciales/promo-descuento/promo-descuento-dialog/promo-descuento-dialog.component';
+import {AjusteComponent} from './frm/compras/procesos/ajuste/ajuste.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -62,6 +63,7 @@ const routes: Routes = [
     { path: 'servicio', component: ServicioComponent},
     { path: 'promo-descuento', component: PromoDescuentoDialogComponent},
     { path: 'pedidoventa', component: PedidoVentaComponent},
+    { path: 'ajuste', component: AjusteComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

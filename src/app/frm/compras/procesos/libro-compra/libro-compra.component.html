@@ -8,7 +8,7 @@
             <span>Actualizar</span>
         </button>
 
-        <button color="primary" mat-button (click)="add()">
+        <button color="primary" mat-button (click)="add()" *ngIf="false">
             <mat-icon>add</mat-icon>
             <span>Nuevo</span>
         </button>
@@ -59,7 +59,7 @@
 
                     <ng-container matColumnDef="montoIVA10">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Monto</strong></h4>
+                            <h4><strong>I.V.A. 10%</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
                             {{ dato.montoIVA10 | myCurrency }}
@@ -75,26 +75,21 @@
                         </mat-cell>
                     </ng-container>
 
+                    <ng-container matColumnDef="montoTotal">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                            <h4><strong>Total</strong></h4>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let dato" class="texto-tabla">
+                            {{ dato.montoNeto + dato.montoIVA5 + dato.montoIVA10 | myCurrency }}
+                        </mat-cell>
+                    </ng-container>
+
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let dato">
-
                             <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(dato)">
                                 <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                             </button>
-
-                            <!--<button [disabled]="dato.estadoNotaDebito.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
-                                <mat-icon aria-label="Editar item">block</mat-icon>
-                            </button>-->
-
-                            <!--<button matTooltip="Eliminar" *ngIf="dato.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">
-                                <mat-icon>delete</mat-icon>
-                            </button>
-
-                            <button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
-                                <mat-icon>refresh</mat-icon>
-                            </button>-->
-
                         </mat-cell>
                     </ng-container>
 

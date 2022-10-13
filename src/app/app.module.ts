@@ -123,6 +123,9 @@ import {
 } from './frm/ventas/procesos/pedido-venta/pedido-venta-dialog/pedido-venta-dialog.component';
 import {ServicioDialogComponent} from './frm/servicio/referenciales/servicio/servicio-dialog/servicio-dialog.component';
 import {PromoDescuentoDialogComponent} from './frm/servicio/referenciales/promo-descuento/promo-descuento-dialog/promo-descuento-dialog.component';
+import {PedidoVentaDialogComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta-dialog/pedido-venta-dialog.component';
+import {AjusteComponent} from './frm/compras/procesos/ajuste/ajuste.component';
+import {AjusteDialogComponent} from './frm/compras/procesos/ajuste/ajuste-dialog/ajuste-dialog.component';
 
 @NgModule({
     declarations: [
@@ -190,6 +193,8 @@ import {PromoDescuentoDialogComponent} from './frm/servicio/referenciales/promo-
         PedidoVentaDialogComponent,
         ServicioDialogComponent,
         PromoDescuentoDialogComponent,
+        AjusteComponent,
+        AjusteDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

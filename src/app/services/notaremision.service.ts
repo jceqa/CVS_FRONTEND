@@ -38,4 +38,12 @@ export class NotaRemisionService {
     public anularNotaRemision(notaRemision: NotaRemision): Observable<any> {
         return this.http.put<any>(this.baseUrl + 'anular', notaRemision);
     }
+
+    public listNotaRemisionPendientes(): Observable<NotaRemision[]> {
+        return this.http.get<NotaRemision[]>(this.baseUrl + 'pendientes');
+    }
+
+    public processNotaRemision(notaRemision: NotaRemision): Observable<any> {
+        return this.http.put<any>(this.baseUrl + 'procesar', notaRemision);
+    }
 }

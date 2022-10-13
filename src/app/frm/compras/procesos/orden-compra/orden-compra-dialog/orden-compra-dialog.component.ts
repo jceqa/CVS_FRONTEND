@@ -187,10 +187,6 @@ export class OrdenCompraDialogComponent implements OnInit {
             this.total += p.total;
 
             p.presupuestoCompraDetalles.forEach(pCD => {
-                /*const art = this.detalles.find(d => d.articulo.id === this.articuloSelected.id);
-                if (art) {
-                    art.cantidad += this.form.get('cantidadArticulo').value;*/
-
                 this.detalles.push(
                     {
                         estado: 'ACTIVO',
@@ -334,10 +330,8 @@ export class OrdenCompraDialogComponent implements OnInit {
 
     // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
-
         // Asigna los valores del formulario al objeto a almacenar
         this.setAtributes();
-
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.observacion)) {
             this.ordenCompraService.editarOrdenCompra(this.item).subscribe(data => {
@@ -347,11 +341,9 @@ export class OrdenCompraDialogComponent implements OnInit {
                     'Cerrar',
                     3000
                 );
-
                 this.dialogRef.close(data);
             }, (error) => {
                 console.error('[ERROR]: ', error);
-
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',

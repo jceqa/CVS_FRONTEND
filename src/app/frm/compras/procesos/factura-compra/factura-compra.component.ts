@@ -66,11 +66,8 @@ export class FacturaCompraComponent implements OnInit {
     }
 
     add(): void {
-
         const item = new FacturaCompra();
-
         this.openDialog(item);
-
     }
 
     anular(dato: FacturaCompra): void {

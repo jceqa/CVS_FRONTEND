@@ -9,7 +9,7 @@ import {UtilService} from '../../../../services/util.service';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 import {
     LibroCompraDialogComponent
-} from '../libro-compra/libro-compra-dialog/libro-compra-dialog.component';
+} from './libro-compra-dialog/libro-compra-dialog.component';
 
 @Component({
     selector: 'app-libro-compra',
@@ -18,7 +18,7 @@ import {
 })
 export class LibroCompraComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'estado', 'fecha', 'montoIVA5', 'montoIVA10', 'montoNeto', 'actions'];
+    displayedColumns: string[] = ['id', 'estado', 'fecha', 'montoIVA5', 'montoIVA10', 'montoNeto', 'montoTotal', 'actions'];
     dataSource = new MatTableDataSource<LibroCompra>();
 
     @ViewChild(MatPaginator)
@@ -68,11 +68,8 @@ export class LibroCompraComponent implements OnInit {
     }
 
     add(): void {
-
         const item = new LibroCompra();
-
         this.openDialog(item);
-
     }
 
     anular(dato: LibroCompra): void {
@@ -135,5 +132,4 @@ export class LibroCompraComponent implements OnInit {
             }
         });
     }
-
 }

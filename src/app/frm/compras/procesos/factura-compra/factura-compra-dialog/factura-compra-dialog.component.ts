@@ -58,17 +58,12 @@ export class FacturaCompraDialogComponent implements OnInit {
     total = 0;
     totalIVA = 0;
 
-    condicionPagoType = 1;
-
     constructor(
         private dialogRef: MatDialogRef<FacturaCompraDialogComponent>,
         private uiService: UIService,
         private facturaCompraService: FacturaCompraService,
         private utils: UtilService,
         private ordenCompraService: OrdenCompraService,
-        // private presupuestoCompraService: PresupuestoCompraService,
-        // private condicionPagoService: CondicionPagoService,
-        // private proveedorService: ProveedorService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -85,7 +80,7 @@ export class FacturaCompraDialogComponent implements OnInit {
 
         if (this.data.item.id) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
-            this.title = 'Editar';
+            this.title = '';
             this.editID = this.data.item.id;
             this.formType = FormType.EDIT;
             this.setForm(this.item);
@@ -195,6 +190,7 @@ export class FacturaCompraDialogComponent implements OnInit {
             notaRemision.origen = new Deposito(1);
             notaRemision.destino = pedido.deposito;
             notaRemision.notaRemisionDetalle = [];
+            notaRemision.usuario = new Usuario(this.utils.getUserId());
 
             pedido.detallePedidoCompras.forEach(dPC => {
                 const detalle = new NotaRemisionDetalle();
@@ -299,10 +295,6 @@ export class FacturaCompraDialogComponent implements OnInit {
     }
 
     ok(): void {
-        if (this.formType === FormType.EDIT) {
-            this.edit();
-        }
-
         if (this.formType === FormType.NEW) {
             this.add();
         }
@@ -357,41 +349,6 @@ export class FacturaCompraDialogComponent implements OnInit {
                     }
                 );
         }
-    }
-
-    // Metodo que modifica un objeto {PriceListDraft} en base de datos
-    edit(): void {
-
-        // Asigna los valores del formulario al objeto a almacenar
-        this.setAtributes();
-
-        // Llama al servicio http que actualiza el objeto.
-        /*if (this.utils.tieneLetras(this.item.observacion)) {
-            this.facturaCompraService.editarFacturaCompra(this.item).subscribe(data => {
-                console.log(data);
-                this.uiService.showSnackbar(
-                    'Modificado exitosamente.',
-                    'Cerrar',
-                    3000
-                );
-
-                this.dialogRef.close(data);
-            }, (error) => {
-                console.error('[ERROR]: ', error);
-
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            });
-        } else {
-            this.uiService.showSnackbar(
-                'La descripción no puede ser solo númerica.',
-                'Cerrar',
-                5000
-            );
-        }*/
     }
 
     anular(dato: FacturaCompra): void {

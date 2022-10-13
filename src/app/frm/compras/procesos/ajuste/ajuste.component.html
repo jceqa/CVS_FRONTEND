@@ -1,0 +1,81 @@
+<div style="margin: 8px;">
+    <mat-toolbar>
+        <span>Ajustes</span>
+        <span class="line-spacer"></span>
+
+        <button color="primary" mat-button (click)="cargar()">
+            <mat-icon>refresh</mat-icon>
+            <span>Actualizar</span>
+        </button>
+
+        <button color="primary" mat-button (click)="add()">
+            <mat-icon>add</mat-icon>
+            <span>Nuevo</span>
+        </button>
+    </mat-toolbar>
+    <mat-card>
+        <mat-card-content>
+            <div class="end">
+                <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Todos</mat-checkbox>
+            </div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Id</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><span [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}"> {{ dato.id }} </span></mat-cell>>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Descripcion</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.descripcion }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Estado</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.estadoAjuste.descripcion }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Fecha</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.fecha | date : 'dd/MM/yyyy' }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="articulo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Articulo</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.stock.articulo.descripcion }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let dato">
+                        <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(dato)">
+                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
+                        </button>
+
+                        <button [disabled]="dato.estadoAjuste.id !== 1" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                            <mat-icon aria-label="Anular item">block</mat-icon>
+                        </button>
+
+                        <button [disabled]="dato.estadoAjuste.id !== 1" matTooltip="Procesar" color="success"  mat-icon-button (click)="procesarDialog($event, dato)" >
+                            <mat-icon aria-label="Procesar">done_all</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <mat-paginator #painator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+            </mat-paginator>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -8,16 +8,16 @@
             <span>Actualizar</span>
         </button>
 
-        <button color="primary" mat-button (click)="add()">
+        <!--<button color="primary" mat-button (click)="add()">
             <mat-icon>add</mat-icon>
             <span>Nuevo</span>
-        </button>
+        </button>-->
 
     </mat-toolbar>
     <mat-card>
         <mat-card-content>
-            <div class="end" *ngIf="false">
-                <mat-checkbox [(ngModel)]="all" (change)="cargar()" disabled>Ver Inactivos</mat-checkbox>
+            <div class="end">
+                <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Todos</mat-checkbox>
             </div>
             <div class="table-responsive">
                 <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
@@ -36,15 +36,6 @@
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
                             <i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.observacion }}</i>
-                        </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="numero">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Número</strong></h4>
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.numero }}
                         </mat-cell>
                     </ng-container>
 
@@ -83,8 +74,12 @@
                                 <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                             </button>
 
-                            <button [disabled]="dato.estadoNotaDebitoCompra.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                            <!--<button [disabled]="dato.estadoNotaDebitoCompra.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
                                 <mat-icon aria-label="Editar item">block</mat-icon>
+                            </button>-->
+
+                            <button [disabled]="dato.estadoNotaDebitoCompra.id !== 1" matTooltip="Procesar" color="success"  mat-icon-button (click)="procesarDialog($event, dato)" >
+                                <mat-icon aria-label="Procesar">done_all</mat-icon>
                             </button>
 
                             <!--<button matTooltip="Eliminar" *ngIf="dato.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">

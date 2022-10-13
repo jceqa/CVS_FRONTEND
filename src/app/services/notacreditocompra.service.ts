@@ -38,4 +38,8 @@ export class NotaCreditoCompraService {
     public anularNotaCreditoCompra(notaCreditoCompra: NotaCreditoCompra): Observable<any> {
         return this.http.put<any>(this.baseUrl + 'anular', notaCreditoCompra);
     }
+
+    public getNotaCreditoCompraPendientes(): Observable<NotaCreditoCompra[]> {
+        return this.http.get<NotaCreditoCompra[]>(this.baseUrl + 'pendientes');
+    }
 }

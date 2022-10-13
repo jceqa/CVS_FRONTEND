@@ -42,35 +42,54 @@ export class OrdenCompraComponent implements OnInit {
 
     cargar() {
         this.util.startLoading();
-        this.ordenCompraService.getOrdenesCompra(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.ordenesCompra = data;
-
-                this.dataSource = new MatTableDataSource<OrdenCompra>(
-                    this.ordenesCompra
-                );
-                this.dataSource.paginator = this.paginator;
-                this.util.stopLoading();
-            },
-            err => {
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+        if (this.all) {
+            this.ordenCompraService.getOrdenesCompra(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.ordenesCompra = data;
+                    this.dataSource = new MatTableDataSource<OrdenCompra>(
+                        this.ordenesCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        } else {
+            this.ordenCompraService.getOrdenCompraPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.ordenesCompra = data;
+                    this.dataSource = new MatTableDataSource<OrdenCompra>(
+                        this.ordenesCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        }
     }
 
     add(): void {
-
         const item = new OrdenCompra();
-
         this.openDialog(item);
-
     }
 
     anular(dato: OrdenCompra): void {
@@ -133,5 +152,4 @@ export class OrdenCompraComponent implements OnInit {
             }
         });
     }
-
 }
