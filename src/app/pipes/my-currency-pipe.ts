@@ -17,27 +17,24 @@ export class MyCurrencyPipe implements PipeTransform {
     transform(value: number | string): string {
         /*let [ integer, fraction = '' ] = (value || '').toString()
             .split(this.DECIMAL_SEPARATOR);
-
         fraction = fractionSize > 0
             ? this.DECIMAL_SEPARATOR + (fraction + PADDING).substring(0, fractionSize)
             : '';*/
+        if (value) {
+            value = value.toString().replace(/\D/g, '');
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, this.THOUSANDS_SEPARATOR);
+            return value;
+        }
 
-        value = value.toString().replace(/\D/g, '');
-
-        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, this.THOUSANDS_SEPARATOR);
-
-        return value;
+        return '0';
     }
 
     parse(value: string): string {
         /*let [ integer, fraction = '' ] = (value || '').split(this.DECIMAL_SEPARATOR);*/
-
         value = value.replace( /[.]/g, '');
-
         /*fraction = parseInt(fraction, 10) > 0 && fractionSize > 0
             ? this.DECIMAL_SEPARATOR + (fraction + PADDING).substring(0, fractionSize)
             : '';*/
-
         return value;
     }
 

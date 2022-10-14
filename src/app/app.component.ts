@@ -124,6 +124,14 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
         console.log(newMenu);
         this.menus = newMenu;
+
+        this.menus.forEach(menu => {
+           menu.Items.forEach(item => {
+              item.SubItems = item.SubItems.sort( (a, b) => {
+                  return (a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()));
+              });
+           });
+        });
     }
 
     generarMenu(permisos: Permiso[]) {
