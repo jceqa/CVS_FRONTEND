@@ -27,6 +27,7 @@ export class ClienteComponent implements OnInit {
 
     pagina = 1;
     numeroResultados = 5;
+    all = false;
 
     constructor(
         private clienteService: ClienteService,
@@ -37,12 +38,12 @@ export class ClienteComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.cargarClientes();
+        this.cargar();
     }
 
-    cargarClientes() {
+    cargar() {
         this.utils.startLoading();
-        this.clienteService.getClientes().subscribe(
+        this.clienteService.getClientes(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.clientes = data;
@@ -64,15 +65,12 @@ export class ClienteComponent implements OnInit {
         );
     }
 
-    addItem(): void {
-
+    add(): void {
         const item = new Cliente();
-
-        this.editItem(item);
-
+        this.edit(item);
     }
 
-    editItem(item: Cliente): void {
+    edit(item: Cliente): void {
         const dialogRef = this.dialog.open(ClienteDialogComponent, {
             minWidth: '60%',
             // maxWidth: '600px',
@@ -84,17 +82,17 @@ export class ClienteComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargarClientes();
+                this.cargar();
             }
         });
     }
 
-    deleteItem(id: number): void {
+    delete(id: number): void {
         this.utils.startLoading();
         this.clienteService.eliminarCliente(id).subscribe(
             result => {
                 console.log(result);
-                this.cargarClientes();
+                this.cargar();
                 this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
@@ -126,7 +124,7 @@ export class ClienteComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.deleteItem(cliente.id);
+                this.delete(cliente.id);
             }
         });
     }

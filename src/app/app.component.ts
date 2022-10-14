@@ -5,9 +5,8 @@ import {LoginService} from './services/login.service';
 import {Store} from '@ngrx/store';
 import * as fromRoot from './app.reducer';
 import {MatSidenav} from '@angular/material/sidenav';
-import {Router, RouteReuseStrategy, RouterOutlet} from '@angular/router';
+import {Router, RouteReuseStrategy} from '@angular/router';
 import {UsuarioRolService} from './services/usuariorol.service';
-import {Permiso} from './models/permiso';
 import {UtilService} from './services/util.service';
 import {MenuService} from './services/menu.service';
 import {Menu} from './models/menu';
@@ -31,7 +30,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
     menus: any[] = [];
     data: any;
     isMenuOpen = true;
-    flexibleToolBar = false;
     isDarkTheme: boolean;
     dir: string;
     isSmall: boolean;
@@ -68,7 +66,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
                             console.log(usuarioRol);
                             this.usuarioRol = usuarioRol;
                             this.util.stopLoading();
-                            this.generarMenu2();
+                            this.generarMenu();
                         },
                         error => {
                             this.util.stopLoading();
@@ -91,7 +89,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    generarMenu2() {
+    generarMenu() {
         const newMenu = [];
         this.menu.sistemas.forEach(s =>
             newMenu.push({
@@ -134,73 +132,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
         });
     }
 
-    generarMenu(permisos: Permiso[]) {
-        let sistema = permisos[0].formulario.sistema.id;
-        let subMenu = permisos[0].formulario.subMenu.id;
-        const sistemas = [];
-        const submenus = [];
-        const formularios = [];
-        let anteriorMenu = '';
-        let anteriorSubMenu = '';
-        permisos.forEach(element => {
-            if (element.formulario.subMenu.id === subMenu && element.formulario.sistema.id === sistema) {
-                formularios.push({
-                    Name: element.formulario.nombre,
-                    Url: element.formulario.url
-                });
-
-                anteriorSubMenu = element.formulario.subMenu.nombre;
-                anteriorMenu = element.formulario.sistema.nombre;
-            } else if (element.formulario.sistema.id === sistema) {
-                submenus.push({
-                    Name: anteriorSubMenu,
-                    SubItems: formularios.slice()
-                });
-                formularios.length = 0;
-                subMenu = element.formulario.subMenu.id;
-                formularios.push({
-                    Name: element.formulario.nombre,
-                    Url: element.formulario.url
-                });
-                anteriorMenu = element.formulario.sistema.nombre;
-            } else {
-                submenus.push({
-                    Name: anteriorSubMenu,
-                    SubItems: formularios.slice()
-                });
-                formularios.length = 0;
-                sistemas.push({
-                    Name: anteriorMenu,
-                    Items: submenus.slice(),
-                    Icon: null,
-                });
-                submenus.length = 0;
-                formularios.push({
-                    Name: element.formulario.nombre,
-                    Url: element.formulario.url
-                });
-                subMenu = element.formulario.subMenu.id;
-                anteriorSubMenu = element.formulario.subMenu.nombre;
-                sistema = element.formulario.sistema.id;
-            }
-        })
-        ;
-
-        submenus.push({
-            Name: anteriorSubMenu,
-            SubItems: formularios.slice()
-        });
-
-        sistemas.push({
-            Name: anteriorMenu,
-            Items: submenus.slice(),
-            Icon: null,
-        });
-
-        this.menus = sistemas;
-        console.log(sistemas);
-    }
-
     toogleSideNav() {
         this.sidenav.toggle();
         console.log(this.sidenav);
@@ -218,10 +149,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.store.dispatch(closeMenuAction);
     }
 
-    toolBarCheck() {
-        this.flexibleToolBar = !this.flexibleToolBar;
-    }
-
     ngAfterViewChecked() {
         this.cd.detectChanges();
     }
@@ -232,14 +159,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
     toggleDir() {
         this.dir = this.dir === 'ltr' ? 'rtl' : 'ltr';
-    }
-
-    go(url: string) {
-        if (this.isSmall) {
-            this.loginService.IsMenuOpen = false;
-            this.sidenav.close();
-        }
-        this.router.navigate([url]);
     }
 
     closeMenu() {
@@ -256,36 +175,5 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
         this.loginService.logout();
         this.router.navigate(['/']);
-    }
-
-    getAnimationData(outlet: RouterOutlet) {
-        return (
-            outlet &&
-            outlet.activatedRouteData &&
-            outlet.activatedRouteData['animation']
-        );
-    }
-
-    checkRouteBg() {
-        switch (this.router.url) {
-            case '/': {
-                return true;
-            }
-            case '/login': {
-                return true;
-            }
-            case '/register': {
-                return true;
-            }
-            default: {
-                return false;
-            }
-        }
-    }
-
-    signOut() {
-        localStorage.clear();
-        this.usuario = 'Invitado';
-        // this.estaLogueado = false;
     }
 }

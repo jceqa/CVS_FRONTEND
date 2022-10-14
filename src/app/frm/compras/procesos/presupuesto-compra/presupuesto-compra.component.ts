@@ -88,11 +88,8 @@ export class PresupuestoCompraComponent implements OnInit {
     }
 
     add(): void {
-
         const item = new PresupuestoCompra();
-
         this.openDialog(item);
-
     }
 
     anular(dato: PresupuestoCompra): void {

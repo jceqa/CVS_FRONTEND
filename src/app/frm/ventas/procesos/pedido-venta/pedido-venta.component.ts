@@ -16,7 +16,7 @@ import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.
 })
 export class PedidoVentaComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'estado', 'deposito', 'actions'];
+    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'estado', 'cliente', 'sucursal', 'actions'];
     dataSource = new MatTableDataSource<PedidoVenta>();
 
     @ViewChild(MatPaginator)
@@ -41,34 +41,50 @@ export class PedidoVentaComponent implements OnInit {
     }
 
     cargar() {
-        // this.store.dispatch(new UI.StartLoading());
-        // this.util.localStorageSetItem('loading', 'true');
         this.util.startLoading();
-        this.pedidoVentaService.getPedidosVenta(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.pedidosVenta = data;
-
-                this.dataSource = new MatTableDataSource<PedidoVenta>(
-                    this.pedidosVenta
-                );
-                this.dataSource.paginator = this.paginator;
-                // this.store.dispatch(new UI.StopLoading());
-                // this.util.localStorageSetItem('loading', 'false');
-                this.util.stopLoading();
-            },
-            err => {
-                // this.store.dispatch(new UI.StopLoading());
-                // this.util.localStorageSetItem('loading', 'false');
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+        if (this.all) {
+            this.pedidoVentaService.getPedidosVenta(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.pedidosVenta = data;
+                    this.dataSource = new MatTableDataSource<PedidoVenta>(
+                        this.pedidosVenta
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        } else {
+            this.pedidoVentaService.getPedidosVentaPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.pedidosVenta = data;
+                    this.dataSource = new MatTableDataSource<PedidoVenta>(
+                        this.pedidosVenta
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        }
     }
 
     add(): void {
@@ -126,6 +142,7 @@ export class PedidoVentaComponent implements OnInit {
             minWidth: '70%',
             // maxWidth: '600px',
             disableClose: true,
+            autoFocus: false,
             data: {
                 item: item
             }

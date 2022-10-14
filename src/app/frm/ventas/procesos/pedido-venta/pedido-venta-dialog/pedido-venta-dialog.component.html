@@ -4,13 +4,6 @@
 
     <mat-dialog-content>
 
-        <!--<div class="mt-2" *ngIf="formType === 1">
-            <mat-form-field class="full-with-field" >
-                <input id="id" formControlName="id" matInput placeholder="Id" readonly />
-            </mat-form-field>
-        </div>-->
-
-
         <div style="display: flex">
             <div class="third-width-field">
                 <span>Nro Pedido: {{ item.id }}</span>
@@ -25,12 +18,27 @@
             </div>
         </div>
 
+        <div *ngIf="this.formType !== 1">
+            <mat-form-field class="full-with-field">
+                <input type="text"
+                       placeholder="Cliente"
+                       matInput
+                       [formControl]="myControlCliente"
+                       [matAutocomplete]="autoCliente"
+                       class="text">
+                <mat-autocomplete #autoCliente="matAutocomplete" [displayWith]="displayCliente">
+                    <mat-option *ngFor="let option of filteredOptionsCliente | async" [value]="option"
+                                (onSelectionChange)="selectedCliente($event)">
+                        {{option.ruc}} | {{option.razon}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
         <div>
             <mat-form-field class="middle-width-field">
                 <mat-label>Sucursal</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listDepositos()"
-                            [disabled]="this.formType === 1">
-                    <!--<mat-option [value]="0" selected="true">Seleccionar...</mat-option>-->
+                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listDepositos()">
                     <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
                         {{ sucursal.descripcion }}
                     </mat-option>
@@ -39,8 +47,7 @@
             &nbsp;
             <mat-form-field class="middle-width-field">
                 <mat-label>Deposito</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="deposito" [disabled]="this.formType === 1">
-                    <!--<mat-option [value]="0" aria-selected="true">Seleccionar...</mat-option>-->
+                <mat-select [compareWith]="compareFunction" formControlName="deposito" (selectionChange)="listStock()">
                     <mat-option *ngFor="let deposito of depositos" [value]="deposito">
                         {{ deposito.descripcion }}
                     </mat-option>
@@ -51,7 +58,7 @@
 
         <div class="mt-2">
             <mat-form-field class="full-with-field">
-                <input [disabled]="this.formType === 1" id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
+                <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
@@ -60,7 +67,7 @@
 
         <h4>Detalles</h4>
         <div class="full-with-field" *ngIf="this.formType !== 1">
-            <mat-form-field>
+            <mat-form-field class="middle-width-field">
                 <input type="text"
                        placeholder="Artículo"
                        matInput
@@ -70,7 +77,7 @@
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="display">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
                                 (onSelectionChange)="selected($event)">
-                        {{option.codigoGenerico}} | {{option.descripcion}}
+                        {{option.articulo.codigoGenerico}} | {{option.articulo.descripcion}} | {{ option.existencia}}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
@@ -120,14 +127,14 @@
 
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let dato">
+                    <mat-cell *matCellDef="let dato, let i = index">
 
                         <!--<button color="primary" mat-icon-button (click)="viewDetail(dato)">
                             <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                         </button>-->
 
                         <button matTooltip="Aumentar" color="primary" mat-icon-button
-                                (click)="incItem(dato)" *ngIf="formType !== 1">
+                                (click)="incItem(dato)" *ngIf="formType !== 1" [disabled]="!existStock(i)">
                             <mat-icon aria-label="Aumentar item">add_circle_outline</mat-icon>
                         </button>
 
@@ -167,7 +174,7 @@
             Aceptar
         </button>
 
-        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoPedido.id === 2" *ngIf="this.formType === 1">
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoPedidoVenta.id === 2" *ngIf="this.formType === 1">
             <mat-icon>block</mat-icon>
             Anular
         </button>

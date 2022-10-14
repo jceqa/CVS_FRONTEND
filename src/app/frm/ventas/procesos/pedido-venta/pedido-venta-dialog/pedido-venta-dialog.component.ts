@@ -12,13 +12,15 @@ import {MatTableDataSource} from '@angular/material/table';
 import {PedidoVentaDetalle} from '../../../../../models/pedidoVentaDetalle';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {Articulo} from '../../../../../models/articulo';
-import {ArticuloService} from '../../../../../services/articulo.service';
 import {SucursalService} from '../../../../../services/sucursal.service';
 import {DepositoService} from '../../../../../services/deposito.service';
 import {Usuario} from '../../../../../models/usuario';
 import {Estado} from '../../../../../models/estado';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
+import {Cliente} from '../../../../../models/cliente';
+import {ClienteService} from '../../../../../services/cliente.service';
+import {StockService} from '../../../../../services/stock.service';
+import {Stock} from '../../../../../models/stock';
 
 @Component({
     selector: 'app-pedido-venta-dialog',
@@ -28,8 +30,11 @@ import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dial
 export class PedidoVentaDialogComponent implements OnInit {
 
     myControl = new FormControl('');
-    options: Articulo[] = [];
-    filteredOptions: Observable<Articulo[]>;
+    myControlCliente = new FormControl('');
+    options: Stock[] = [];
+    optionsCliente: Cliente[] = [];
+    filteredOptions: Observable<Stock[]>;
+    filteredOptionsCliente: Observable<Cliente[]>;
 
     item: PedidoVenta;
     companyId = 0;
@@ -42,13 +47,15 @@ export class PedidoVentaDialogComponent implements OnInit {
 
     fecha = new Date();
 
-    articuloSelected: Articulo = null;
+    stockSelected: Stock = null;
+    clienteSelected: Cliente = null;
     sucursales: Sucursal[] = [];
     depositos: Deposito[] = [];
 
     displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'actions'];
     dataSource = new MatTableDataSource<PedidoVentaDetalle>();
     detalles: PedidoVentaDetalle[] = [];
+    listStocks: Stock[] = [];
 
     estadoPedido = '';
 
@@ -56,10 +63,11 @@ export class PedidoVentaDialogComponent implements OnInit {
         private dialogRef: MatDialogRef<PedidoVentaDialogComponent>,
         private uiService: UIService,
         private pedidoVentaService: PedidoVentaService,
-        private articuloService: ArticuloService,
+        private clienteService: ClienteService,
         private utils: UtilService,
         private sucursalService: SucursalService,
         private depositoService: DepositoService,
+        private stockService: StockService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -73,19 +81,20 @@ export class PedidoVentaDialogComponent implements OnInit {
             observacion: new FormControl('', [Validators.required]),
             sucursal: new FormControl('', [Validators.required]),
             deposito: new FormControl('', [Validators.required]),
-            // codigoArticulo: new FormControl(''),
-            // descripcionArticulo: new FormControl(''),
             cantidadArticulo: new FormControl(0),
         });
 
         if (this.data.item.id) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
-            this.title = 'Editar';
+            // this.title = 'Editar';
+            this.title = '';
             this.editID = this.data.item.id;
             // this.getMarcaById(this.data.item.id);
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.form.get('observacion').disable();
+            this.form.get('deposito').disable();
+            this.form.get('sucursal').disable();
         } else {
             // Si no existe es una nueva lista
             this.title = 'Nuevo';
@@ -93,13 +102,13 @@ export class PedidoVentaDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        this.articuloService.getArticulos().subscribe(data => {
+        this.clienteService.getClientes().subscribe(data => {
             console.log(data);
-            this.options = data;
+            this.optionsCliente = data;
 
-            this.filteredOptions = this.myControl.valueChanges.pipe(
+            this.filteredOptionsCliente = this.myControlCliente.valueChanges.pipe(
                 startWith(''),
-                map(value => this._filter(value || '')),
+                map(value => this._filterCliente(value || '')),
             );
             this.utils.stopLoading();
         }, error => {
@@ -118,14 +127,21 @@ export class PedidoVentaDialogComponent implements OnInit {
         });
     }
 
-    private _filter(value: any): Articulo[] {
+    private _filter(value: any): Stock[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.options.filter(option => option.codigoGenerico.toString().includes(filterValue) ||
-                option.descripcion.toLowerCase().includes(filterValue))
+            this.options.filter(option => option.articulo.codigoGenerico.toString().includes(filterValue) ||
+                option.articulo.descripcion.toLowerCase().includes(filterValue))
         );
     }
 
+    private _filterCliente(value: any): Cliente[] {
+        const filterValue = value.toString().toLowerCase();
+        return (
+            this.optionsCliente.filter(option => option.ruc.toString().includes(filterValue) ||
+                option.razon.toLowerCase().includes(filterValue))
+        );
+    }
 
     compareFunction(o1: any, o2: any) {
         return (o1 && o2 && o1.id === o2.id);
@@ -137,15 +153,16 @@ export class PedidoVentaDialogComponent implements OnInit {
             this.form.patchValue({
                 id: item.id,
                 observacion: item.observacion,
-                // deposito: item.deposito,
+                deposito: item.deposito,
                 sucursal: item.deposito.sucursal,
             });
             this.fecha = item.fecha;
-            this.detalles = item.detallePedidoVentas;
-            this.estadoPedido = item.estadoPedido.descripcion;
+            this.detalles = item.pedidoVentaDetalles;
+            this.estadoPedido = item.estadoPedidoVenta.descripcion;
             this.dataSource = new MatTableDataSource<PedidoVentaDetalle>(
                 this.detalles
             );
+            this.clienteSelected = item.cliente;
 
             this.listDepositos();
         }
@@ -156,11 +173,12 @@ export class PedidoVentaDialogComponent implements OnInit {
         this.item.id = this.form.get('id').value;
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
         this.item.deposito = this.form.get('deposito').value;
-        this.item.estadoPedido = new Estado(1);
+        this.item.estadoPedidoVenta = new Estado(1);
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
-        this.item.detallePedidoVentas = this.detalles;
+        this.item.pedidoVentaDetalles = this.detalles;
+        this.item.cliente = this.clienteSelected;
     }
 
     listDepositos() {
@@ -182,6 +200,23 @@ export class PedidoVentaDialogComponent implements OnInit {
         );
     }
 
+    listStock() {
+        this.utils.startLoading();
+        this.stockService.listStockByDeposito(this.form.get('deposito').value.id).subscribe(data => {
+            console.log(data);
+            this.options = data;
+
+            this.filteredOptions = this.myControl.valueChanges.pipe(
+                startWith(''),
+                map(value => this._filter(value || '')),
+            );
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
+    }
+
     dismiss(result?: any) {
         this.dialogRef.close(result);
     }
@@ -192,47 +227,69 @@ export class PedidoVentaDialogComponent implements OnInit {
 
     selected($event): void {
         console.log($event.source.value);
-        this.articuloSelected = $event.source.value;
+        this.stockSelected = $event.source.value;
     }
 
-    display(value) {
+    selectedCliente($event): void {
+        console.log($event.source.value);
+        this.clienteSelected = $event.source.value;
+    }
+
+    display(value: Stock) {
         if (value) {
-            return value.codigoGenerico.toString() + ' - ' + value.descripcion;
+            return value.articulo.codigoGenerico.toString() + ' | ' + value.articulo.descripcion + ' | ' + value.existencia.toString();
+        }
+    }
+
+    displayCliente(value: Cliente) {
+        if (value) {
+            return value.ruc.toString() + ' - ' + value.razon;
         }
     }
 
     limpiarCampos() {
-        this.articuloSelected = null;
+        this.stockSelected = null;
         this.myControl.setValue('');
         this.form.get('cantidadArticulo').setValue(0);
     }
 
     addItem() {
-        if (this.articuloSelected !== null) {
+        if (this.stockSelected !== null) {
             if (this.form.get('cantidadArticulo').value > 0) {
-                const art = this.detalles.find(d => d.articulo.id === this.articuloSelected.id);
-                if (art) {
-                    art.cantidad += this.form.get('cantidadArticulo').value;
-                    /*const index = this.detalles.indexOf(art);
-                    this.detalles.splice(index, 1, {
-                        'id': 0,
-                        'articulo': this.articuloSelected,
-                        'cantidad': this.form.get('cantidadArticulo').value + this.detalles[index].cantidad,
-                        'estado': 'ACTIVO'
-                    });*/
+                if (this.form.get('cantidadArticulo').value <= this.stockSelected.existencia) {
+                    const art = this.detalles.find(d => d.articulo.id === this.stockSelected.articulo.id);
+                    if (art) {
+                        if (art.cantidad + this.form.get('cantidadArticulo').value <= this.stockSelected.existencia) {
+                            art.cantidad += this.form.get('cantidadArticulo').value;
+                            this.limpiarCampos();
+                        } else {
+                            this.uiService.showSnackbar(
+                                'La cantidad de articulos no puede sobrepasar a la existencia.',
+                                'Cerrar',
+                                3000
+                            );
+                        }
+                    } else {
+                        this.detalles.push({
+                            'id': 0,
+                            'articulo': this.stockSelected.articulo,
+                            'cantidad': this.form.get('cantidadArticulo').value,
+                            'estado': 'ACTIVO'
+                        });
+                        this.listStocks.push(this.stockSelected);
+                        console.log(this.detalles);
+                        this.dataSource = new MatTableDataSource<PedidoVentaDetalle>(
+                            this.detalles
+                        );
+                        this.limpiarCampos();
+                    }
                 } else {
-                    this.detalles.push({
-                        'id': 0,
-                        'articulo': this.articuloSelected,
-                        'cantidad': this.form.get('cantidadArticulo').value,
-                        'estado': 'ACTIVO'
-                    });
+                    this.uiService.showSnackbar(
+                        'La cantidad de articulos no puede sobrepasar a la existencia.',
+                        'Cerrar',
+                        3000
+                    );
                 }
-                console.log(this.detalles);
-                this.dataSource = new MatTableDataSource<PedidoVentaDetalle>(
-                    this.detalles
-                );
-                this.limpiarCampos();
             } else {
                 this.uiService.showSnackbar(
                     'La cantidad de articulos debe ser mayor a 0.',
@@ -259,6 +316,7 @@ export class PedidoVentaDialogComponent implements OnInit {
 
     deleteItem(dato) {
         this.detalles = this.detalles.filter(d => d.articulo.id !== dato.articulo.id);
+        this.listStocks = this.listStocks.filter(d => d.articulo.id !== dato.articulo.id);
         this.dataSource = new MatTableDataSource<PedidoVentaDetalle>(
             this.detalles
         );
@@ -326,10 +384,8 @@ export class PedidoVentaDialogComponent implements OnInit {
 
     // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
-
         // Asigna los valores del formulario al objeto a almacenar
         this.setAtributes();
-
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.observacion)) {
             this.pedidoVentaService.editarPedidoVenta(this.item).subscribe(data => {
@@ -339,11 +395,9 @@ export class PedidoVentaDialogComponent implements OnInit {
                     'Cerrar',
                     3000
                 );
-
                 this.dialogRef.close(data);
             }, (error) => {
                 console.error('[ERROR]: ', error);
-
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -383,6 +437,10 @@ export class PedidoVentaDialogComponent implements OnInit {
         );
     }
 
+    existStock(i: number) {
+        return this.detalles[i].cantidad < this.listStocks[i].existencia;
+    }
+
     anularDialog(event: any): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -400,5 +458,4 @@ export class PedidoVentaDialogComponent implements OnInit {
             }
         });
     }
-
 }
