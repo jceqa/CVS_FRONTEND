@@ -44,27 +44,49 @@ export class CuentaAPagarComponent implements OnInit {
 
     cargar() {
         this.util.startLoading();
-        this.cuentaAPagarService.getCuentasAPagar(this.all).subscribe(
-            (data) => {
-                console.log(data);
-                this.facturasCompra = data;
-
-                this.dataSource = new MatTableDataSource<CuentaAPagar>(
-                    this.facturasCompra
-                );
-                this.dataSource.paginator = this.paginator;
-                this.util.stopLoading();
-            },
-            err => {
-                this.util.stopLoading();
-                console.log(err.error);
-                this.uiService.showSnackbar(
-                    'Ha ocurrido un error.',
-                    'Cerrar',
-                    3000
-                );
-            }
-        );
+        if (this.all) {
+            this.cuentaAPagarService.getCuentasAPagar(this.all).subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
+                    this.dataSource = new MatTableDataSource<CuentaAPagar>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        } else {
+            this.cuentaAPagarService.getCuentasAPagarPendientes().subscribe(
+                (data) => {
+                    console.log(data);
+                    this.facturasCompra = data;
+                    this.dataSource = new MatTableDataSource<CuentaAPagar>(
+                        this.facturasCompra
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.util.stopLoading();
+                },
+                err => {
+                    this.util.stopLoading();
+                    console.log(err.error);
+                    this.uiService.showSnackbar(
+                        'Ha ocurrido un error.',
+                        'Cerrar',
+                        3000
+                    );
+                }
+            );
+        }
     }
 
     add(): void {

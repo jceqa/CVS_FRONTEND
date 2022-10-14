@@ -22,85 +22,18 @@
             </mat-form-field>
         </div>
 
-        <div>
-            <mat-form-field class="middle-width-field">
-                <mat-label>Origen</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="origen" required>
-                    <mat-option *ngFor="let origen of depositos" [value]="origen"
-                                (onSelectionChange)="selected($event)">
-                        {{origen.descripcion}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div style="display: flex">
+            <div class="third-width-field">
+                <span>Fecha Vto: {{ item.cuentaAPagar.fechaVencimiento | date: 'dd/MM/yyyy' }}</span>
+            </div>
             &nbsp;
-            <mat-form-field class="middle-width-field">
-                <mat-label>Destino</mat-label>
-                <mat-select [compareWith]="compareFunction" formControlName="destino" required>
-                    <mat-option *ngFor="let destino of depositos" [value]="destino">
-                        {{destino.descripcion}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <div *ngIf="this.formType !== 1 && stocks.length > 0">
-            <mat-selection-list #stock (selectionChange)="selectedStock($event)">
-                <mat-list-option *ngFor="let stock of stocks" [value]="stock" [disabled]="stock.existencia === 0">
-                    {{ stock.articulo.id }} | {{ stock.articulo.descripcion }} | {{ stock.existencia }}
-                </mat-list-option>
-            </mat-selection-list>
-        </div>
-
-        <mat-divider></mat-divider>
-
-        <h4>Detalles</h4>
-        <div>
-            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
-                <ng-container matColumnDef="codigo">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Código</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span> {{ dato.articulo.id }} </span>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="item">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Item</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.articulo.descripcion }}
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="cantidad">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Cantidad</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.cantidad }}
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="actions">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let dato">
-                        <button matTooltip="Aumentar" color="primary" mat-icon-button
-                                (click)="incItem(dato)" *ngIf="formType !== 1" [disabled]="disableInc(dato)">
-                            <mat-icon aria-label="Aumentar item">add_circle_outline</mat-icon>
-                        </button>
-
-                        <button matTooltip="Disminuir" color="primary" mat-icon-button
-                                (click)="descItem(dato)" [disabled]="dato.cantidad <= 1" *ngIf="formType !== 1">
-                            <mat-icon aria-label="Disminuir item">remove_circle_outline</mat-icon>
-                        </button>
-                    </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
+            <div class="third-width-field">
+                <span>Cuota: {{ item.cuentaAPagar.numeroCuota }} de {{ item.cuentaAPagar.cantidadCuotas }} </span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Total: {{ item.monto | myCurrency }}</span>
+            </div>
         </div>
     </mat-dialog-content>
 
@@ -109,16 +42,6 @@
             <mat-icon>cancel</mat-icon>
             Cerrar
         </button>
-
-        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid" *ngIf="this.formType !== 1">
-            <mat-icon>save</mat-icon>
-            Aceptar
-        </button>
-
-        <!--<button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoNotaRemision.id !== 1 || item.tipo === 'AUTOMATICA'" *ngIf="this.formType === 1">
-            <mat-icon>block</mat-icon>
-            Anular
-        </button>-->
 
         <button mat-button color="success" (click)="process()" *ngIf="this.estadoNotaDebitoCompra !== ''" [disabled]="item.estadoNotaDebitoCompra.id !== 1">
             <mat-icon>done_all</mat-icon>

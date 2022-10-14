@@ -37,4 +37,8 @@ export class CuentaAPagarService {
     public anularCuentaAPagar(cuentaAPagar: CuentaAPagar): Observable<any> {
         return this.http.put<any>(this.baseUrl + 'anular', cuentaAPagar);
     }
+
+    public getCuentasAPagarPendientes(): Observable<CuentaAPagar[]> {
+        return this.http.get<CuentaAPagar[]>(this.baseUrl + 'pendientes');
+    }
 }

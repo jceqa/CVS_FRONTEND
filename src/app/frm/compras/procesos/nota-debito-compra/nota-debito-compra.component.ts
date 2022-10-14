@@ -8,6 +8,8 @@ import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 import {NotaDebitoCompraDialogComponent} from './nota-debito-compra-dialog/nota-debito-compra-dialog.component';
+import {MatSort} from '@angular/material/sort';
+import {Pago} from '../../../../models/pago';
 
 @Component({
     selector: 'app-nota-debito-compra',
@@ -19,8 +21,10 @@ export class NotaDebitoCompraComponent implements OnInit {
     displayedColumns: string[] = ['id', 'observacion', 'fechaVencimiento', 'estado', 'monto', 'actions'];
     dataSource = new MatTableDataSource<NotaDebitoCompra>();
 
-    @ViewChild(MatPaginator)
+    @ViewChild('MatPaginator')
     paginator!: MatPaginator;
+    @ViewChild('MatSort')
+    matSort: MatSort;
 
     facturasCompra: NotaDebitoCompra[] = [];
 
@@ -51,6 +55,13 @@ export class NotaDebitoCompraComponent implements OnInit {
                         this.facturasCompra
                     );
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sortingDataAccessor = (item, property) => {
+                        switch (property) {
+                            case 'fechaVencimiento': return item.cuentaAPagar.fechaVencimiento;
+                            default: return item[property];
+                        }
+                    };
+                    this.dataSource.sort = this.matSort;
                     this.util.stopLoading();
                 },
                 err => {
@@ -88,11 +99,8 @@ export class NotaDebitoCompraComponent implements OnInit {
     }
 
     add(): void {
-
         const item = new NotaDebitoCompra();
-
         this.openDialog(item);
-
     }
 
     anular(dato: NotaDebitoCompra): void {
@@ -174,8 +182,21 @@ export class NotaDebitoCompraComponent implements OnInit {
         });
     }
 
+    generatePago(dato: NotaDebitoCompra): NotaDebitoCompra {
+        const pago = new Pago();
+        pago.id = 0;
+        pago.descripcion = 'PAGO GENERADO PARA NOTA DE DEBITO NRO: ' + dato.id;
+        pago.fecha = new Date();
+        pago.estado = 'ACTIVO';
+        pago.monto = dato.monto;
+
+        dato.cuentaAPagar.pago = pago;
+        return dato;
+    }
+
     procesar(dato: NotaDebitoCompra): void {
         this.util.startLoading();
+        dato = this.generatePago(dato);
         this.notaDebitoCompraService.processNotaDebitoCompra(dato).subscribe(
             result => {
                 console.log(result);

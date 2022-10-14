@@ -225,7 +225,8 @@ export class FacturaCompraDialogComponent implements OnInit {
                 cantidadCuotas : cantidadCuotas,
                 numeroCuota: i + 1,
                 estado: 'ACTIVO',
-                estadoCuentaAPagar: new Estado(1)
+                estadoCuentaAPagar: new Estado(1),
+                pago: null
             };
             const detalles = [];
             this.detalles.forEach(det => {

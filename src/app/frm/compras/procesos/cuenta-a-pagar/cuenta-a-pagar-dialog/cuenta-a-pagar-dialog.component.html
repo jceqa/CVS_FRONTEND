@@ -1,1 +1,39 @@
-<p>cuenta-a-pagar-dialog works!</p>
+<h4 mat-dialog-title>{{ title }} Cuenta a Pagar</h4>
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+    <mat-dialog-content>
+        <div style="display: flex">
+            <div class="third-width-field">
+                <span>Nro Cuenta A Pagar: {{ item.id }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Estado: {{ estadoCuentaAPagar }}</span>
+            </div>
+        </div>
+        &nbsp;
+        <div style="display: flex">
+            <div class="third-width-field">
+                <span>Fecha Vto: {{ item.fechaVencimiento | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Cuota: {{ item.numeroCuota }} de {{ item.cantidadCuotas }} </span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Total: {{ item.monto | myCurrency }}</span>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon>
+            Cerrar
+        </button>
+    </mat-dialog-actions>
+</form>

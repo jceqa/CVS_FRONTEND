@@ -126,6 +126,7 @@ import {AjusteDialogComponent} from './frm/compras/procesos/ajuste/ajuste-dialog
 import {RecepcionComponent} from './frm/servicio/procesos/recepcion/recepcion.component';
 import {ServicioComponent} from './frm/servicio/referenciales/servicio/servicio.component';
 import {PromoDescuentoComponent} from './frm/servicio/referenciales/promo-descuento/promo-descuento.component';
+import {PagoComponent} from './frm/compras/procesos/pago/pago.component';
 
 @NgModule({
     declarations: [
@@ -198,6 +199,7 @@ import {PromoDescuentoComponent} from './frm/servicio/referenciales/promo-descue
         PromoDescuentoDialogComponent,
         AjusteComponent,
         AjusteDialogComponent,
+        PagoComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

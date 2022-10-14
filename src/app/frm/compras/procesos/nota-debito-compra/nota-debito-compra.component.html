@@ -20,9 +20,9 @@
                 <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Todos</mat-checkbox>
             </div>
             <div class="table-responsive">
-                <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <mat-table #table [dataSource]="dataSource" class="table table-striped text-center" matSort #MatSort="matSort">
                     <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head" mat-sort-header>
                             <h4><strong>Id</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
@@ -31,7 +31,7 @@
                     </ng-container>
 
                     <ng-container matColumnDef="observacion">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head" mat-sort-header>
                             <h4><strong>Observación</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
@@ -40,7 +40,7 @@
                     </ng-container>
 
                     <ng-container matColumnDef="fechaVencimiento">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head" mat-sort-header>
                             <h4><strong>Fecha Vto.</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
@@ -49,7 +49,7 @@
                     </ng-container>
 
                     <ng-container matColumnDef="estado">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head" mat-sort-header>
                             <h4><strong>Estado</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
@@ -58,7 +58,7 @@
                     </ng-container>
 
                     <ng-container matColumnDef="monto">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head" mat-sort-header>
                             <h4><strong>Monto</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
@@ -74,21 +74,9 @@
                                 <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                             </button>
 
-                            <!--<button [disabled]="dato.estadoNotaDebitoCompra.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
-                                <mat-icon aria-label="Editar item">block</mat-icon>
-                            </button>-->
-
                             <button [disabled]="dato.estadoNotaDebitoCompra.id !== 1" matTooltip="Procesar" color="success"  mat-icon-button (click)="procesarDialog($event, dato)" >
                                 <mat-icon aria-label="Procesar">done_all</mat-icon>
                             </button>
-
-                            <!--<button matTooltip="Eliminar" *ngIf="dato.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">
-                                <mat-icon>delete</mat-icon>
-                            </button>
-
-                            <button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
-                                <mat-icon>refresh</mat-icon>
-                            </button>-->
 
                         </mat-cell>
                     </ng-container>
@@ -96,7 +84,7 @@
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                 </mat-table>
-                <mat-paginator #painator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+                <mat-paginator #MatPaginator="matPaginator" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
                 </mat-paginator>
             </div>
         </mat-card-content>
