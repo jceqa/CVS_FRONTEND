@@ -29,9 +29,6 @@ import {ClienteComponent} from './frm/administracion/referenciales/cliente/clien
 import {PedidoVentaComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta.component';
 import {ServicioComponent} from './frm/servicio/referenciales/servicio/servicio.component';
 import { PromoDescuentoComponent } from './frm/servicio/referenciales/promo-descuento/promo-descuento.component';
-import {
-    PromoDescuentoDialogComponent
-} from './frm/servicio/referenciales/promo-descuento/promo-descuento-dialog/promo-descuento-dialog.component';
 import {AjusteComponent} from './frm/compras/procesos/ajuste/ajuste.component';
 
 const routes: Routes = [
@@ -61,7 +58,7 @@ const routes: Routes = [
     { path: 'caja', component: CajaComponent},
     { path: 'cliente', component: ClienteComponent},
     { path: 'servicio', component: ServicioComponent},
-    { path: 'promo-descuento', component: PromoDescuentoDialogComponent},
+    { path: 'promodescuento', component: PromoDescuentoComponent},
     { path: 'pedidoventa', component: PedidoVentaComponent},
     { path: 'ajuste', component: AjusteComponent},
     { path: '', component: MainContentComponent },

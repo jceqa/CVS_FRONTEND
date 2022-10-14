@@ -1,13 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {Equipo} from '../../../../models/equipo';
 import {MatPaginator} from '@angular/material/paginator';
 import {UIService} from '../../../../services/ui.service';
 import {MatDialog} from '@angular/material/dialog';
-import {PromoDescuentoService} from '../../../../services/promo-descuento.service';
 import {PromoDescuentoDialogComponent} from './promo-descuento-dialog/promo-descuento-dialog.component';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
-import {PromoDescuento} from '../../../../models/promodescuento';
+import {PromoDescuento} from '../../../../models/promoDescuento';
+import {PromoDescuentoService} from '../../../../services/promodescuento.service';
 
 @Component({
     selector: 'app-promo-descuento',
@@ -18,7 +17,7 @@ export class PromoDescuentoComponent implements OnInit {
 
     displayedColumns: string[] = ['id', 'descripcion', 'porcentaje'];
 
-    dataSource = new MatTableDataSource<Equipo>();
+    dataSource = new MatTableDataSource<PromoDescuento>();
 
     @ViewChild(MatPaginator)
     paginator!: MatPaginator;
@@ -36,10 +35,10 @@ export class PromoDescuentoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.cargarPromoDescuentos();
+        this.cargar();
     }
 
-    cargarEquipos() {
+    cargar() {
         this.promoDescuentoService.listPromoDescuentos().subscribe(
             (data) => {
                 console.log(data);
@@ -62,14 +61,11 @@ export class PromoDescuentoComponent implements OnInit {
     }
 
     addItem(): void {
-
-        const item = new Equipo();
-
-        this.editItem(item);
-
+        const item = new PromoDescuento();
+        this.edit(item);
     }
 
-    editItem(item: PromoDescuento): void {
+    edit(item: PromoDescuento): void {
         const dialogRef = this.dialog.open(PromoDescuentoDialogComponent, {
             minWidth: '60%',
             // maxWidth: '600px',
@@ -81,7 +77,7 @@ export class PromoDescuentoComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargarPromoDescuentos();
+                this.cargar();
             }
         });
     }
@@ -90,7 +86,7 @@ export class PromoDescuentoComponent implements OnInit {
         this.promoDescuentoService.eliminarPromoDescuento(id).subscribe(
             result => {
                 console.log(result);
-                this.cargarPromoDescuentos();
+                this.cargar();
 
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
@@ -112,7 +108,7 @@ export class PromoDescuentoComponent implements OnInit {
     openDialog(event: any, promoDescuento: PromoDescuento): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
                 title: 'Eliminar esta Promocion o Descuento',
                 msg: '¿Está seguro que desea eliminar esta Promocion o Descuento?'

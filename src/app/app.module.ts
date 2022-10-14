@@ -118,14 +118,14 @@ import {
 } from './frm/administracion/referenciales/cliente/cliente-dialog/cliente-dialog.component';
 import {RecepcionDialogComponent} from './frm/servicio/procesos/recepcion/recepcion-dialog/recepcion-dialog.component';
 import {PedidoVentaComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta.component';
-import {
-    PedidoVentaDialogComponent
-} from './frm/ventas/procesos/pedido-venta/pedido-venta-dialog/pedido-venta-dialog.component';
 import {ServicioDialogComponent} from './frm/servicio/referenciales/servicio/servicio-dialog/servicio-dialog.component';
 import {PromoDescuentoDialogComponent} from './frm/servicio/referenciales/promo-descuento/promo-descuento-dialog/promo-descuento-dialog.component';
 import {PedidoVentaDialogComponent} from './frm/ventas/procesos/pedido-venta/pedido-venta-dialog/pedido-venta-dialog.component';
 import {AjusteComponent} from './frm/compras/procesos/ajuste/ajuste.component';
 import {AjusteDialogComponent} from './frm/compras/procesos/ajuste/ajuste-dialog/ajuste-dialog.component';
+import {RecepcionComponent} from './frm/servicio/procesos/recepcion/recepcion.component';
+import {ServicioComponent} from './frm/servicio/referenciales/servicio/servicio.component';
+import {PromoDescuentoComponent} from './frm/servicio/referenciales/promo-descuento/promo-descuento.component';
 
 @NgModule({
     declarations: [
@@ -188,10 +188,13 @@ import {AjusteDialogComponent} from './frm/compras/procesos/ajuste/ajuste-dialog
         CajaDialogComponent,
         ClienteComponent,
         ClienteDialogComponent,
+        RecepcionComponent,
         RecepcionDialogComponent,
         PedidoVentaComponent,
         PedidoVentaDialogComponent,
+        ServicioComponent,
         ServicioDialogComponent,
+        PromoDescuentoComponent,
         PromoDescuentoDialogComponent,
         AjusteComponent,
         AjusteDialogComponent,

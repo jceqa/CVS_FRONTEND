@@ -34,11 +34,11 @@ export class ServicioComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.cargarServicios();
+        this.cargar();
     }
 
-    cargarEquipos() {
-        this.servicioService.listEquipos().subscribe(
+    cargar() {
+        this.servicioService.listServicios().subscribe(
             (data) => {
                 console.log(data);
                 this.servicios = data;
@@ -79,7 +79,7 @@ export class ServicioComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargarServicios();
+                this.cargar();
             }
         });
     }
@@ -88,7 +88,7 @@ export class ServicioComponent implements OnInit {
         this.servicioService.eliminarServicio(id).subscribe(
             result => {
                 console.log(result);
-                this.cargarEquipos();
+                this.cargar();
 
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
@@ -104,16 +104,16 @@ export class ServicioComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
     openDialog(event: any, equipo: Servicio): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
-                title: "Eliminar Servicio",
-                msg: "¿Está seguro que desea eliminar este Servicio?"
+                title: 'Eliminar Servicio',
+                msg: '¿Está seguro que desea eliminar este Servicio?'
             }
         });
 

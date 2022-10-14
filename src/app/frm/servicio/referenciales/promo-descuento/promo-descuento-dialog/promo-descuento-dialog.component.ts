@@ -3,12 +3,12 @@ import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
-import {PromoDescuentoService} from '../../../../../services/promoDescuento.service';
-import {PromoDescuento} from '../../../../../models/promodescuento';
+import {PromoDescuentoService} from '../../../../../services/promodescuento.service';
+import {PromoDescuento} from '../../../../../models/promoDescuento';
 
 @Component({
     selector: 'app-promo-descuento-dialog',
-    templateUrl: './promo-descuento.component.html',
+    templateUrl: './promo-descuento-dialog.component.html',
     styleUrls: ['./promo-descuento-dialog.component.css']
 })
 export class PromoDescuentoDialogComponent implements OnInit {
@@ -25,7 +25,7 @@ export class PromoDescuentoDialogComponent implements OnInit {
     typeSection: Array<{ value: number, viewValue: string }>;
 
     constructor(
-        //private store: Store<fromRoot.State>,
+        // private store: Store<fromRoot.State>,
         private dialogRef: MatDialogRef<PromoDescuentoDialogComponent>,
         private uiService: UIService,
         private promoDescuentoService: PromoDescuentoService,
@@ -44,14 +44,14 @@ export class PromoDescuentoDialogComponent implements OnInit {
 
 
         if (this.data.item.id && this.data != null) {
-            //Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
+            // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
             this.title = 'Editar';
             this.editID = this.data.item.id;
-            this.getEquipoById(this.data.item.id);
+            // this.getEquipoById(this.data.item.id);
             this.formType = FormType.EDIT;
-            //this.setForm(this.item);
+            // this.setForm(this.item);
         } else {
-            //Si no existe es una nueva lista
+            // Si no existe es una nueva lista
             this.title = 'Nuevo';
             this.formType = FormType.NEW;
         }
@@ -60,7 +60,7 @@ export class PromoDescuentoDialogComponent implements OnInit {
 
     getPromoDescuentoById(id: number): void {
 
-        //Realiza la llamada http para obtener el objeto
+        // Realiza la llamada http para obtener el objeto
         this.promoDescuentoService.getPromoDescuentoById(id).subscribe(
             data => {
                 this.item = data as PromoDescuento;
@@ -70,7 +70,7 @@ export class PromoDescuentoDialogComponent implements OnInit {
             });
     }
 
-    //Rellena los campos del formulario con los valores dados
+    // Rellena los campos del formulario con los valores dados
     setForm(item: PromoDescuento) {
         console.log(item);
         if (this.formType === FormType.EDIT) {
@@ -82,7 +82,7 @@ export class PromoDescuentoDialogComponent implements OnInit {
         }
     }
 
-    //Asigna los valores del formulario al objeto de tipo {PriceListDraft}
+    // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.descripcion = this.form.get('descripcion').value;
@@ -97,27 +97,26 @@ export class PromoDescuentoDialogComponent implements OnInit {
         console.log(dato);
     }
 
-    //Metodo que se llama al oprimir el boton guardar
+    // Metodo que se llama al oprimir el boton guardar
     ok(): void {
-        //Si es una edicion llama al metodo para editar
+        // Si es una edicion llama al metodo para editar
         if (this.formType === FormType.EDIT) {
             this.edit();
         }
 
-        //Si es una lista nueva llama al metodo para agregar
+        // Si es una lista nueva llama al metodo para agregar
         if (this.formType === FormType.NEW) {
             this.add();
         }
-        ;
     }
 
-    //Metodo para agregar una nueva lista de precios
+    // Metodo para agregar una nueva lista de precios
     add(): void {
 
         this.setAtributes();
         console.log(this.item);
 
-        //Llama al servicio que almacena el objeto {PriceListDraft}
+        // Llama al servicio que almacena el objeto {PriceListDraft}
         this.promoDescuentoService.guardarPromoDescuento(this.item)
             .subscribe(data => {
                     console.log(data);
@@ -143,15 +142,15 @@ export class PromoDescuentoDialogComponent implements OnInit {
             );
     }
 
-    //Metodo que modifica un objeto {PriceListDraft} en base de datos
+    // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
 
-        //Asigna los valores del formulario al objeto a almacenar
+        // Asigna los valores del formulario al objeto a almacenar
         console.log(this.item);
         this.setAtributes();
         console.log(this.item);
 
-        //Llama al servicio http que actualiza el objeto.
+        // Llama al servicio http que actualiza el objeto.
         this.promoDescuentoService.editarPromoDescuento(this.item)
             .subscribe(data => {
                     console.log(data);

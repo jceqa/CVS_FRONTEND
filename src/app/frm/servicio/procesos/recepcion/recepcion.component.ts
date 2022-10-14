@@ -1,13 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
-import {PedidoCompra} from '../../../../models/pedidoCompra';
 import {MatDialog} from '@angular/material/dialog';
 import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
 import {RecepcionService} from '../../../../services/recepcion.service';
 import {RecepcionDialogComponent} from './recepcion-dialog/recepcion-dialog.component';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
+import {Recepcion} from '../../../../models/recepcion';
 
 @Component({
     selector: 'app-recepcion',
@@ -49,7 +49,7 @@ export class RecepcionComponent implements OnInit {
                 console.log(data);
                 this.recepcion = data;
 
-                this.dataSource = new MatTableDataSource<PedidoCompra>(
+                this.dataSource = new MatTableDataSource<Recepcion>(
                     this.recepcion
                 );
                 this.dataSource.paginator = this.paginator;
