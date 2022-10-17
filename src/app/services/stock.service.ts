@@ -20,6 +20,10 @@ export class StockService {
 
     private baseUrl = 'api/stock/';
 
+    public getStocks(all: boolean = false): Observable<Stock[]> {
+        return this.http.get<Stock[]>(this.baseUrl + `?all=${all}`);
+    }
+
     public listStockByDeposito(idDeposito: number): Observable<Stock[]> {
         return this.http.get<Stock[]>(this.baseUrl + `deposito/${idDeposito}`);
     }

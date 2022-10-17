@@ -39,21 +39,21 @@
                         </mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="numero">
+                    <ng-container matColumnDef="proveedor">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Número</strong></h4>
+                            <h4><strong>Proveedor</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.numero }}
+                            {{ dato.proveedor.razonSocial }}
                         </mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="fechaVencimiento">
+                    <ng-container matColumnDef="fecha">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Fecha Vto.</strong></h4>
+                            <h4><strong>Fecha </strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.cuentaAPagar.fechaVencimiento | date : 'dd/MM/yyyy' }}
+                            {{ dato.fecha | date : 'dd/MM/yyyy' }}
                         </mat-cell>
                     </ng-container>
 
@@ -62,7 +62,7 @@
                             <h4><strong>Estado</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.estadoNotaDebito.descripcion }}
+                            {{ dato.estadoNotaCreditoCompra.descripcion }}
                         </mat-cell>
                     </ng-container>
 
@@ -83,7 +83,7 @@
                                 <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                             </button>
 
-                            <button [disabled]="dato.estadoNotaDebito.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                            <button [disabled]="dato.estadoNotaCreditoCompra.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
                                 <mat-icon aria-label="Editar item">block</mat-icon>
                             </button>
 

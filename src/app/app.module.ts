@@ -127,9 +127,8 @@ import {RecepcionComponent} from './frm/servicio/procesos/recepcion/recepcion.co
 import {ServicioComponent} from './frm/servicio/referenciales/servicio/servicio.component';
 import {PromoDescuentoComponent} from './frm/servicio/referenciales/promo-descuento/promo-descuento.component';
 import {PagoComponent} from './frm/compras/procesos/pago/pago.component';
-import {
-    NotaCreditoCompraDialogComponent
-} from './frm/compras/procesos/nota-credito-compra/nota-credito-compra-dialog/nota-credito-compra-dialog.component';
+import {NotaCreditoCompraDialogComponent} from './frm/compras/procesos/nota-credito-compra/nota-credito-compra-dialog/nota-credito-compra-dialog.component';
+import {StockComponent} from './frm/ventas/procesos/stock/stock.component';
 
 @NgModule({
     declarations: [
@@ -203,6 +202,7 @@ import {
         AjusteComponent,
         AjusteDialogComponent,
         PagoComponent,
+        StockComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

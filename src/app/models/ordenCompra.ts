@@ -4,6 +4,7 @@ import {PresupuestoCompra} from './presupuestoCompra';
 import {CondicionPago} from './condicionPago';
 import {OrdenCompraDetalle} from './ordenCompraDetalle';
 import {Proveedor} from './proveedor';
+import {NotaCreditoCompra} from './notaCreditoCompra';
 
 export class OrdenCompra {
     id: number;
@@ -20,4 +21,5 @@ export class OrdenCompra {
     proveedor: Proveedor;
     presupuestosCompra: PresupuestoCompra[];
     ordenCompraDetalle: OrdenCompraDetalle[];
+    notaCreditoComprasCancelacion: NotaCreditoCompra[];
 }

@@ -6,7 +6,7 @@
 
         <div style="display: flex">
             <div class="third-width-field">
-                <span>Nro Orden: {{ item.id }}</span>
+                <span>Nro Nota de Crédito: {{ item.id }}</span>
             </div>
             &nbsp;
             <div class="third-width-field">
@@ -45,41 +45,12 @@
             </mat-form-field>
         </div>
 
-        <div class="mt-2">
-            <mat-form-field class="full-with-field">
-                <input id="numero_factura" formControlName="numeroNotaCredito" required matInput
-                       placeholder="Número Nota de Crédito"
-                       autocomplete="off" class="text"/>
-            </mat-form-field>
-        </div>
-
-        <div *ngIf="facturaCompraSelected">
-            <div>
-                <span>Condición Pago: {{ facturaCompraSelected.ordenCompra.condicionPago.descripcion }}</span>
-            </div>
-            <br/>
-            <div style="display: flex" *ngIf="this.facturaCompraSelected.ordenCompra.condicionPago.id === 2">
-                <div class="third-width-field">
-                    <span>Cantidad Cuotas: {{ facturaCompraSelected.ordenCompra.cantidadCuota }}</span>
-                </div>
-                &nbsp;
-                <div class="third-width-field">
-                    <span>Intervalo (días): {{ facturaCompraSelected.ordenCompra.intervalo }}</span>
-                </div>
-                &nbsp;
-                <div class="third-width-field">
-                    <span>Monto Cuota: {{ facturaCompraSelected.ordenCompra.montoCuota | myCurrency }}</span>
-                </div>
-            </div>
-            <br/>
-        </div>
-
         <mat-divider></mat-divider>
 
         <h4>Detalles</h4>
         <div align="end">
-            <h3>Total: {{ total | myCurrency }}</h3>
-            <h4>Total I.V.A. : {{ totalIVA | myCurrency }}</h4>
+            <h3 *ngIf="this.formType !== 1">Total Factura: {{ total | myCurrency }}</h3>
+            <h3>Total Nota Crédito : {{ totalNotaCredito | myCurrency }}</h3>
         </div>
 
         <div>
@@ -120,31 +91,9 @@
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="exenta">
+                <ng-container matColumnDef="total">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Exenta</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span *ngIf="dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 3">
-                            {{  dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
-                        dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="iva5">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>I.V.A. 5%</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span *ngIf="dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 1">
-                            {{  dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
-                        dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="iva10">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>I.V.A. 10%</strong></h4>
+                        <h4><strong>Total</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
                         <span *ngIf="dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 2">
@@ -153,15 +102,38 @@
                     </mat-cell>
                 </ng-container>
 
-                <!--<ng-container matColumnDef="total">
+                <ng-container matColumnDef="cantidadNotaCredito">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Sub Total</strong></h4>
+                        <h4><strong>Cant. Nota Crédito</strong></h4>
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
-                    dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}
+                    <mat-cell *matCellDef="let dato, let i = index" class="texto-tabla">
+                        {{ cantidadNotaCredito[i] }}
                     </mat-cell>
-                </ng-container>-->
+                </ng-container>
+
+                <ng-container matColumnDef="subTotalNotaCredito">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>SubTotal Nota Crédito</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato, let i = index" class="texto-tabla">
+                        {{ cantidadNotaCredito[i] * dato.ordenCompraDetalle.presupuestoCompraDetalle.monto | myCurrency }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let dato, let i = index">
+                        <button matTooltip="Aumentar" color="primary" mat-icon-button
+                                (click)="incItem(i)" *ngIf="formType !== 1" [disabled]="disableInc(dato, i)">
+                            <mat-icon aria-label="Aumentar item">add_circle_outline</mat-icon>
+                        </button>
+
+                        <button matTooltip="Disminuir" color="primary" mat-icon-button
+                                (click)="descItem(i)" [disabled]="cantidadNotaCredito[i] < 1" *ngIf="formType !== 1">
+                            <mat-icon aria-label="Disminuir item">remove_circle_outline</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
@@ -181,7 +153,7 @@
             Aceptar
         </button>
 
-        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoFacturaCompra.id === 2"
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoNotaCreditoCompra.id === 2"
                 *ngIf="this.formType === 1">
             <mat-icon>block</mat-icon>
             Anular

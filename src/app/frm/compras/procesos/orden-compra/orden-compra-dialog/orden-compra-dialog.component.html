@@ -6,11 +6,11 @@
             <div class="third-width-field">
                 <span>Nro Orden: {{ item.id }}</span>
             </div>
-            &nbsp
+            &nbsp;
             <div class="third-width-field">
                 <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
             </div>
-            &nbsp
+            &nbsp;
             <div class="third-width-field">
                 <span>Estado: {{ estadoOrden }}</span>
             </div>
@@ -55,6 +55,16 @@
                 <mat-list-option *ngFor="let presupuesto of presupuestos" [value]="presupuesto">
                     {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
                     {{ presupuesto.usuario.nombre }} | {{ presupuesto.proveedor.razonSocial }} | {{ presupuesto.total | myCurrency }}
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+
+        <div *ngIf="this.formType !== 1 && notasCredito.length > 0">
+            <h4>Notas de Crédito</h4>
+            <mat-selection-list #shoes (selectionChange)="selectedNotaCredito($event)">
+                <mat-list-option *ngFor="let notaCreditoCompra of notasCredito" [value]="notaCreditoCompra">
+                    {{ notaCreditoCompra.observacion }} | {{ notaCreditoCompra.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ notaCreditoCompra.usuario.nombre }} | {{ notaCreditoCompra.monto | myCurrency }}
                 </mat-list-option>
             </mat-selection-list>
         </div>
@@ -128,6 +138,7 @@
         <h4>Detalles</h4>
         <div align="end">
             <h3>Total: {{total | myCurrency}}</h3>
+            <h4>Total Notas Crédito : {{ totalNotasCredito | myCurrency }}</h4>
         </div>
 
         <div>
