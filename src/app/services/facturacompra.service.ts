@@ -38,4 +38,8 @@ export class FacturaCompraService {
     public anularFacturaCompra(facturaCompra: FacturaCompra): Observable<any> {
         return this.http.put<any>(this.baseUrl + 'anular', facturaCompra);
     }
+
+    public getFacturasComprasProcesadas(): Observable<FacturaCompra[]> {
+        return this.http.get<FacturaCompra[]>(this.baseUrl + 'procesadas');
+    }
 }

@@ -124,11 +124,19 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.menus = newMenu;
 
         this.menus.forEach(menu => {
-           menu.Items.forEach(item => {
+            menu.Items = menu.Items.sort( (a, b) => {
+               return (a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()));
+            });
+
+            menu.Items.forEach(item => {
               item.SubItems = item.SubItems.sort( (a, b) => {
                   return (a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()));
               });
            });
+        });
+
+        this.menus = this.menus.sort( (a, b) => {
+           return (a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()));
         });
     }
 
