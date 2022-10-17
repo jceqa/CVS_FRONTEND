@@ -61,6 +61,7 @@ const routes: Routes = [
     { path: 'servicio', component: ServicioComponent},
     { path: 'promodescuento', component: PromoDescuentoComponent},
     { path: 'pedidoventa', component: PedidoVentaComponent},
+    { path: 'presupuestoservicio', component: PresupuestoServicioComponent},
     { path: 'ajuste', component: AjusteComponent},
     { path: 'pago', component: PagoComponent},
     { path: '', component: MainContentComponent },

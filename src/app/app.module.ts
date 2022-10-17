@@ -195,6 +195,8 @@ import {PagoComponent} from './frm/compras/procesos/pago/pago.component';
         PedidoVentaDialogComponent,
         ServicioComponent,
         ServicioDialogComponent,
+        PresupuestoServicioComponent,
+        PresupuestoServicioDialogComponent,
         PromoDescuentoComponent,
         PromoDescuentoDialogComponent,
         AjusteComponent,
