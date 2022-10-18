@@ -130,6 +130,12 @@ import {PagoComponent} from './frm/compras/procesos/pago/pago.component';
 import {
     NotaCreditoCompraDialogComponent
 } from './frm/compras/procesos/nota-credito-compra/nota-credito-compra-dialog/nota-credito-compra-dialog.component';
+import {
+    PresupuestoServicioComponent
+} from './frm/servicio/procesos/presupuesto-servicio/presupuesto-servicio.component';
+import {
+    PresupuestoServicioDialogComponent
+} from './frm/servicio/procesos/presupuesto-servicio/presupuesto-servicio-dialog/presupuesto-servicio-dialog.component';
 
 @NgModule({
     declarations: [

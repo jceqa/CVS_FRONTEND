@@ -1,32 +1,33 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {PresupuestoServicio} from '../../../../../models/presupuestoServicio';
-import {FormType} from '../../../../../models/enum';
 import {MatTableDataSource} from '@angular/material/table';
-import {PresupuestoServicioDetalle} from '../../../../../models/presupuestoServicioDetalle';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {UIService} from '../../../../../services/ui.service';
-import {PresupuestoServicioService} from '../../../../../services/presupuestoservicio.service';
-import {UtilService} from '../../../../../services/util.service';
 import {map, startWith} from 'rxjs/operators';
-import {Estado} from '../../../../../models/estado';
-import {Usuario} from '../../../../../models/usuario';
-import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
-import {DiagnosticoService} from '../../../../../services/diagnostico.service';
-import {Diagnostico} from '../../../../../models/diagnostico';
 import {formatDate} from '@angular/common';
-import {Servicio} from '../../../../../models/servicio';
-import {ServicioService} from '../../../../../services/servicio.service';
-import {PromoDescuento} from '../../../../../models/promo-descuento';
-import {PromoDescuentoService} from '../../../../../services/promo-descuento.service';
+import {Diagnostico} from '../../../../models/diagnostico';
+import {PromoDescuento} from '../../../../models/promoDescuento';
+import {Servicio} from '../../../../models/servicio';
+import {PresupuestoServicio} from '../../../../models/presupuestoServicio';
+import {FormType} from '../../../../models/enum';
+import {PresupuestoServicioDetalle} from '../../../../models/presupuestoServicioDetalle';
+import {UIService} from '../../../../services/ui.service';
+import {PresupuestoServicioDialogComponent} from './presupuesto-servicio-dialog/presupuesto-servicio-dialog.component';
+import {PresupuestoServicioService} from '../../../../services/presupuestoservicio.service';
+import {UtilService} from '../../../../services/util.service';
+import {DiagnosticoService} from '../../../../services/diagnostico.service';
+import {PromoDescuentoService} from '../../../../services/promodescuento.service';
+import {ServicioService} from '../../../../services/servicio.service';
+import {Estado} from '../../../../models/estado';
+import {Usuario} from '../../../../models/usuario';
+import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-presupuesto-servicio-dialog',
-    templateUrl: './presupuesto-servicio-dialog.component.html',
-    styleUrls: ['./presupuesto-servicio-dialog.component.scss']
+    selector: 'app-presupuesto-servicio',
+    templateUrl: './presupuesto-servicio.component.html',
+    styleUrls: ['./presupuesto-servicio.component.scss']
 })
-export class PresupuestoServicioDialogComponent implements OnInit {
+export class PresupuestoServicioComponent implements OnInit {
 
     diagnosticosControl = new FormControl('');
     promoDescuentoControl = new FormControl('');
@@ -97,7 +98,11 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        this.diagnosticoService.getDiagnosticoPendientes().subscribe(data => {
+        /**
+         * TODO
+         * diagnostico pendiente
+         */
+        this.diagnosticoService.getDiagnosticos().subscribe(data => {
             console.log(data);
             this.diagnosticos = data;
 
@@ -112,7 +117,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         });
 
         this.utils.startLoading();
-        this.promoDescuentoService.getPromoDescuentos().subscribe(data => {
+        this.promoDescuentoService.listPromoDescuentos().subscribe(data => {
             console.log(data);
             this.promoDescuento = data;
 
@@ -127,7 +132,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         });
 
         this.utils.startLoading();
-        this.servicioService.getServicio().subscribe(data => {
+        this.servicioService.listServicios().subscribe(data => {
             console.log(data);
             this.servicio = data;
 
@@ -150,7 +155,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
                 observacion: item.observacion,
             });
             this.fecha = item.fecha;
-            this.detalles = item.presupuestoCompraDetalles;
+            this.detalles = item.presupuestoServicioDetalles;
             this.estadoPresupuestoServicio = item.estadoPresupuestoServicio.descripcion;
             this.dataSource = new MatTableDataSource<PresupuestoServicioDetalle>(
                 this.detalles
@@ -187,7 +192,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
 
         this.detalles.length = 0;
 
-        this.diagnosticoSelected.detalleDiagnosticos.forEach(dPC => {
+        this.diagnosticoSelected.diagnosticoDetalle.forEach(dPC => {
             this.detalles.push(
                 {
                     estado: 'ACTIVO',
@@ -228,9 +233,9 @@ export class PresupuestoServicioDialogComponent implements OnInit {
     }
 
     setNumber($event, index) {
-        this.total -= this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.cantidad;
+        this.total -= this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
         this.detalles[index].monto = this.utils.getNumber($event.target.value);
-        this.total += this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.cantidad;
+        this.total += this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
     }
 
     onKeydown($event, index) {
@@ -277,7 +282,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         }
 
         let haveZero = false;
-        this.item.presupuestoCompraDetalles.forEach(pcd => {
+        this.item.presupuestoServicioDetalles.forEach(pcd => {
             if (pcd.monto === 0) {
                 haveZero = true;
             }
@@ -409,17 +414,26 @@ export class PresupuestoServicioDialogComponent implements OnInit {
             this.diagnosticos.filter(diagnostico =>
                 diagnostico.observacion.toLowerCase().includes(filterValue) ||
                 diagnostico.usuario.nombre.toLowerCase().includes(filterValue) ||
-                diagnostico.sucursal.descripcion.toLowerCase().includes(filterValue) ||
-                formatDate(diagnotico.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
+                // diagnostico.sucursal.descripcion.toLowerCase().includes(filterValue) ||
+                formatDate(diagnostico.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
         );
     }
 
     private _filterServicio(value: any): Servicio[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.servicios.filter(servicio =>
-                servicio.id.toLowerCase().includes(filterValue) ||
+            this.servicio.filter(servicio =>
+                servicio.id.toString().toLowerCase().includes(filterValue) ||
                 servicio.descripcion.toLowerCase().includes(filterValue))
+        );
+    }
+
+    private _filterPromoDescuento(value: any): PromoDescuento[] {
+        const filterValue = value.toString().toLowerCase();
+        return (
+            this.promoDescuento.filter(promoDescuento =>
+                promoDescuento.id.toString().toLowerCase().includes(filterValue) ||
+                promoDescuento.descripcion.toLowerCase().includes(filterValue))
         );
     }
 }
