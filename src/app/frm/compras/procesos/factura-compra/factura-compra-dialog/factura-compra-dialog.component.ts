@@ -55,6 +55,7 @@ export class FacturaCompraDialogComponent implements OnInit {
     estadoFactura = '';
     total = 0;
     totalIVA = 0;
+    totalNotasCredito = 0;
 
     constructor(
         private dialogRef: MatDialogRef<FacturaCompraDialogComponent>,
@@ -83,6 +84,10 @@ export class FacturaCompraDialogComponent implements OnInit {
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.total = this.item.monto;
+            this.item.ordenCompra.notaCreditoComprasCancelacion.forEach( nCCC => {
+                this.totalNotasCredito += nCCC.monto;
+            });
+            // this.totalNotasCredito = this.item.ordenCompra.notaCreditoComprasCancelacion
             this.totalIVA = this.item.libroCompra.montoIVA10 + this.item.libroCompra.montoIVA5;
         } else {
             // Si no existe es una nueva lista
@@ -262,7 +267,9 @@ export class FacturaCompraDialogComponent implements OnInit {
         this.total = this.ordenCompraSelected.monto;
         this.totalIVA = 0;
         this.libroCompraDetalles.length = 0;
-        // this.selectedProveedor(this.ordenCompraSelected.proveedor);
+        this.ordenCompraSelected.notaCreditoComprasCancelacion.forEach( nCCC => {
+            this.totalNotasCredito += nCCC.monto;
+        });
 
         this.ordenCompraSelected.ordenCompraDetalle.forEach(oCD => {
             this.detalles.push({
@@ -274,7 +281,6 @@ export class FacturaCompraDialogComponent implements OnInit {
             const montoSinIVA = Math.round(oCD.monto / fact);
             const iva = oCD.monto - montoSinIVA;
             this.totalIVA += iva;
-
             this.libroCompraDetalles.push(new LibroCompraDetalle(montoSinIVA, iva, oCD.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto));
         });
 

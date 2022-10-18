@@ -43,7 +43,7 @@
             <div *ngFor="let presupuesto of item.presupuestosCompra">
                 <span>Presupuesto de Compra: {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
                     {{ presupuesto.usuario.nombre }} |  {{ presupuesto.proveedor.razonSocial }} |
-                    {{ presupuesto.total }}</span>
+                    {{ presupuesto.total | myCurrency}}</span>
                 <br/>
                 <br/>
             </div>
@@ -57,6 +57,17 @@
                     {{ presupuesto.usuario.nombre }} | {{ presupuesto.proveedor.razonSocial }} | {{ presupuesto.total | myCurrency }}
                 </mat-list-option>
             </mat-selection-list>
+        </div>
+
+        <div *ngIf="this.formType === 1 && item.notaCreditoComprasCancelacion.length > 0" >
+            <h4>Notas de Crédito</h4>
+            <div *ngFor="let notaCreditoCompra of item.notaCreditoComprasCancelacion">
+                <span>Nota de Crédito: {{ notaCreditoCompra.observacion }} | {{ notaCreditoCompra.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ notaCreditoCompra.usuario.nombre }} |  {{ notaCreditoCompra.proveedor.razonSocial }} |
+                    {{ notaCreditoCompra.monto | myCurrency }}</span>
+                <br/>
+                <br/>
+            </div>
         </div>
 
         <div *ngIf="this.formType !== 1 && notasCredito.length > 0">

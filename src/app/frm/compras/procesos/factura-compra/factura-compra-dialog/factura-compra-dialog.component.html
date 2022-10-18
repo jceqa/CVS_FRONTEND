@@ -74,11 +74,23 @@
             <br/>
         </div>
 
+        <div *ngIf="ordenCompraSelected">
+            <h4>Notas de Crédito</h4>
+            <div *ngFor="let notaCreditoCompra of ordenCompraSelected.notaCreditoComprasCancelacion">
+                <span>Nota de Crédito: {{ notaCreditoCompra.observacion }} | {{ notaCreditoCompra.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ notaCreditoCompra.usuario.nombre }} |  {{ notaCreditoCompra.proveedor.razonSocial }} |
+                    {{ notaCreditoCompra.monto | myCurrency }}</span>
+                <br/>
+                <br/>
+            </div>
+        </div>
+
         <mat-divider></mat-divider>
 
         <h4>Detalles</h4>
         <div align="end">
             <h3>Total: {{ total | myCurrency }}</h3>
+            <h4>Total Notas Crédito : {{ totalNotasCredito | myCurrency }}</h4>
             <h4>Total I.V.A. : {{ totalIVA | myCurrency }}</h4>
         </div>
 

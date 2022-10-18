@@ -99,8 +99,9 @@ export class OrdenCompraDialogComponent implements OnInit {
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.form.get('observacion').disable();
-            this.item.presupuestosCompra.forEach(pc => {
-                this.total += pc.total;
+            this.total = this.item.monto;
+            this.item.notaCreditoComprasCancelacion.forEach( nCCC => {
+               this.totalNotasCredito += nCCC.monto;
             });
         } else {
             // Si no existe es una nueva lista
@@ -151,7 +152,6 @@ export class OrdenCompraDialogComponent implements OnInit {
             this.dataSource = new MatTableDataSource<OrdenCompraDetalle>(
                 this.detalles
             );
-
         }
     }
 

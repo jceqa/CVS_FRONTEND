@@ -3,8 +3,7 @@ import {Usuario} from './usuario';
 import {Diagnostico} from './diagnostico';
 import {Servicio} from './servicio';
 import {PresupuestoServicioDetalle} from './presupuestoServicioDetalle';
-import {PromoDescuento} from './promodescuento';
-
+import {PromoDescuento} from './promoDescuento';
 
 export class PresupuestoServicio {
     id: number;
