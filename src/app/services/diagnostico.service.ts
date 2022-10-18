@@ -36,7 +36,7 @@ export class DiagnosticoService {
     }
 
     public anularDiagnostico(diagnostico: Diagnostico): Observable<any> {
-        return this.http.put<any>(this.baseUrl + 'anular', this.getDiagnostico());
+        return this.http.put<any>(this.baseUrl + 'anular', diagnostico);
     }
 
     public getDiagnosticos(): Observable<Diagnostico[]> {
