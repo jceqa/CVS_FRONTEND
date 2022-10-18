@@ -33,6 +33,8 @@ import {AjusteComponent} from './frm/compras/procesos/ajuste/ajuste.component';
 import {PagoComponent} from './frm/compras/procesos/pago/pago.component';
 import {StockComponent} from './frm/ventas/procesos/stock/stock.component';
 import {PresupuestoServicioComponent} from './frm/servicio/procesos/presupuesto-servicio/presupuesto-servicio.component';
+import {DepositoComponent} from './frm/administracion/referenciales/deposito/deposito.component';
+import {SucursalComponent} from './frm/administracion/referenciales/sucursal/sucursal.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -67,6 +69,9 @@ const routes: Routes = [
     { path: 'ajuste', component: AjusteComponent},
     { path: 'pago', component: PagoComponent},
     { path: 'stock', component: StockComponent},
+    { path: 'deposito', component: DepositoComponent},
+    { path: 'sucursal', component: SucursalComponent},
+    { path: 'tipoarticulo', component: TipoArticuloComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

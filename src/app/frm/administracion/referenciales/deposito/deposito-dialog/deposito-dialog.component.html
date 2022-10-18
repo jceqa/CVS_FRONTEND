@@ -13,15 +13,15 @@
         <div class="mt-2">
             <mat-form-field class="full-with-field">
                 <input id="descripcion" formControlName="descripcion" required matInput placeholder="Descripcion"
-                       autocomplete="off"/>
+                       autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
 
 
         <div class="mt-2">
-            <mat-form-field>
+            <mat-form-field class="full-with-field">
                 <mat-label>Sucursal</mat-label>
-                <mat-select formControlName="sucursal">
+                <mat-select formControlName="sucursal" [compareWith]="compareFunction">
                     <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
                         {{sucursal.descripcion}}
                     </mat-option>

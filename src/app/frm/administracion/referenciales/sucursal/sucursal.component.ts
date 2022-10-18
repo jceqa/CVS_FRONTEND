@@ -16,7 +16,7 @@ import {UtilService} from '../../../../services/util.service';
 })
 export class SucursalComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'descripcion',  'ciudad'];
+    displayedColumns: string[] = ['id', 'descripcion',  'ciudad', 'actions'];
 
     dataSource = new MatTableDataSource<Sucursal>();
 

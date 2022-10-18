@@ -57,7 +57,7 @@ export class SucursalDialogComponent implements OnInit {
             // this.setForm(this.item);
         } else {
             // Si no existe es una nueva lista
-            this.title = 'Nuevo';
+            this.title = 'Nueva';
             this.formType = FormType.NEW;
         }
 
@@ -75,8 +75,10 @@ export class SucursalDialogComponent implements OnInit {
                 );
             }
         );
+    }
 
-
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
     }
 
     getSucursalById(id: number): void {
@@ -98,6 +100,7 @@ export class SucursalDialogComponent implements OnInit {
             this.form.patchValue({
                 id: item.id,
                 descripcion: item.descripcion,
+                ciudad: item.ciudad
             });
         }
     }

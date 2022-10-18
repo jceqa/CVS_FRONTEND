@@ -97,14 +97,19 @@ export class DepositoDialogComponent implements OnInit {
             this.form.patchValue({
                 id: item.id,
                 descripcion: item.descripcion,
+                sucursal: item.sucursal
             });
         }
+    }
+
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
     }
 
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.descripcion = this.form.get('descripcion').value;
+        this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
         this.item.sucursal = this.form.get('sucursal').value;
     }
 
