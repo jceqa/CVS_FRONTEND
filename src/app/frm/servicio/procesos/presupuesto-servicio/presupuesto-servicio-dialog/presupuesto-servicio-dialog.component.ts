@@ -22,7 +22,7 @@ import {Estado} from '../../../../../models/estado';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-presupuesto-servicio',
+    selector: 'app-presupuesto-dialog-servicio',
     templateUrl: './presupuesto-servicio-dialog.component.html',
     styleUrls: ['./presupuesto-servicio-dialog.component.scss']
 })
@@ -232,9 +232,9 @@ export class PresupuestoServicioDialogComponent implements OnInit {
     }
 
     setNumber($event, index) {
-        this.total -= this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
+        // this.total -= this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
         this.detalles[index].monto = this.utils.getNumber($event.target.value);
-        this.total += this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
+        // this.total += this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
     }
 
     onKeydown($event, index) {

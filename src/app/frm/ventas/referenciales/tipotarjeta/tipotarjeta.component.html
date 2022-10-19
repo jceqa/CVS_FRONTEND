@@ -3,7 +3,7 @@
         <span>Tipo de Tarjetas</span>
         <span class="line-spacer"></span>
 
-        <button color="primary" mat-button (click)="cargarMarcas()">
+        <button color="primary" mat-button (click)="cargarTipoTarjetas()">
             <mat-icon>refresh</mat-icon>
             <span>Actualizar</span>
         </button>
@@ -58,7 +58,7 @@
                             <mat-icon aria-label="Editar item">mode_edit</mat-icon>
                         </button>
 
-                        <button color="warn" mat-icon-button (click)="openDialog($event, dato)">
+                        <button color="warn" mat-icon-button (click)="delete($event, dato)">
                             <mat-icon>delete</mat-icon>
                         </button>
 

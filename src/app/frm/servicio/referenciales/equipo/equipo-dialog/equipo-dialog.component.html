@@ -5,32 +5,32 @@
     <mat-dialog-content>
 
         <div class="mt-2" *ngIf="formType === 1">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="id" formControlName="id" matInput placeholder="Id" readonly />
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="descripcion" formControlName="descripcion" required matInput placeholder="Descripcion"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="serie" formControlName="serie" required matInput placeholder="Serie" autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="modelo" formControlName="modelo" required matInput placeholder="Modelo" autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <mat-select matInput formControlName="marca" [compareWith]="compareFunction" placeholder="Marca" required>
                     <mat-option *ngFor="let marca of marcas" [value]="marca">
                         {{ marca.descripcion }}

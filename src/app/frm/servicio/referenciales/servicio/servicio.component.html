@@ -3,7 +3,7 @@
         <span>Servicios</span>
         <span class="line-spacer"></span>
 
-        <button color="primary" mat-button (click)="cargarServicios()">
+        <button color="primary" mat-button (click)="cargar()">
             <mat-icon>refresh</mat-icon>
             <span>Actualizar</span>
         </button>
@@ -30,11 +30,11 @@
                     <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.descripcion}}</i></mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="serie">
+                <ng-container matColumnDef="monto">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Monto</strong></h4>
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.serie}}</i></mat-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.monto | myCurrency}}</i></mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="actions">

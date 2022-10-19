@@ -15,7 +15,7 @@ import {PromoDescuentoService} from '../../../../services/promodescuento.service
 })
 export class PromoDescuentoComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'descripcion', 'porcentaje'];
+    displayedColumns: string[] = ['id', 'descripcion', 'porcentaje', 'actions'];
 
     dataSource = new MatTableDataSource<PromoDescuento>();
 
@@ -43,7 +43,6 @@ export class PromoDescuentoComponent implements OnInit {
             (data) => {
                 console.log(data);
                 this.promoDescuentos = data;
-
                 this.dataSource = new MatTableDataSource<PromoDescuento>(
                     this.promoDescuentos
                 );
@@ -62,10 +61,11 @@ export class PromoDescuentoComponent implements OnInit {
 
     addItem(): void {
         const item = new PromoDescuento();
-        this.edit(item);
+        this.editItem(item);
     }
 
-    edit(item: PromoDescuento): void {
+    editItem(item: PromoDescuento): void {
+        // console.log(item);
         const dialogRef = this.dialog.open(PromoDescuentoDialogComponent, {
             minWidth: '60%',
             // maxWidth: '600px',

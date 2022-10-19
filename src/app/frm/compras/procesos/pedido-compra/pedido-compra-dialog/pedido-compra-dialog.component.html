@@ -5,7 +5,7 @@
     <mat-dialog-content>
 
         <!--<div class="mt-2" *ngIf="formType === 1">
-            <mat-form-field class="full-with-field" >
+            <mat-form-field class="full-width-field" >
                 <input id="id" formControlName="id" matInput placeholder="Id" readonly />
             </mat-form-field>
         </div>-->
@@ -45,7 +45,7 @@
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
                        autocomplete="off" class="text"/>
             </mat-form-field>
@@ -54,7 +54,7 @@
         <mat-divider></mat-divider>
 
         <h4>Detalles</h4>
-        <div class="full-with-field" *ngIf="this.formType !== 1">
+        <div class="full-width-field" *ngIf="this.formType !== 1">
             <mat-form-field>
                 <input type="text"
                        placeholder="Artículo"

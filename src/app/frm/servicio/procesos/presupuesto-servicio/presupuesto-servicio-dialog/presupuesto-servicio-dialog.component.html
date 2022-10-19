@@ -5,7 +5,7 @@
     <mat-dialog-content>
         <div style="display: flex">
             <div class="third-width-field">
-                <span>Nro PresupuestoServicio: {{ item.id }}</span>
+                <span>Nro Presupuesto Servicio: {{ item.id }}</span>
             </div>
             &nbsp;
             <div class="third-width-field">
@@ -24,7 +24,7 @@
                     {{ item.diagnostico.usuario.nombre }} | {{ item.diagnostico.deposito.descripcion }}</span>
             </div>
 
-            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Diagnostico"
                        matInput
@@ -47,7 +47,7 @@
                 <span >Promocion/Descuento: {{ item.promoDescuento.id }} | {{ item.promoDescuento.descripcion }}</span>
             </div>
 
-            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Promocion/Descuento"
                        matInput
@@ -69,7 +69,7 @@
                 <span >Servicio: {{ item.servicio.id }} | {{ item.servicio.descripcion }}</span>
             </div>
 
-            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Servicio"
                        matInput
@@ -86,7 +86,7 @@
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
                        autocomplete="off" class="text"/>
             </mat-form-field>

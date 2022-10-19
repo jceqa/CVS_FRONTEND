@@ -50,7 +50,7 @@ export class TipoTarjetaDialogComponent implements OnInit {
             // this.setForm(this.item);
         } else {
             // Si no existe es una nueva lista
-            this.title = 'Nueva';
+            this.title = 'Nuevo';
             this.formType = FormType.NEW;
         }
     }

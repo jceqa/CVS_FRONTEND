@@ -31,8 +31,8 @@
     </mat-toolbar>
     <mat-card>
         <mat-card-content>
-            <div class="end" *ngIf="false">
-                <mat-checkbox [(ngModel)]="all" (change)="cargar()" disabled>Ver Inactivos</mat-checkbox>
+            <div class="end">
+                <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Todos</mat-checkbox>
             </div>
             <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
                 <ng-container matColumnDef="id">
@@ -71,12 +71,12 @@
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="deposito">
+                <ng-container matColumnDef="sucursal">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Deposito</strong></h4>
+                        <h4><strong>Sucursal</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.deposito.descripcion }}
+                        {{ dato.sucursal.descripcion }}
                     </mat-cell>
                 </ng-container>
 

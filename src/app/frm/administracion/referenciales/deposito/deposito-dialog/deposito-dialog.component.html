@@ -5,13 +5,13 @@
     <mat-dialog-content>
 
         <div class="mt-2" *ngIf="formType === 1">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="id" formControlName="id" matInput placeholder="Id" readonly/>
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="descripcion" formControlName="descripcion" required matInput placeholder="Descripcion"
                        autocomplete="off" class="text"/>
             </mat-form-field>
@@ -19,7 +19,7 @@
 
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <mat-label>Sucursal</mat-label>
                 <mat-select formControlName="sucursal" [compareWith]="compareFunction">
                     <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
