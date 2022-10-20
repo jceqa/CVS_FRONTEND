@@ -5,5 +5,9 @@ export class Estado {
 
     constructor(id: number) {
         this.id = id;
+        if (id === 1) {
+            this.descripcion = 'PENDIENTE';
+            this.estado = 'ACTIVO';
+        }
     }
 }
