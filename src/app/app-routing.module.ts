@@ -39,6 +39,7 @@ import {SucursalComponent} from './frm/administracion/referenciales/sucursal/suc
 import {CondicionPagoComponent} from './frm/ventas/referenciales/condicion-pago/condicion-pago.component';
 import {EntidadEmisoraComponent} from './frm/ventas/referenciales/entidademisora/entidademisora.component';
 import {RecepcionComponent} from './frm/servicio/procesos/recepcion/recepcion.component';
+import {OrdenServicioComponent} from './frm/servicio/procesos/orden-servicio/orden-servicio.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -80,6 +81,7 @@ const routes: Routes = [
     { path: 'condicionpago', component: CondicionPagoComponent},
     { path: 'entidademisora', component: EntidadEmisoraComponent},
     { path: 'recepcion', component: RecepcionComponent},
+    { path: 'ordenservicio', component: OrdenServicioComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

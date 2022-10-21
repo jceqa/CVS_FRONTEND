@@ -1,10 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {PresupuestoCompra} from '../../../../../models/presupuestoCompra';
 import {FormType} from '../../../../../models/enum';
 import {MatTableDataSource} from '@angular/material/table';
-import {PresupuestoCompraDetalle} from '../../../../../models/presupuestoCompraDetalle';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
 import {DiagnosticoService} from '../../../../../services/diagnostico.service';
@@ -16,6 +14,10 @@ import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dial
 import {RecepcionService} from '../../../../../services/recepcion.service';
 import {Recepcion} from '../../../../../models/recepcion';
 import {formatDate} from '@angular/common';
+import {Diagnostico} from '../../../../../models/diagnostico';
+import {DiagnosticoDetalle} from '../../../../../models/diagnosticoDetalle';
+import {Servicio} from '../../../../../models/servicio';
+import {DiagnosticoEquipoDialogComponent} from './diagnostico-equipo-dialog/diagnostico-equipo-dialog.component';
 
 
 @Component({
@@ -38,9 +40,9 @@ export class DiagnosticoDialogComponent implements OnInit {
     editID: number;
     fecha = new Date();
 
-    displayedColumns: string[] = ['codigo', 'item', 'diagnostico'/*, 'actions'*/];
+    displayedColumns: string[] = ['equipo', 'diagnostico', 'actions' ];
     dataSource = new MatTableDataSource<DiagnosticoDetalle>();
-    detalles: DiagosticoDetalle[] = [];
+    detalles: DiagnosticoDetalle[] = [];
 
     recepciones: Recepcion[] = [];
     recepcionSelected: Recepcion;
@@ -117,13 +119,13 @@ export class DiagnosticoDialogComponent implements OnInit {
 
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
+        this.item.fecha = this.fecha;
+        this.item.estado = 'ACTIVO';
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
         this.item.estadoDiagnostico = new Estado(1);
         this.item.usuario = new Usuario(this.utils.getUserId());
-        this.item.fecha = this.fecha;
-        this.item.estado = 'ACTIVO';
-        this.item.diagnosticoDetalles = this.detalles;
         this.item.recepcion = this.recepcionSelected;
+        this.item.diagnosticoDetalles = this.detalles;
     }
 
     dismiss(result?: any) {
@@ -140,13 +142,14 @@ export class DiagnosticoDialogComponent implements OnInit {
 
         this.detalles.length = 0;
 
-        this.recepcionSelected.recepcionDetalles.forEach(dPC => {
+        this.recepcionSelected.recepcionDetalles.forEach(rD => {
             this.detalles.push(
                 {
-                    estado: 'ACTIVO',
                     id: 0,
-                    monto: 0,
-                    recepcionDetalle: dPC
+                    estado: 'ACTIVO',
+                    diagnostico: '',
+                    recepcionDetalle: rD,
+                    servicios : []
                 });
         });
 
@@ -155,12 +158,30 @@ export class DiagnosticoDialogComponent implements OnInit {
         );
     }
 
-    displayRecepcion(value) {
+    displayRecepcion(value: Recepcion) {
         if (value) {
             return value.observacion + ' | '
                 + formatDate(value.fecha, 'dd/MM/yyyy', 'en-US') + ' | '
                 + value.usuario.nombre + ' | '
+                + value.cliente.razon + ' | '
                 + value.sucursal.descripcion;
+        }
+    }
+
+    displayServicio(value: Servicio) {
+        if (value) {
+            return '';
+            // return value.descripcion;
+        }
+    }
+
+    setText($event, index) {
+        this.detalles[index].diagnostico = $event.target.value.toString().toUpperCase().trim();
+    }
+
+    onKeydown($event, index) {
+        if ($event.key === 'Enter') {
+            this.setText($event, index);
         }
     }
 
@@ -194,16 +215,16 @@ export class DiagnosticoDialogComponent implements OnInit {
             return false;
         }
 
-        let haveZero = false;
-        this.item.diagnosticoDetalle.forEach( pcd => {
-            if (pcd.monto === 0) {
-                haveZero = true;
+        let hasBlankSpaces = false;
+        this.item.diagnosticoDetalles.forEach( dD => {
+            if (dD.diagnostico === '') {
+                hasBlankSpaces = true;
             }
         });
 
-        if (haveZero) {
+        if (hasBlankSpaces) {
             this.uiService.showSnackbar(
-                'Debe especificar un Precio diferente de 0 para cada Articulo.',
+                'Debe especificar un Diagnostico para cada Equipo.',
                 'Cerrar',
                 5000
             );
@@ -252,7 +273,7 @@ export class DiagnosticoDialogComponent implements OnInit {
 
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.observacion)) {
-            this.diagnosticoService.editardiagnostico(this.item).subscribe(data => {
+            this.diagnosticoService.editarDiagnostico(this.item).subscribe(data => {
                 console.log(data);
                 this.uiService.showSnackbar(
                     'Modificado exitosamente.',
@@ -279,9 +300,9 @@ export class DiagnosticoDialogComponent implements OnInit {
         }
     }
 
-    anular(dato: PresupuestoCompra): void {
+    anular(dato: Diagnostico): void {
         this.utils.startLoading();
-        this.diagnosticoService.anularDiagosticoDetalle(dato).subscribe(
+        this.diagnosticoService.anularDiagnostico(dato).subscribe(
             data => {
                 console.log(data);
                 this.utils.stopLoading();
@@ -328,8 +349,29 @@ export class DiagnosticoDialogComponent implements OnInit {
                 recepcion.observacion.toLowerCase().includes(filterValue) ||
                 recepcion.usuario.nombre.toLowerCase().includes(filterValue) ||
                 recepcion.sucursal.descripcion.toLowerCase().includes(filterValue) ||
+                recepcion.cliente.razon.toLowerCase().includes(filterValue) ||
                 formatDate(recepcion.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
         );
+    }
+
+    openDialog(item: Diagnostico, index): void {
+        const dialogRef = this.dialog.open(DiagnosticoEquipoDialogComponent, {
+            minWidth: '70%',
+            // maxWidth: '600px',
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                item: item
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            // debugger;
+            if (result) {
+               this.detalles[index].servicios = result;
+                // console.log(result);
+            }
+        });
     }
 
 }

@@ -21,7 +21,9 @@
             <div *ngIf="this.formType === 1">
                 <br/>
                 <span >Diagnostico: {{ item.diagnostico.observacion }} | {{ item.diagnostico.fecha | date: 'dd/MM/yyyy' }} |
-                    {{ item.diagnostico.usuario.nombre }} | {{ item.diagnostico.deposito.descripcion }}</span>
+                    {{ item.diagnostico.usuario.nombre }} | {{ item.diagnostico.recepcion.sucursal.descripcion }} |
+                    {{ item.diagnostico.recepcion.cliente.razon}}
+                </span>
             </div>
 
             <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
@@ -31,13 +33,21 @@
                        [formControl]="diagnosticosControl"
                        [matAutocomplete]="autoDiagnostico"
                        class="text">
-                <mat-autocomplete #autoPedido="matAutocomplete" [displayWith]="displayPedido">
+                <mat-autocomplete #autoDiagnostico="matAutocomplete" [displayWith]="displayDiagnostico">
                     <mat-option *ngFor="let diagnostico of diagnosticosFiltered | async" [value]="diagnostico"
                                 (onSelectionChange)="selectedDiagnostico($event)">
                         {{ diagnostico.observacion }} | {{ diagnostico.fecha | date: 'dd/MM/yyyy' }} |
-                        {{ diagnostico.usuario.nombre }} | {{ diagnostico.deposito.descripcion }}
+                        {{ diagnostico.usuario.nombre }} | {{ diagnostico.recepcion.sucursal.descripcion }} |
+                        {{ diagnostico.recepcion.cliente.razon}}
                     </mat-option>
                 </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
+                       autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
 
@@ -57,13 +67,13 @@
                 <mat-autocomplete #autoPromoDescuento="matAutocomplete" [displayWith]="displayPromoDescuento">
                     <mat-option *ngFor="let promoDescuento of promoDescuentoFiltered | async" [value]="promoDescuento"
                                 (onSelectionChange)="selectedPromoDescuento($event)">
-                        {{ promoDescuento.id }} | {{ promoDescuento.descripcion }}
+                        {{ promoDescuento.id }} | {{ promoDescuento.descripcion }} | {{ promoDescuento.porcentaje }}%
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
         </div>
 
-        <div>
+        <!--<div>
             <div *ngIf="this.formType === 1">
                 <br/>
                 <span >Servicio: {{ item.servicio.id }} | {{ item.servicio.descripcion }}</span>
@@ -79,18 +89,11 @@
                 <mat-autocomplete #autoServicio="matAutocomplete" [displayWith]="displayServicio">
                     <mat-option *ngFor="let servicio of servicioFiltered | async" [value]="servicio"
                                 (onSelectionChange)="selectedServicio($event)">
-                        {{ servicio.id }} | {{ servicio.descripcion }}
+                        {{ servicio.id }} | {{ servicio.descripcion }} | {{ servicio.monto | myCurrency }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
-        </div>
-
-        <div class="mt-2">
-            <mat-form-field class="full-width-field">
-                <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
-                       autocomplete="off" class="text"/>
-            </mat-form-field>
-        </div>
+        </div>-->
 
         <mat-divider></mat-divider>
 
@@ -101,30 +104,32 @@
 
         <div>
             <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
-                <ng-container matColumnDef="codigo">
+                <ng-container matColumnDef="equipo">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Código</strong></h4>
+                        <h4><strong>Equipo</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span> {{ dato.diagnosticoDetalle.servicio.codigoGenerico }} </span>
+                        <span>
+                            {{ dato.diagnosticoDetalle.recepcionDetalle.equipo.descripcion }} -
+                            {{ dato.diagnosticoDetalle.recepcionDetalle.equipo.serie }}
+                        </span>
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="item">
+                <ng-container matColumnDef="diagnostico">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Item</strong></h4>
+                        <h4><strong>Diagnostico</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.diagnosticoDetalle.servicio.descripcion }}
+                        {{ dato.diagnosticoDetalle.diagnostico }}
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="cantidad">
+                <ng-container matColumnDef="servicio">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Cantidad</strong></h4>
+                        <h4><strong>Servicio</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.diagnosticoDetalle.cantidad }}
                     </mat-cell>
                 </ng-container>
 
@@ -133,20 +138,17 @@
                         <h4><strong>Precio</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato;let index = index" class="texto-tabla">
-                        <input id="diagnostico" matInput [value]="dato.monto"
-                               autocomplete="off" myCurrencyFormatter (blur)="setNumber($event, index)"
-                               (keydown)="onKeydown($event, index)"/>
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="total">
+                <!--<ng-container matColumnDef="total">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Sub Total</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
                         {{ dato.monto * dato.diagnosticoDetalle.cantidad | myCurrency }}
                     </mat-cell>
-                </ng-container>
+                </ng-container>-->
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

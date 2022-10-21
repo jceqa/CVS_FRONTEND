@@ -7,7 +7,7 @@ import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
 import {OrdenServicio} from '../../../../models/ordenServicio';
 import {OrdenServicioDialogComponent} from './orden-servicio-dialog/orden-servicio-dialog.component';
-import {OrdenServicioService} from '../../../../services/ordenServicio.service';
+import {OrdenServicioService} from '../../../../services/ordenservicio.service';
 
 @Component({
     selector: 'app-orden-servicio',

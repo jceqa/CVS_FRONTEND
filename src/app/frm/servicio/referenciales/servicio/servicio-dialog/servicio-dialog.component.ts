@@ -6,6 +6,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UIService } from '../../../../../services/ui.service';
 import { ServicioService } from '../../../../../services/servicio.service';
 import {UtilService} from '../../../../../services/util.service';
+import {Impuesto} from '../../../../../models/impuesto';
+import {ImpuestoService} from '../../../../../services/impuesto.service';
 
 @Component({
     selector: 'app-equipo-dialog',
@@ -22,6 +24,7 @@ export class ServicioDialogComponent implements OnInit {
 
     title: String;
     editID: number;
+    impuestos: Impuesto[] = [];
 
     constructor(
         // private store: Store<fromRoot.State>,
@@ -29,6 +32,7 @@ export class ServicioDialogComponent implements OnInit {
         private uiService: UIService,
         private servicioService: ServicioService,
         private utils: UtilService,
+        private impuestoService: ImpuestoService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -40,6 +44,7 @@ export class ServicioDialogComponent implements OnInit {
             id: new FormControl('', []),
             descripcion: new FormControl('', [Validators.required]),
             monto: new FormControl('', [Validators.required]),
+            impuesto: new FormControl('', [Validators.required]),
         });
 
         if (this.data.item.id) {
@@ -53,6 +58,24 @@ export class ServicioDialogComponent implements OnInit {
             this.title = 'Nuevo';
             this.formType = FormType.NEW;
         }
+
+        this.utils.startLoading();
+        this.impuestoService.getImpuestos().subscribe(
+            (data) => {
+                console.log(data);
+                this.impuestos = data;
+                this.utils.stopLoading();
+            },
+            err => {
+                console.log(err.error);
+                this.utils.stopLoading();
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
     }
 
     // Rellena los campos del formulario con los valores dados
@@ -63,6 +86,7 @@ export class ServicioDialogComponent implements OnInit {
                 id: item.id,
                 descripcion: item.descripcion,
                 monto: item.monto,
+                impuesto: item.impuesto
             });
         }
     }
@@ -72,6 +96,7 @@ export class ServicioDialogComponent implements OnInit {
         this.item.id = this.form.get('id').value;
         this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
         this.item.monto = this.utils.getNumber(this.form.get('monto').value);
+        this.item.impuesto = this.form.get('impuesto').value;
     }
 
     dismiss(result?: any) {
@@ -81,6 +106,11 @@ export class ServicioDialogComponent implements OnInit {
     uploadListItem(dato) {
         console.log(dato);
     }
+
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
+    }
+
 
     // Metodo que se llama al oprimir el boton guardar
     ok(): void {

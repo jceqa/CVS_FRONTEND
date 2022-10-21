@@ -88,7 +88,7 @@
                             <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                         </button>
 
-                        <button [disabled]="dato.estadoRecepcion.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                        <button [disabled]="dato.estadoRecepcion.id !== 1" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
                             <mat-icon aria-label="Editar item">block</mat-icon>
                         </button>
 

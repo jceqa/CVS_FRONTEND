@@ -20,7 +20,7 @@ export class DiagnosticoService {
 
     private baseUrl = 'api/diagnostico/';
 
-    public getDiagnostico(all: boolean = false): Observable<Diagnostico[]> {
+    public getDiagnosticos(all: boolean = false): Observable<Diagnostico[]> {
         return this.http.get<Diagnostico[]>(this.baseUrl + `?all=${all}`);
     }
 
@@ -39,11 +39,11 @@ export class DiagnosticoService {
         return this.http.put<any>(this.baseUrl + 'anular', diagnostico);
     }
 
-    public getDiagnosticos(): Observable<Diagnostico[]> {
+    public getDiagnosticosPendientes(): Observable<Diagnostico[]> {
         return this.http.get<Diagnostico[]>(this.baseUrl + 'pendientes');
     }
 
-    public getDiagnosticosPendientesByProveedor(idProveedor: number): Observable<Diagnostico[]> {
+    /*public getDiagnosticosPendientesByProveedor(idProveedor: number): Observable<Diagnostico[]> {
         return this.http.get<Diagnostico[]>(this.baseUrl + `pendientes/${idProveedor}`);
-    }
+    }*/
 }

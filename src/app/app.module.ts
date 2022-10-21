@@ -99,6 +99,10 @@ import {DiagnosticoComponent} from './frm/servicio/procesos/diagnostico/diagnost
 import {DiagnosticoDialogComponent} from './frm/servicio/procesos/diagnostico/diagnostico-dialog/diagnostico-dialog.component';
 import {PresupuestoServicioComponent} from './frm/servicio/procesos/presupuesto-servicio/presupuesto-servicio.component';
 import {PresupuestoServicioDialogComponent} from './frm/servicio/procesos/presupuesto-servicio/presupuesto-servicio-dialog/presupuesto-servicio-dialog.component';
+import {
+    DiagnosticoEquipoDialogComponent
+} from './frm/servicio/procesos/diagnostico/diagnostico-dialog/diagnostico-equipo-dialog/diagnostico-equipo-dialog.component';
+import {OrdenServicioComponent} from './frm/servicio/procesos/orden-servicio/orden-servicio.component';
 
 
 @NgModule({
@@ -172,12 +176,15 @@ import {PresupuestoServicioDialogComponent} from './frm/servicio/procesos/presup
         PresupuestoServicioDialogComponent,
         DiagnosticoComponent,
         DiagnosticoDialogComponent,
+        DiagnosticoEquipoDialogComponent,
         PromoDescuentoComponent,
         PromoDescuentoDialogComponent,
         AjusteComponent,
         AjusteDialogComponent,
         PagoComponent,
         StockComponent,
+        OrdenServicioComponent,
+        OrdenCompraDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

@@ -11,12 +11,12 @@ import {DiagnosticoService} from '../../../../services/diagnostico.service';
 
 @Component({
     selector: 'app-diagnostico',
-    templateUrl: './dianostico.component.html',
+    templateUrl: './diagnostico.component.html',
     styleUrls: ['./diagnostico.component.scss']
 })
 export class DiagnosticoComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'proveedor', 'estado', 'total', 'actions'];
+    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'sucursal', 'estado', 'actions'];
     dataSource = new MatTableDataSource<Diagnostico>();
 
     @ViewChild(MatPaginator)
@@ -44,12 +44,12 @@ export class DiagnosticoComponent implements OnInit {
     cargar() {
         this.util.startLoading();
         if (this.all) {
-            this.diagnosticoService.getDiagnostico(this.all).subscribe(
+            this.diagnosticoService.getDiagnosticos(this.all).subscribe(
                 (data) => {
                     console.log(data);
-                    this.diagnostico = data;
+                    this.diagnosticos = data;
                     this.dataSource = new MatTableDataSource<Diagnostico>(
-                        this.diagnostico
+                        this.diagnosticos
                     );
                     this.dataSource.paginator = this.paginator;
                     this.util.stopLoading();
@@ -65,12 +65,12 @@ export class DiagnosticoComponent implements OnInit {
                 }
             );
         } else {
-            this.diagnosticoService.getDiagnosticoPendientes().subscribe(
+            this.diagnosticoService.getDiagnosticosPendientes().subscribe(
                 (data) => {
                     console.log(data);
                     this.diagnosticos = data;
                     this.dataSource = new MatTableDataSource<Diagnostico>(
-                        this.diagnostico
+                        this.diagnosticos
                     );
                     this.dataSource.paginator = this.paginator;
                     this.util.stopLoading();

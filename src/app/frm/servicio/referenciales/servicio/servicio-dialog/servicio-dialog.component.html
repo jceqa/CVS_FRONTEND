@@ -21,6 +21,17 @@
                        myCurrencyFormatter (change)="setNumber($event, 'monto')" />
             </mat-form-field>
         </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <mat-label>Impuesto</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="impuesto">
+                    <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
+                        {{impuesto.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end" class="mt-4">

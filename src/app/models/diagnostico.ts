@@ -13,5 +13,5 @@ export class Diagnostico {
     estadoDiagnostico: Estado;
     usuario: Usuario;
     recepcion: Recepcion;
-    diagnosticoDetalle: DiagnosticoDetalle[];
+    diagnosticoDetalles: DiagnosticoDetalle[];
 }

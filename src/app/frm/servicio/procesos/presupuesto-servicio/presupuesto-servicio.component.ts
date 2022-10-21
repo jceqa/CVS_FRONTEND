@@ -16,7 +16,7 @@ import {UtilService} from '../../../../services/util.service';
 })
 export class PresupuestoServicioComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'servicio', 'estado', 'total', 'actions'];
+    displayedColumns: string[] = ['id', 'observacion', 'fecha', /*'servicio',*/ 'estado', 'total', 'actions'];
     dataSource = new MatTableDataSource<PresupuestoServicio>();
 
     @ViewChild(MatPaginator)

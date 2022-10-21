@@ -32,20 +32,40 @@
                        [matAutocomplete]="autoRecepcion"
                        class="text">
                 <mat-autocomplete #autoRecepcion="matAutocomplete" [displayWith]="displayRecepcion">
-                    <mat-option *ngFor="let recepcion of recepcionesFiltered | async" [value]="recepcion"
+                    <mat-option *ngFor="let recepcion of recepcionFiltered | async" [value]="recepcion"
                                 (onSelectionChange)="selectedRecepcion($event)">
                         {{ recepcion.observacion }} | {{ recepcion.fecha | date: 'dd/MM/yyyy' }} |
-                        {{ recepcion.usuario.nombre }} | {{ recepcion.sucursal.descripcion }}
+                        {{ recepcion.usuario.nombre }} | {{ recepcion.sucursal.descripcion }} | {{ recepcion.cliente.razon }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
         </div>
 
+        <!--<div *ngIf="this.formType === 1">
+            <br/>
+            <span >Servicio: {{ item.servicio.id }} | {{ item.servicio.descripcion }}</span>
+        </div>-->
+
+        <!--<mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
+            <input type="text"
+                   placeholder="Servicio"
+                   matInput
+                   [formControl]="servicioControl"
+                   [matAutocomplete]="autoServicio"
+                   class="text">
+            <mat-autocomplete #autoServicio="matAutocomplete" [displayWith]="displayServicio">
+                <mat-option *ngFor="let servicio of servicioFiltered | async" [value]="servicio"
+                            (onSelectionChange)="selectedServicio($event)">
+                    {{ servicio.id }} | {{ servicio.descripcion }} | {{ servicio.monto | myCurrency }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>-->
+
 
 
         <div class="mt-2">
             <mat-form-field class="full-width-field">
-                <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
+                <input id="observacion" formControlName="observacion" required matInput placeholder="Observación"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
@@ -56,31 +76,41 @@
 
         <div>
             <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
-                <ng-container matColumnDef="codigo">
+                <ng-container matColumnDef="equipo">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Código</strong></h4>
+                        <h4><strong>Equipo</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span> {{ dato.pedidoCompraDetalle.articulo.codigoGenerico }} </span>
+                        <span> {{ dato.recepcionDetalle.equipo.descripcion }} | {{dato.recepcionDetalle.equipo.serie}}</span>
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="item">
+                <!--<ng-container matColumnDef="item">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Item</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
                         {{ dato.recepcionDetalle.equipo.descripcion }}
                     </mat-cell>
-                </ng-container>
+                </ng-container>-->
 
                 <ng-container matColumnDef="diagnostico">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Diagnostico</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato;let index = index" class="texto-tabla">
-                        <input id="descripcion" formControlName="diagnostico" required matInput placeholder="Diagnostico"
-                               autocomplete="off" class="text"/>
+                        <input id="diagnostico" matInput placeholder="Diagnostico" [value]="dato.diagnostico"
+                               autocomplete="off" class="text" (blur)="setText($event, index)"
+                               (keydown)="onKeydown($event, index)"/>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Servicios</mat-header-cell>
+                    <mat-cell *matCellDef="let dato, let i = index">
+                        <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(dato, i)">
+                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
+                        </button>
                     </mat-cell>
                 </ng-container>
 
