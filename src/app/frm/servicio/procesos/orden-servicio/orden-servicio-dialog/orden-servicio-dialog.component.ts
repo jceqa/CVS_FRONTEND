@@ -4,38 +4,38 @@ import {Observable} from 'rxjs';
 import {PresupuestoCompra} from '../../../../../models/presupuestoCompra';
 import {FormType} from '../../../../../models/enum';
 import {MatTableDataSource} from '@angular/material/table';
-import {PresupuestoCompraDetalle} from '../../../../../models/presupuestoCompraDetalle';
+import {PresupuestoServicioDetalle} from '../../../../../models/presupuestoServicioDetalle';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
-import {PresupuestoCompraService} from '../../../../../services/presupuestoCompra.service';
+import {PresupuestoCompraService} from '../../../../../services/presupuestocompra.service';
 import {UtilService} from '../../../../../services/util.service';
 import {map, startWith} from 'rxjs/operators';
 import {Estado} from '../../../../../models/estado';
 import {Usuario} from '../../../../../models/usuario';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
-import {DiagnosticoService} from '../../../../../services/diagnostico.service';
-import {Diagnostico} from '../../../../../models/diagnostico';
+import {RecepcionService} from '../../../../../services/recepcion.service';
+import {Recepcion} from '../../../../../models/recepcion';
 import {formatDate} from '@angular/common';
-import {Servicio} from '../../../../../models/servicio';
-import {ServicioService} from '../../../../../services/servicio.service';
-import {PromoDescuento} from '../../../../../models/promoDescuento';
-import {PromoDescuentoService} from '../../../../../services/promoDescuento.service';
+import {Deposito} from '../../../../../models/deposito';
+import {DepositoService} from '../../../../../services/deposito.service';
+import {Sucursal} from '../../../../../models/sucursal';
+import {SucursalService} from '../../../../../services/sucursal.service';
 
 @Component({
-    selector: 'app-presupuesto-servicio-dialog',
-    templateUrl: './presupuesto-servicio-dialog.component.html',
-    styleUrls: ['./presupuesto-servicio-dialog.component.scss']
+    selector: 'app-orden-servicio-dialog',
+    templateUrl: './orden-servicio-dialog.component.html',
+    styleUrls: ['./orden-servicio-dialog.component.scss']
 })
-export class PresupuestoServicioDialogComponent implements OnInit {
+export class OrdenServicioDialogComponent implements OnInit {
 
-    diagnosticosControl = new FormControl('');
-    promoDescuentoControl = new FormControl('');
-    servicioControl = new FormControl('');
-    diagnosticosFiltered: Observable<Diagnostico[]>;
-    promoDescuentoFiltered: Observable<PromoDescuento[]>;
-    servicioFiltered: Observable<Servicio[]>;
+    recepcionesControl = new FormControl('');
+    depositoControl = new FormControl('');
+    sucursalControl = new FormControl('');
+    recepcionesFiltered: Observable<Recepcion[]>;
+    depositoFiltered: Observable<Deposito[]>;
+    sucursalFiltered: Observable<Sucursal[]>;
 
-    item: PresupuestoServicio;
+    item: OrdenSevicio;
     companyId = 0;
     form: FormGroup;
 
@@ -46,27 +46,27 @@ export class PresupuestoServicioDialogComponent implements OnInit {
     fecha = new Date();
 
     displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'precio', 'total'/*, 'actions'*/];
-    dataSource = new MatTableDataSource<PresupuestoCompraDetalle>();
-    detalles: PresupuestoCompraDetalle[] = [];
+    dataSource = new MatTableDataSource<OrdenServicioDetalle>();
+    detalles: OrdenServicioDetalle[] = [];
 
-    diagnosticos: Diagnostico[] = [];
-    promoDescuento: PromoDescuento[] = [];
-    servicio: Servicio[] = [];
-    diagnosticoSelected: Diagnostico;
-    promoDescuentoSelected: PromoDescuento;
-    servicioSelected: Servicio;
+    recepciones: Recepcion[] = [];
+    depositos: Deposito[] = [];
+    sucursal: Sucursal[] = [];
+    recepcionSelected: Recepcion;
+    depositoSelected: Deposito;
+    sucursalSelected: Sucursal;
 
-    estadoPresupuestoServicio = '';
+    estadoOrdenServicio = '';
     total = 0;
 
     constructor(
-        private dialogRef: MatDialogRef<PresupuestoServicioDialogComponent>,
+        private dialogRef: MatDialogRef<OrdenServicioDialogComponent>,
         private uiService: UIService,
-        private presupuestoServicioService: PresupuestoServicioService,
+        private presupuestoCompraService: PresupuestoCompraService,
         private utils: UtilService,
-        private diagnosticoService: DiagnosticoService,
-        private promoDescuentoService: PromoDescuentoService,
-        private servicioService: ServicioService,
+        private recepcionService: RecepcionService,
+        private depositoService: DepositoService,
+        private sucursalService: DepositoService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -97,11 +97,11 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        this.diagnosticoService.getDiagnosticoPendientes().subscribe(data => {
+        this.recepcionService.getRecepcionPendientes().subscribe(data => {
             console.log(data);
-            this.diagnosticos = data;
+            this.recepciones = data;
 
-            this.diagnosticosFiltered = this.diagnosticosControl.valueChanges.pipe(
+            this.recepcionesFiltered = this.recepcionControl.valueChanges.pipe(
                 startWith(''),
                 map(value => this._filterPedido(value || '')),
             );
@@ -112,13 +112,13 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         });
 
         this.utils.startLoading();
-        this.promoDescuentoService.getPromoDescuentos().subscribe(data => {
+        this.depositoService.getDepositos().subscribe(data => {
             console.log(data);
-            this.promoDescuento = data;
+            this.depositos = data;
 
-            this.promoDescuentoFiltered = this.promoDescuentoControl.valueChanges.pipe(
+            this.depositoFiltered = this.depositoControl.valueChanges.pipe(
                 startWith(''),
-                map(value => this._filterPromoDescuento(value || '')),
+                map(value => this._filterDeposito(value || '')),
             );
             this.utils.stopLoading();
         }, error => {
@@ -127,13 +127,13 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         });
 
         this.utils.startLoading();
-        this.servicioService.getServicio().subscribe(data => {
+        this.sucursalService.getSucursales().subscribe(data => {
             console.log(data);
-            this.servicio = data;
+            this.sucursales = data;
 
-            this.servicioFiltered = this.servicioControl.valueChanges.pipe(
+            this.sucursalesFiltered = this.sucursalControl.valueChanges.pipe(
                 startWith(''),
-                map(value => this._filterServicio(value || '')),
+                map(value => this._filterSucursal(value || '')),
             );
             this.utils.stopLoading();
         }, error => {
@@ -142,7 +142,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         });
     }
 
-    setForm(item: PresupuestoServicio) {
+    setForm(item: OrdenServicio) {
         console.log(item);
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({
@@ -151,8 +151,8 @@ export class PresupuestoServicioDialogComponent implements OnInit {
             });
             this.fecha = item.fecha;
             this.detalles = item.presupuestoCompraDetalles;
-            this.estadoPresupuestoServicio = item.estadoPresupuestoServicio.descripcion;
-            this.dataSource = new MatTableDataSource<PresupuestoCompraDetalle>(
+            this.estadoOrdenServicio = item.estadoOrdenServicio.descripcion;
+            this.dataSource = new MatTableDataSource<OrdenServicioDetalle>(
                 this.detalles
             );
 
@@ -162,15 +162,15 @@ export class PresupuestoServicioDialogComponent implements OnInit {
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
-        this.item.estadoPresupuestoServicio = new Estado(1);
+        this.item.estadoOrdenServicio = new Estado(1);
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
-        this.item.presupuestoServicioDetalles = this.detalles;
+        this.item.ordenServicioDetalles = this.detalles;
         this.item.total = this.total;
-        this.item.diagnostico = this.diagnosticoSelected;
-        this.item.promoDescuento = this.promoDescuentoSelected;
-        this.item.servicio = this.servicioSelected;
+        this.item.recepcion = this.recepcionSelected;
+        this.item.deposito = this.depositoSelected;
+        this.item.sucursal = this.sucursalSelected;
     }
 
     dismiss(result?: any) {
@@ -181,38 +181,38 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         console.log(dato);
     }
 
-    selectedDiagnostcico($event): void {
+    selectedRecepcion($event): void {
         console.log($event.source.value);
-        this.diagnosticoSelected = $event.source.value;
+        this.recepcionSelected = $event.source.value;
 
         this.detalles.length = 0;
 
-        this.diagnosticoSelected.detalleDiagnosticos.forEach(dPC => {
+        this.recepcionSelected.RecepcionDetalle.forEach(dPC => {
             this.detalles.push(
                 {
                     estado: 'ACTIVO',
                     id: 0,
                     monto: 0,
-                    diagnosticoDetalle: dPC
+                    recepcionDetalle: dPC
                 });
         });
 
-        this.dataSource = new MatTableDataSource<PresupuestoServicioDetalle>(
+        this.dataSource = new MatTableDataSource<OrdenServicioDetalle>(
             this.detalles
         );
     }
 
-    selectedPromoDescuento($event): void {
+    selectedDeposito($event): void {
         console.log($event.source.value);
-        this.promoDescuentoSelected = $event.source.value;
+        this.depositoSelected = $event.source.value;
     }
 
-    selectedServicio($event): void {
+    selectedSucursal($event): void {
         console.log($event.source.value);
-        this.servicioSelected = $event.source.value;
+        this.sucursalSelected = $event.source.value;
     }
 
-    displayDiagnostico(value) {
+    displayRecepcion(value) {
         if (value) {
             return value.observacion + ' | '
                 + formatDate(value.fecha, 'dd/MM/yyyy', 'en-US') + ' | '
@@ -221,16 +221,22 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         }
     }
 
-    displayPromoDescuento(value) {
+    displayDeposito(value) {
+        if (value) {
+            return value.id + ' | ' + value.descripcion;
+        }
+    }
+
+    displaySucursal(value) {
         if (value) {
             return value.id + ' | ' + value.descripcion;
         }
     }
 
     setNumber($event, index) {
-        this.total -= this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.cantidad;
+        this.total -= this.detalles[index].monto * this.detalles[index].pedidoCompraDetalle.cantidad;
         this.detalles[index].monto = this.utils.getNumber($event.target.value);
-        this.total += this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.cantidad;
+        this.total += this.detalles[index].monto * this.detalles[index].pedidoCompraDetalle.cantidad;
     }
 
     onKeydown($event, index) {
@@ -260,16 +266,9 @@ export class PresupuestoServicioDialogComponent implements OnInit {
                 5000
             );
             return false;
-        } else if (!this.diagnosticoSelected) {
+        } else if (!this.recepcionSelected) {
             this.uiService.showSnackbar(
-                'Debe seleccionar un Diagnostico.',
-                'Cerrar',
-                5000
-            );
-            return false;
-        } else if (!this.servicioSelected) {
-            this.uiService.showSnackbar(
-                'Debe seleccionar un Servicio.',
+                'Debe seleccionar un Pedido de Compra.',
                 'Cerrar',
                 5000
             );
@@ -277,7 +276,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         }
 
         let haveZero = false;
-        this.item.presupuestoCompraDetalles.forEach(pcd => {
+        this.item.ordenServicioDetalles.forEach(pcd => {
             if (pcd.monto === 0) {
                 haveZero = true;
             }
@@ -285,7 +284,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
 
         if (haveZero) {
             this.uiService.showSnackbar(
-                'Debe especificar un Precio diferente de 0 para cada Servicio.',
+                'Debe especificar un Precio diferente de 0 para cada Articulo.',
                 'Cerrar',
                 5000
             );
@@ -300,7 +299,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         this.item.id = 0;
         if (this.validarCampos()) {
             this.utils.startLoading();
-            this.presupuestoServicioService.guardarPresupuestoServicio(this.item)
+            this.presupuestoCompraService.guardarOrdenServicio(this.item)
                 .subscribe(data => {
                         console.log(data);
                         this.utils.stopLoading();
@@ -334,7 +333,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
 
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.observacion)) {
-            this.presupuestoServicioService.editarPresupuestoServicio(this.item).subscribe(data => {
+            this.ordenServicioService.editarOrdenServicio(this.item).subscribe(data => {
                 console.log(data);
                 this.uiService.showSnackbar(
                     'Modificado exitosamente.',
@@ -361,9 +360,9 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         }
     }
 
-    anular(dato: PresupuestoServicio): void {
+    anular(dato: OrdenServicio): void {
         this.utils.startLoading();
-        this.presupuestoServicioService.anularPresupuestoServicio(dato).subscribe(
+        this.ordenServicioService.anularOrdenServicio(dato).subscribe(
             data => {
                 console.log(data);
                 this.utils.stopLoading();
@@ -390,8 +389,8 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Presupuesto de Servicio',
-                msg: '¿Está seguro que desea anular este Presupuesto de Servicio?'
+                title: 'Anular Orden de Servicio',
+                msg: '¿Está seguro que desea anular esta Orden de Servicio?'
             }
         });
 
@@ -403,23 +402,15 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         });
     }
 
-    private _filterDiagnostico(value: any): Diagnostico[] {
+    private _filterRecepcion(value: any): Recepcion[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.diagnosticos.filter(diagnostico =>
-                diagnostico.observacion.toLowerCase().includes(filterValue) ||
-                diagnostico.usuario.nombre.toLowerCase().includes(filterValue) ||
-                diagnostico.sucursal.descripcion.toLowerCase().includes(filterValue) ||
-                formatDate(diagnotico.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
-        );
-    }
-
-    private _filterServicio(value: any): Servicio[] {
-        const filterValue = value.toString().toLowerCase();
-        return (
-            this.servicios.filter(servicio =>
-                servicio.id.toLowerCase().includes(filterValue) ||
-                servicio.descripcion.toLowerCase().includes(filterValue))
+            this.recepciones.filter(recepcion =>
+                recepcion.observacion.toLowerCase().includes(filterValue) ||
+                recepcion.usuario.nombre.toLowerCase().includes(filterValue) ||
+                recepcion.deposito.descripcion.toLowerCase().includes(filterValue) ||
+                formatDate(recepcion.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
         );
     }
 }
+
