@@ -4,7 +4,6 @@ import {OrdenCompra} from './ordenCompra';
 import {FacturaCompraDetalle} from './facturaCompraDetalle';
 import {NotaRemision} from './notaRemision';
 import {NotaDebitoCompra} from './notaDebitoCompra';
-import {NotaCreditoCompra} from './notaCreditoCompra';
 import {LibroCompra} from './libroCompra';
 
 export class FacturaCompra {
@@ -21,5 +20,4 @@ export class FacturaCompra {
     libroCompra: LibroCompra;
     notaRemisionList: NotaRemision[];
     notaDebitoCompraList: NotaDebitoCompra[];
-    notaCreditoComprasCancelacion: NotaCreditoCompra[];
 }

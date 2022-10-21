@@ -42,8 +42,6 @@ export class CondicionPagoComponent implements OnInit {
     }
 
     cargarCondicionPagos() {
-        // this.store.dispatch(new UI.StartLoading());
-        // this.util.localStorageSetItem('loading', 'true');
         this.util.startLoading();
         this.condicionPagoService.getCondicionPagos(this.all).subscribe(
             (data) => {
@@ -54,13 +52,9 @@ export class CondicionPagoComponent implements OnInit {
                     this.condicionpagos
                 );
                 this.dataSource.paginator = this.paginator;
-                // this.store.dispatch(new UI.StopLoading());
-                // this.util.localStorageSetItem('loading', 'false');
                 this.util.stopLoading();
             },
             err => {
-                // this.store.dispatch(new UI.StopLoading());
-                // this.util.localStorageSetItem('loading', 'false');
                 this.util.stopLoading();
                 console.log(err.error);
                 this.uiService.showSnackbar(
@@ -73,11 +67,8 @@ export class CondicionPagoComponent implements OnInit {
     }
 
     addItem(): void {
-
         const item = new CondicionPago();
-
         this.editItem(item);
-
     }
 
     editItem(item: CondicionPago): void {
@@ -148,8 +139,8 @@ export class CondicionPagoComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Eliminar esta Condicion de pago',
-                msg: '¿Está seguro que desea eliminar esta condicion de pago?'
+                title: 'Eliminar esta Condición de pago',
+                msg: '¿Está seguro que desea eliminar esta Condición de Pago?'
             }
         });
 

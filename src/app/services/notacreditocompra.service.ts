@@ -42,4 +42,8 @@ export class NotaCreditoCompraService {
     public getNotaCreditoCompraPendientes(): Observable<NotaCreditoCompra[]> {
         return this.http.get<NotaCreditoCompra[]>(this.baseUrl + 'pendientes');
     }
+
+    public getNotasCreditoCompraPendientesByProveedor(idProveedor: number): Observable<NotaCreditoCompra[]> {
+        return this.http.get<NotaCreditoCompra[]>(this.baseUrl + `pendientes/${idProveedor}`);
+    }
 }

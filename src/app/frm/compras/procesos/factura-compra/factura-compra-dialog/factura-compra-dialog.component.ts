@@ -5,7 +5,6 @@ import {FacturaCompra} from '../../../../../models/facturaCompra';
 import {FormType} from '../../../../../models/enum';
 import {MatTableDataSource} from '@angular/material/table';
 import {FacturaCompraDetalle} from '../../../../../models/facturaCompraDetalle';
-import {PresupuestoCompra} from '../../../../../models/presupuestoCompra';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
 import {FacturaCompraService} from '../../../../../services/facturacompra.service';
@@ -49,7 +48,6 @@ export class FacturaCompraDialogComponent implements OnInit {
     detalles: FacturaCompraDetalle[] = [];
 
     ordenesCompra: OrdenCompra[];
-    presupuestosSelected: PresupuestoCompra[];
     ordenCompraSelected: OrdenCompra;
 
     libroCompraDetalles: LibroCompraDetalle[] = [];
@@ -57,6 +55,7 @@ export class FacturaCompraDialogComponent implements OnInit {
     estadoFactura = '';
     total = 0;
     totalIVA = 0;
+    totalNotasCredito = 0;
 
     constructor(
         private dialogRef: MatDialogRef<FacturaCompraDialogComponent>,
@@ -85,6 +84,10 @@ export class FacturaCompraDialogComponent implements OnInit {
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.total = this.item.monto;
+            this.item.ordenCompra.notaCreditoComprasCancelacion.forEach( nCCC => {
+                this.totalNotasCredito += nCCC.monto;
+            });
+            // this.totalNotasCredito = this.item.ordenCompra.notaCreditoComprasCancelacion
             this.totalIVA = this.item.libroCompra.montoIVA10 + this.item.libroCompra.montoIVA5;
         } else {
             // Si no existe es una nueva lista
@@ -143,7 +146,7 @@ export class FacturaCompraDialogComponent implements OnInit {
         this.item.notaRemisionList = this.crearNotaRemision();
         this.item.notaDebitoCompraList = this.crearNotaDebito();
 
-        this.item.notaCreditoComprasCancelacion = null;
+        // this.item.notaCreditoComprasCancelacion = this.notasCreditoSelected;
     }
 
     crearLibroCompra(): LibroCompra {
@@ -216,11 +219,11 @@ export class FacturaCompraDialogComponent implements OnInit {
             notaDebitoCompra.observacion = 'GENERADO AUTOMATICAMENTE POR FACTURA NUMERO : ' + this.item.numeroFactura;
             notaDebitoCompra.estado = 'ACTIVO';
             // NUMERO GENERADO AUTOINCREMENTADO
-            notaDebitoCompra.monto = cantidadCuotas === 1 ? this.ordenCompraSelected.monto : this.ordenCompraSelected.montoCuota;
+            notaDebitoCompra.monto = cantidadCuotas === 1 ? this.total : this.ordenCompraSelected.montoCuota;
             notaDebitoCompra.estadoNotaDebitoCompra = new Estado(1);
             notaDebitoCompra.cuentaAPagar = {
                 id: 0,
-                monto: cantidadCuotas === 1 ? this.ordenCompraSelected.monto : this.ordenCompraSelected.montoCuota,
+                monto: cantidadCuotas === 1 ? this.total : this.ordenCompraSelected.montoCuota,
                 fechaVencimiento: cantidadCuotas === 1 ? new Date() : this.calcularVencimiento(i + 1, this.ordenCompraSelected.intervalo),
                 cantidadCuotas : cantidadCuotas,
                 numeroCuota: i + 1,
@@ -264,6 +267,9 @@ export class FacturaCompraDialogComponent implements OnInit {
         this.total = this.ordenCompraSelected.monto;
         this.totalIVA = 0;
         this.libroCompraDetalles.length = 0;
+        this.ordenCompraSelected.notaCreditoComprasCancelacion.forEach( nCCC => {
+            this.totalNotasCredito += nCCC.monto;
+        });
 
         this.ordenCompraSelected.ordenCompraDetalle.forEach(oCD => {
             this.detalles.push({
@@ -275,7 +281,6 @@ export class FacturaCompraDialogComponent implements OnInit {
             const montoSinIVA = Math.round(oCD.monto / fact);
             const iva = oCD.monto - montoSinIVA;
             this.totalIVA += iva;
-
             this.libroCompraDetalles.push(new LibroCompraDetalle(montoSinIVA, iva, oCD.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto));
         });
 
@@ -283,7 +288,6 @@ export class FacturaCompraDialogComponent implements OnInit {
             this.detalles
         );
     }
-
 
     displayOrdenCompra(value) {
         if (value) {

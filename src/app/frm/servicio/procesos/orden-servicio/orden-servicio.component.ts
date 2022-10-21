@@ -43,12 +43,12 @@ export class OrdenServicioComponent implements OnInit {
     cargar() {
         this.util.startLoading();
         if (this.all) {
-            this.ordenServicioService.getOrdenServicio(this.all).subscribe(
+            this.ordenServicioService.getOrdenesServicio(this.all).subscribe(
                 (data) => {
                     console.log(data);
-                    this.ordenServicio = data;
+                    this.ordenServicios = data;
                     this.dataSource = new MatTableDataSource<OrdenServicio>(
-                        this.ordenServicio
+                        this.ordenServicios
                     );
                     this.dataSource.paginator = this.paginator;
                     this.util.stopLoading();
@@ -67,9 +67,9 @@ export class OrdenServicioComponent implements OnInit {
             this.ordenServicioService.getOrdenServicioPendientes().subscribe(
                 (data) => {
                     console.log(data);
-                    this.ordenServicio= data;
+                    this.ordenServicios = data;
                     this.dataSource = new MatTableDataSource<OrdenServicio>(
-                        this.ordenServicio
+                        this.ordenServicios
                     );
                     this.dataSource.paginator = this.paginator;
                     this.util.stopLoading();

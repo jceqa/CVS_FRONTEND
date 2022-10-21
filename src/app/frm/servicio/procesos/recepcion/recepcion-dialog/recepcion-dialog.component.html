@@ -5,7 +5,7 @@
     <mat-dialog-content>
 
         <!--<div class="mt-2" *ngIf="formType === 1">
-            <mat-form-field class="full-with-field" >
+            <mat-form-field class="full-width-field" >
                 <input id="id" formControlName="id" matInput placeholder="Id" readonly />
             </mat-form-field>
         </div>-->
@@ -31,7 +31,7 @@
                 <span >Cliente: {{ item.cliente.ruc }} | {{ item.cliente.razon }}</span>
             </div>
 
-            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Cliente"
                        matInput
@@ -47,9 +47,20 @@
             </mat-form-field>
         </div>
 
+        <div>
+            <mat-form-field class="full-width-field">
+                <mat-label>Sucursal</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="sucursal">
+                    <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
+                        {{ sucursal.descripcion }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
-                <input [disabled]="this.formType === 1" id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
+            <mat-form-field class="full-width-field">
+                <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
@@ -57,8 +68,8 @@
         <mat-divider></mat-divider>
 
         <h4>Detalles</h4>
-        <div class="full-with-field" *ngIf="this.formType !== 1">
-            <mat-form-field>
+        <div class="full-width-field" *ngIf="this.formType !== 1">
+            <mat-form-field class="semi-full-width-field">
                 <input type="text"
                        placeholder="Equipo"
                        matInput
@@ -68,15 +79,9 @@
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="display">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
                                 (onSelectionChange)="selected($event)">
-                        {{option.codigoGenerico}} | {{option.descripcion}}
+                        {{option.descripcion}} | {{option.marca.descripcion}} | {{option.modelo}} | {{option.serie}}
                     </mat-option>
                 </mat-autocomplete>
-            </mat-form-field>
-            &nbsp;
-            <mat-form-field>
-                <input type=number id="cantidad" formControlName="cantidadEquipo" matInput
-                       placeholder="Cantidad"
-                       autocomplete="off" class="text"/>
             </mat-form-field>
             &nbsp;
             <button matTooltip="Agregar Item" color="primary" mat-icon-button
@@ -93,56 +98,54 @@
                         <h4><strong>Código</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span> {{ dato.equipo.codigoGenerico }} </span>
+                        <span> {{ dato.equipo.id }} </span>
                     </mat-cell>
                     >
                 </ng-container>
 
-                <ng-container matColumnDef="item">
+                <ng-container matColumnDef="descripcion">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Item</strong></h4>
+                        <h4><strong>Descripción</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
                         {{ dato.equipo.descripcion }}
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="cantidad">
+                <ng-container matColumnDef="marca">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Cantidad</strong></h4>
+                        <h4><strong>Marca</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.cantidad }}
+                        {{ dato.equipo.marca.descripcion }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="modelo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Modelo</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.equipo.modelo }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="serie">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Serie</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.equipo.serie }}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
                     <mat-cell *matCellDef="let dato">
-
-                        <!--<button color="primary" mat-icon-button (click)="viewDetail(dato)">
-                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
-                        </button>-->
-
-                        <button matTooltip="Aumentar" color="primary" mat-icon-button
-                                (click)="incItem(dato)" *ngIf="formType !== 1">
-                            <mat-icon aria-label="Aumentar item">add_circle_outline</mat-icon>
-                        </button>
-
-                        <button matTooltip="Disminuir" color="primary" mat-icon-button
-                                (click)="descItem(dato)" [disabled]="dato.cantidad === 1" *ngIf="formType !== 1">
-                            <mat-icon aria-label="Disminuir item">remove_circle_outline</mat-icon>
-                        </button>
-
                         <button matTooltip="Eliminar" color="warn" mat-icon-button
                                 (click)="deleteItem(dato)" *ngIf="formType !== 1">
                             <mat-icon>delete</mat-icon>
                         </button>
-
-                        <!--<button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
-                            <mat-icon>refresh</mat-icon>
-                        </button>-->
-
                     </mat-cell>
                 </ng-container>
 

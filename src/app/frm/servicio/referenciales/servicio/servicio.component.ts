@@ -15,7 +15,7 @@ import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialo
 })
 export class ServicioComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'descripcion', 'monto'];
+    displayedColumns: string[] = ['id', 'descripcion', 'monto', 'actions'];
 
     dataSource = new MatTableDataSource<Servicio>();
 

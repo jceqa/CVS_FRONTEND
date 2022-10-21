@@ -93,7 +93,6 @@ export class PresupuestoCompraDialogComponent implements OnInit {
         this.pedidoCompraService.getPedidosCompraPendientes().subscribe(data => {
             console.log(data);
             this.pedidos = data;
-
             this.pedidosFiltered = this.pedidosControl.valueChanges.pipe(
                 startWith(''),
                 map(value => this._filterPedido(value || '')),

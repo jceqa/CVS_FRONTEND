@@ -19,7 +19,7 @@ export class EntidadEmisoraService {
         return this.accountService.getAuthHeather();
       }
 
-    private baseUrl = 'api/entidad-emisora/';
+    private baseUrl = 'api/entidademisora/';
 
     public buscarEntidadEmisoras(cantRegistros: number, pag: number, texto): Observable<any> {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);

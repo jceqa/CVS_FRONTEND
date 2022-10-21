@@ -40,10 +40,10 @@ export class EntidadEmisoraComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.cargarEntidadEmisoras();
+        this.cargarEntidadesEmisoras();
     }
 
-    cargarEntidadEmisoras() {
+    cargarEntidadesEmisoras() {
         this.util.startLoading();
         this.entidademisoraService.getEntidadEmisoras(this.all).subscribe(
             (data) => {
@@ -92,7 +92,7 @@ export class EntidadEmisoraComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargarEntidadEmisoras();
+                this.cargarEntidadesEmisoras();
             }
         });
     }
@@ -101,7 +101,7 @@ export class EntidadEmisoraComponent implements OnInit {
         this.entidademisoraService.eliminarEntidadEmisora(id).subscribe(
             result => {
                 console.log(result);
-                this.cargarEntidadEmisoras();
+                this.cargarEntidadesEmisoras();
 
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
@@ -125,7 +125,7 @@ export class EntidadEmisoraComponent implements OnInit {
         this.entidademisoraService.editarEntidadEmisora(entidademisora).subscribe(
             result => {
                 console.log(result);
-                this.cargarEntidadEmisoras();
+                this.cargarEntidadesEmisoras();
                 this.uiService.showSnackbar(
                     'Reactivado correctamente.',
                     'Cerrar',

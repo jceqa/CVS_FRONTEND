@@ -1,33 +1,29 @@
-<h4 mat-dialog-title>{{title}} Servicios</h4>
+<h4 mat-dialog-title>{{title}} Servicio</h4>
 
 <form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
-
     <mat-dialog-content>
-
         <div class="mt-2" *ngIf="formType === 1">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="id" formControlName="id" matInput placeholder="Id" readonly />
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="descripcion" formControlName="descripcion" required matInput placeholder="Descripcion"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
-                <input id="monto" formControlName="serie" required matInput placeholder="Monto" autocomplete="off" />
+            <mat-form-field class="full-width-field">
+                <input id="monto" formControlName="monto" required matInput placeholder="Monto" autocomplete="off"
+                       myCurrencyFormatter (change)="setNumber($event, 'monto')" />
             </mat-form-field>
         </div>
-
-
     </mat-dialog-content>
 
     <mat-dialog-actions align="end" class="mt-4">
-
         <button mat-button color="primary" (click)="dismiss()">
             <mat-icon>cancel</mat-icon> Cancelar
         </button>
@@ -35,7 +31,6 @@
         <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid">
             <mat-icon>save</mat-icon> Aceptar
         </button>
-
     </mat-dialog-actions>
 
 </form>

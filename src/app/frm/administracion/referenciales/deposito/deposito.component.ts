@@ -16,7 +16,7 @@ import {UtilService} from '../../../../services/util.service';
 })
 export class DepositoComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'descripcion', 'sucursal'];
+    displayedColumns: string[] = ['id', 'descripcion', 'sucursal', 'actions'];
 
     dataSource = new MatTableDataSource<Deposito>();
 

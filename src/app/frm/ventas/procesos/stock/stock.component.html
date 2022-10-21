@@ -1,0 +1,59 @@
+<div style="margin: 8px;">
+    <mat-toolbar>
+        <span>Pagos </span>
+        <span class="line-spacer"></span>
+
+        <button color="primary" mat-button (click)="cargar()">
+            <mat-icon>refresh</mat-icon>
+            <span>Actualizar</span>
+        </button>
+    </mat-toolbar>
+    <mat-card>
+        <mat-card-content>
+            <div class="end" *ngIf="false">
+                <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Inactivos</mat-checkbox>
+            </div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Id</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><span [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}"> {{ dato.id }} </span></mat-cell>>
+                </ng-container>
+
+                <!--<ng-container matColumnDef="sucursal">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Sucursal</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.deposito.sucursal.descripcion }}</i></mat-cell>
+                </ng-container>-->
+
+                <ng-container matColumnDef="deposito">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Depósito</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.deposito.descripcion }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="articulo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Artículo</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.articulo.descripcion }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="existencia">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Existencia</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.existencia }}</i></mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <mat-paginator #painator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+            </mat-paginator>
+        </mat-card-content>
+    </mat-card>
+</div>

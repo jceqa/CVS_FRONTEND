@@ -24,7 +24,7 @@
                     {{ item.pedidoCompra.usuario.nombre }} | {{ item.pedidoCompra.deposito.descripcion }}</span>
             </div>
 
-            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Pedido de Compra"
                        matInput
@@ -47,7 +47,7 @@
                 <span >Proveedor: {{ item.proveedor.ruc }} | {{ item.proveedor.razonSocial }}</span>
             </div>
 
-            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Proveedor"
                        matInput
@@ -64,7 +64,7 @@
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
                        autocomplete="off" class="text"/>
             </mat-form-field>

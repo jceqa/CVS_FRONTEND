@@ -5,21 +5,21 @@
     <mat-dialog-content>
 
         <div class="mt-2" *ngIf="formType === 1">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="id" formControlName="id" matInput placeholder="Id" readonly />
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="descripcion" formControlName="descripcion" required matInput placeholder="Descripcion"
                        autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
-                <input id="porcentaje" formControlName="serie" required matInput placeholder="Porcentaje" autocomplete="off" />
+            <mat-form-field class="full-width-field">
+                <input type="number" id="porcentaje" formControlName="porcentaje" required matInput placeholder="Porcentaje" autocomplete="off" />
             </mat-form-field>
         </div>
 

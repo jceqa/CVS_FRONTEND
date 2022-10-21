@@ -50,7 +50,7 @@
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Sucursal</strong></h4>
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{ dato.sucursal.descripcion }}</i></mat-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i *ngIf="dato.sucursal">{{ dato.sucursal.descripcion }}</i></mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="actions">

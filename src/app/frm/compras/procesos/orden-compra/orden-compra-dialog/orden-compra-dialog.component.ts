@@ -19,6 +19,8 @@ import {CondicionPago} from '../../../../../models/condicionPago';
 import {CondicionPagoService} from '../../../../../services/condicionpago.service';
 import {Proveedor} from '../../../../../models/proveedor';
 import {ProveedorService} from '../../../../../services/proveedor.service';
+import {NotaCreditoCompraService} from '../../../../../services/notacreditocompra.service';
+import {NotaCreditoCompra} from '../../../../../models/notaCreditoCompra';
 
 @Component({
     selector: 'app-orden-compra-dialog',
@@ -46,7 +48,7 @@ export class OrdenCompraDialogComponent implements OnInit {
 
     presupuestos: PresupuestoCompra[] = [];
     proveedores: Proveedor[] = [];
-    presupuestosSelected: PresupuestoCompra[];
+    presupuestosSelected: PresupuestoCompra[] = [];
     proveedorSelected: Proveedor;
 
     condicionesPago: CondicionPago[] = [];
@@ -58,6 +60,10 @@ export class OrdenCompraDialogComponent implements OnInit {
 
     condicionPagoType = 1;
 
+    notasCredito: NotaCreditoCompra[] = [];
+    totalNotasCredito = 0;
+    notasCreditoSelected: NotaCreditoCompra[] = [];
+
     constructor(
         private dialogRef: MatDialogRef<OrdenCompraDialogComponent>,
         private uiService: UIService,
@@ -67,6 +73,7 @@ export class OrdenCompraDialogComponent implements OnInit {
         private condicionPagoService: CondicionPagoService,
         private proveedorService: ProveedorService,
         private dialog: MatDialog,
+        private notaCreditoCompraService: NotaCreditoCompraService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -92,8 +99,9 @@ export class OrdenCompraDialogComponent implements OnInit {
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.form.get('observacion').disable();
-            this.item.presupuestosCompra.forEach(pc => {
-                this.total += pc.total;
+            this.total = this.item.monto;
+            this.item.notaCreditoComprasCancelacion.forEach( nCCC => {
+               this.totalNotasCredito += nCCC.monto;
             });
         } else {
             // Si no existe es una nueva lista
@@ -144,7 +152,6 @@ export class OrdenCompraDialogComponent implements OnInit {
             this.dataSource = new MatTableDataSource<OrdenCompraDetalle>(
                 this.detalles
             );
-
         }
     }
 
@@ -166,6 +173,8 @@ export class OrdenCompraDialogComponent implements OnInit {
             this.item.montoCuota = this.utils.getNumber(this.form.get('montoCuota').value);
             this.item.cantidadCuota = this.form.get('cantidadCuota').value;
         }
+
+        this.item.notaCreditoComprasCancelacion = this.notasCreditoSelected;
     }
 
     dismiss(result?: any) {
@@ -201,7 +210,17 @@ export class OrdenCompraDialogComponent implements OnInit {
             this.detalles
         );
 
-        const montoCuota = this.total / this.utils.getNumber(this.form.get('cantidadCuota').value);
+        this.totalNotasCredito = 0;
+        // if (this.notasCreditoSelected.length > 0) {
+            this.notasCreditoSelected.forEach(p => {
+                this.totalNotasCredito += p.monto;
+            });
+            if (this.total >= this.totalNotasCredito) {
+                this.total -= this.totalNotasCredito;
+            }
+        // }
+
+        const montoCuota = Math.round(this.total / this.utils.getNumber(this.form.get('cantidadCuota').value));
         this.form.get('montoCuota').setValue(montoCuota);
     }
 
@@ -213,6 +232,17 @@ export class OrdenCompraDialogComponent implements OnInit {
         this.presupuestoCompraService.getPresupuestosCompraPendientesByProveedor(this.proveedorSelected.id).subscribe(data => {
             console.log(data);
             this.presupuestos = data;
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
+
+
+        this.utils.startLoading();
+        this.notaCreditoCompraService.getNotasCreditoCompraPendientesByProveedor(this.proveedorSelected.id).subscribe(data => {
+            console.log(data);
+            this.notasCredito = data;
             this.utils.stopLoading();
         }, error => {
             console.log(error);
@@ -230,7 +260,7 @@ export class OrdenCompraDialogComponent implements OnInit {
     cantidadCuotaSelected($event): void {
         if ($event.isUserInput) {
             console.log($event.source.value);
-            const montoCuota = this.total / this.utils.getNumber($event.source.value);
+            const montoCuota = Math.round(this.total / this.utils.getNumber($event.source.value));
             this.form.get('montoCuota').setValue(montoCuota);
         }
     }
@@ -408,5 +438,24 @@ export class OrdenCompraDialogComponent implements OnInit {
                 proveedor.ruc.toLowerCase().includes(filterValue) ||
                 proveedor.razonSocial.toLowerCase().includes(filterValue))
         );
+    }
+
+    selectedNotaCredito($event): void {
+        console.log($event.source._value);
+        this.notasCreditoSelected = $event.source._value;
+        this.totalNotasCredito = 0;
+        this.total = 0;
+        this.notasCreditoSelected.forEach(p => {
+            this.totalNotasCredito += p.monto;
+        });
+        this.presupuestosSelected.forEach(pc => {
+            this.total += pc.total;
+        });
+        if (this.total >= this.totalNotasCredito) {
+            this.total -= this.totalNotasCredito;
+        }
+
+        const montoCuota = Math.round(this.total / this.utils.getNumber(this.form.get('cantidadCuota').value));
+        this.form.get('montoCuota').setValue(montoCuota);
     }
 }

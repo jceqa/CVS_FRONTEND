@@ -6,7 +6,7 @@
 
         <div style="display: flex">
             <div class="third-width-field">
-                <span>Nro Orden: {{ item.id }}</span>
+                <span>Nro Factura: {{ item.id }}</span>
             </div>
             &nbsp;
             <div class="third-width-field">
@@ -19,7 +19,7 @@
         </div>
 
         <div>
-            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Orden Compra"
                        matInput
@@ -38,7 +38,7 @@
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="descripcion" formControlName="observacion" required matInput
                        placeholder="Observación"
                        autocomplete="off" class="text"/>
@@ -46,7 +46,7 @@
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="numero_factura" formControlName="numeroFactura" required matInput
                        placeholder="Número Factura"
                        autocomplete="off" class="text"/>
@@ -74,11 +74,23 @@
             <br/>
         </div>
 
+        <div *ngIf="ordenCompraSelected">
+            <h4>Notas de Crédito</h4>
+            <div *ngFor="let notaCreditoCompra of ordenCompraSelected.notaCreditoComprasCancelacion">
+                <span>Nota de Crédito: {{ notaCreditoCompra.observacion }} | {{ notaCreditoCompra.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ notaCreditoCompra.usuario.nombre }} |  {{ notaCreditoCompra.proveedor.razonSocial }} |
+                    {{ notaCreditoCompra.monto | myCurrency }}</span>
+                <br/>
+                <br/>
+            </div>
+        </div>
+
         <mat-divider></mat-divider>
 
         <h4>Detalles</h4>
         <div align="end">
             <h3>Total: {{ total | myCurrency }}</h3>
+            <h4>Total Notas Crédito : {{ totalNotasCredito | myCurrency }}</h4>
             <h4>Total I.V.A. : {{ totalIVA | myCurrency }}</h4>
         </div>
 

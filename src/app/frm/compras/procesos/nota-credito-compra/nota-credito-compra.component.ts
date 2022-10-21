@@ -19,7 +19,7 @@ import {
 export class NotaCreditoCompraComponent implements OnInit {
 
 
-    displayedColumns: string[] = ['id', 'observacion', 'numero', 'fechaVencimiento', 'estado', 'monto', 'actions'];
+    displayedColumns: string[] = ['id', 'observacion', 'proveedor', 'fecha', 'estado', 'monto', 'actions'];
     dataSource = new MatTableDataSource<NotaCreditoCompra>();
 
     @ViewChild(MatPaginator)
@@ -127,8 +127,8 @@ export class NotaCreditoCompraComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Factura Compra',
-                msg: '¿Está seguro que desea anular esta Factura de Compra?'
+                title: 'Anular Nota de Crédito Comra',
+                msg: '¿Está seguro que desea anular esta Nota de Crédito Compra?'
             }
         });
 

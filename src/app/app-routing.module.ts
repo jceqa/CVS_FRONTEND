@@ -31,6 +31,13 @@ import {ServicioComponent} from './frm/servicio/referenciales/servicio/servicio.
 import { PromoDescuentoComponent } from './frm/servicio/referenciales/promo-descuento/promo-descuento.component';
 import {AjusteComponent} from './frm/compras/procesos/ajuste/ajuste.component';
 import {PagoComponent} from './frm/compras/procesos/pago/pago.component';
+import {StockComponent} from './frm/ventas/procesos/stock/stock.component';
+import {PresupuestoServicioComponent} from './frm/servicio/procesos/presupuesto-servicio/presupuesto-servicio.component';
+import {DepositoComponent} from './frm/administracion/referenciales/deposito/deposito.component';
+import {SucursalComponent} from './frm/administracion/referenciales/sucursal/sucursal.component';
+import {CondicionPagoComponent} from './frm/ventas/referenciales/condicion-pago/condicion-pago.component';
+import {EntidadEmisoraComponent} from './frm/ventas/referenciales/entidademisora/entidademisora.component';
+import {RecepcionComponent} from './frm/servicio/procesos/recepcion/recepcion.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -64,6 +71,13 @@ const routes: Routes = [
     { path: 'presupuestoservicio', component: PresupuestoServicioComponent},
     { path: 'ajuste', component: AjusteComponent},
     { path: 'pago', component: PagoComponent},
+    { path: 'stock', component: StockComponent},
+    { path: 'deposito', component: DepositoComponent},
+    { path: 'sucursal', component: SucursalComponent},
+    { path: 'tipoarticulo', component: TipoArticuloComponent},
+    { path: 'condicionpago', component: CondicionPagoComponent},
+    { path: 'entidademisora', component: EntidadEmisoraComponent},
+    { path: 'recepcion', component: RecepcionComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

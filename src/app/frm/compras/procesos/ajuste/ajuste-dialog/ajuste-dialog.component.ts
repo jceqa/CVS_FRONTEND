@@ -136,7 +136,7 @@ export class AjusteDialogComponent implements OnInit {
     }
 
     listDepositos() {
-        this.form.get('deposito').setValue('');
+        this.limpiarCampos();
         this.utils.startLoading();
         this.depositoService.listDepositosBySucursal(this.form.get('sucursal').value.id).subscribe(
             data => {
@@ -156,6 +156,7 @@ export class AjusteDialogComponent implements OnInit {
 
     listStock() {
         this.utils.startLoading();
+        this.options.length = 0;
         this.stockService.listStockByDeposito(this.form.get('deposito').value.id).subscribe(result => {
             console.log(result);
             result.forEach(r => {
@@ -364,6 +365,17 @@ export class AjusteDialogComponent implements OnInit {
                 console.log(error);
                 this.utils.stopLoading();
             }
+        );
+    }
+
+    limpiarCampos() {
+        this.form.get('deposito').setValue('');
+        this.stockSelected = null;
+        this.options.length = 0;
+        this.myControl.setValue('');
+        this.detalles.length = 0;
+        this.dataSource = new MatTableDataSource<Stock>(
+            this.detalles
         );
     }
 }
