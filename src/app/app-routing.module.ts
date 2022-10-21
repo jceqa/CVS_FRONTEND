@@ -32,6 +32,7 @@ import { PromoDescuentoComponent } from './frm/servicio/referenciales/promo-desc
 import {AjusteComponent} from './frm/compras/procesos/ajuste/ajuste.component';
 import {PagoComponent} from './frm/compras/procesos/pago/pago.component';
 import {StockComponent} from './frm/ventas/procesos/stock/stock.component';
+import {DiagnosticoComponent} from './frm/servicio/procesos/diagnostico/diagnostico.component';
 import {PresupuestoServicioComponent} from './frm/servicio/procesos/presupuesto-servicio/presupuesto-servicio.component';
 import {DepositoComponent} from './frm/administracion/referenciales/deposito/deposito.component';
 import {SucursalComponent} from './frm/administracion/referenciales/sucursal/sucursal.component';
@@ -69,6 +70,7 @@ const routes: Routes = [
     { path: 'promodescuento', component: PromoDescuentoComponent},
     { path: 'pedidoventa', component: PedidoVentaComponent},
     { path: 'presupuestoservicio', component: PresupuestoServicioComponent},
+    { path: 'diagnostico', component: DiagnosticoComponent},
     { path: 'ajuste', component: AjusteComponent},
     { path: 'pago', component: PagoComponent},
     { path: 'stock', component: StockComponent},

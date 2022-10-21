@@ -1,0 +1,110 @@
+<h4 mat-dialog-title>{{ title }} Diagnostico</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+        <div style="display: flex">
+            <div class="third-width-field">
+                <span>Nro Diagnostico: {{ item.id }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Estado: {{ estadoDiagnostico }}</span>
+            </div>
+        </div>
+
+        <div>
+            <div *ngIf="this.formType === 1">
+                <br/>
+                <span >Recepcion: {{ item.recepcion.observacion }} | {{ item.recepcion.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ item.recepcion.usuario.nombre }} | {{ item.recepcion.sucursal.descripcion }}</span>
+            </div>
+
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
+                <input type="text"
+                       placeholder="Recepcion"
+                       matInput
+                       [formControl]="recepcionesControl"
+                       [matAutocomplete]="autoRecepcion"
+                       class="text">
+                <mat-autocomplete #autoRecepcion="matAutocomplete" [displayWith]="displayRecepcion">
+                    <mat-option *ngFor="let recepcion of recepcionesFiltered | async" [value]="recepcion"
+                                (onSelectionChange)="selectedRecepcion($event)">
+                        {{ recepcion.observacion }} | {{ recepcion.fecha | date: 'dd/MM/yyyy' }} |
+                        {{ recepcion.usuario.nombre }} | {{ recepcion.sucursal.descripcion }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h4>Detalles</h4>
+
+        <div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Código</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span> {{ dato.pedidoCompraDetalle.articulo.codigoGenerico }} </span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="item">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Item</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.recepcionDetalle.equipo.descripcion }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="diagnostico">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Diagnostico</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato;let index = index" class="texto-tabla">
+                        <input id="descripcion" formControlName="diagnostico" required matInput placeholder="Diagnostico"
+                               autocomplete="off" class="text"/>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon>
+            Cerrar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid" *ngIf="this.formType !== 1">
+            <mat-icon>save</mat-icon>
+            Aceptar
+        </button>
+
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoDiagnostico.id !== 1" *ngIf="this.formType === 1">
+            <mat-icon>block</mat-icon>
+            Anular
+        </button>
+    </mat-dialog-actions>
+</form>

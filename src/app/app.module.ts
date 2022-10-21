@@ -95,6 +95,8 @@ import {PagoComponent} from './frm/compras/procesos/pago/pago.component';
 import {NotaCreditoCompraComponent} from './frm/compras/procesos/nota-credito-compra/nota-credito-compra.component';
 import {NotaCreditoCompraDialogComponent} from './frm/compras/procesos/nota-credito-compra/nota-credito-compra-dialog/nota-credito-compra-dialog.component';
 import {StockComponent} from './frm/ventas/procesos/stock/stock.component';
+import {DiagnosticoComponent} from './frm/servicio/procesos/diagnostico/diagnostico.component';
+import {DiagnosticoDialogComponent} from './frm/servicio/procesos/diagnostico/diagnostico-dialog/diagnostico-dialog.component';
 import {PresupuestoServicioComponent} from './frm/servicio/procesos/presupuesto-servicio/presupuesto-servicio.component';
 import {PresupuestoServicioDialogComponent} from './frm/servicio/procesos/presupuesto-servicio/presupuesto-servicio-dialog/presupuesto-servicio-dialog.component';
 
@@ -168,6 +170,8 @@ import {PresupuestoServicioDialogComponent} from './frm/servicio/procesos/presup
         ServicioDialogComponent,
         PresupuestoServicioComponent,
         PresupuestoServicioDialogComponent,
+        DiagnosticoComponent,
+        DiagnosticoDialogComponent,
         PromoDescuentoComponent,
         PromoDescuentoDialogComponent,
         AjusteComponent,
