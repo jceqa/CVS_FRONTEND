@@ -22,7 +22,7 @@
                 <br/>
                 <span >Diagnostico: {{ item.diagnostico.observacion }} | {{ item.diagnostico.fecha | date: 'dd/MM/yyyy' }} |
                     {{ item.diagnostico.usuario.nombre }} | {{ item.diagnostico.recepcion.sucursal.descripcion }} |
-                    {{ item.diagnostico.recepcion.cliente.razon}}
+                    {{ item.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon}}
                 </span>
             </div>
 
@@ -37,8 +37,8 @@
                     <mat-option *ngFor="let diagnostico of diagnosticosFiltered | async" [value]="diagnostico"
                                 (onSelectionChange)="selectedDiagnostico($event)">
                         {{ diagnostico.observacion }} | {{ diagnostico.fecha | date: 'dd/MM/yyyy' }} |
-                        {{ diagnostico.usuario.nombre }} | {{ diagnostico.recepcion.sucursal.descripcion }} |
-                        {{ diagnostico.recepcion.cliente.razon}}
+                        {{ diagnostico.usuario.nombre }} | {{ diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon}} |
+                        {{ diagnostico.recepcion.sucursal.descripcion }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
@@ -73,33 +73,13 @@
             </mat-form-field>
         </div>
 
-        <!--<div>
-            <div *ngIf="this.formType === 1">
-                <br/>
-                <span >Servicio: {{ item.servicio.id }} | {{ item.servicio.descripcion }}</span>
-            </div>
-
-            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
-                <input type="text"
-                       placeholder="Servicio"
-                       matInput
-                       [formControl]="servicioControl"
-                       [matAutocomplete]="autoServicio"
-                       class="text">
-                <mat-autocomplete #autoServicio="matAutocomplete" [displayWith]="displayServicio">
-                    <mat-option *ngFor="let servicio of servicioFiltered | async" [value]="servicio"
-                                (onSelectionChange)="selectedServicio($event)">
-                        {{ servicio.id }} | {{ servicio.descripcion }} | {{ servicio.monto | myCurrency }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </div>-->
-
         <mat-divider></mat-divider>
 
         <h4>Detalles</h4>
         <div align="end">
             <h3>Total: {{total | myCurrency}}</h3>
+            <h4>Total con Descuento: {{totalConDescuento | myCurrency}}</h4>
+            <h4>Total Descuento: {{totalDescuento | myCurrency}}</h4>
         </div>
 
         <div>
@@ -130,25 +110,27 @@
                         <h4><strong>Servicio</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.diagnosticoDetalle.recepcionDetalle }}
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="precio">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Precio</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato;let index = index" class="texto-tabla">
-                    </mat-cell>
-                </ng-container>
-
-                <!--<ng-container matColumnDef="total">
+                <ng-container matColumnDef="subTotal">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Sub Total</strong></h4>
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.monto * dato.diagnosticoDetalle.cantidad | myCurrency }}
+                    <mat-cell *matCellDef="let dato;let index = index" class="texto-tabla">
+                        {{ subTotales[index] | myCurrency}}
                     </mat-cell>
-                </ng-container>-->
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Servicios</mat-header-cell>
+                    <mat-cell *matCellDef="let dato, let i = index">
+                        <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(i)">
+                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

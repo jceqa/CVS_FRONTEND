@@ -16,7 +16,6 @@ import {Recepcion} from '../../../../../models/recepcion';
 import {formatDate} from '@angular/common';
 import {Diagnostico} from '../../../../../models/diagnostico';
 import {DiagnosticoDetalle} from '../../../../../models/diagnosticoDetalle';
-import {Servicio} from '../../../../../models/servicio';
 import {DiagnosticoEquipoDialogComponent} from './diagnostico-equipo-dialog/diagnostico-equipo-dialog.component';
 
 
@@ -163,15 +162,8 @@ export class DiagnosticoDialogComponent implements OnInit {
             return value.observacion + ' | '
                 + formatDate(value.fecha, 'dd/MM/yyyy', 'en-US') + ' | '
                 + value.usuario.nombre + ' | '
-                + value.cliente.razon + ' | '
+                + value.recepcionDetalles[0].equipo.cliente.razon + ' | '
                 + value.sucursal.descripcion;
-        }
-    }
-
-    displayServicio(value: Servicio) {
-        if (value) {
-            return '';
-            // return value.descripcion;
         }
     }
 
@@ -216,15 +208,28 @@ export class DiagnosticoDialogComponent implements OnInit {
         }
 
         let hasBlankSpaces = false;
+        let hasNoServices = false;
         this.item.diagnosticoDetalles.forEach( dD => {
             if (dD.diagnostico === '') {
                 hasBlankSpaces = true;
+            }
+            if (dD.servicios.length === 0) {
+                hasNoServices = true;
             }
         });
 
         if (hasBlankSpaces) {
             this.uiService.showSnackbar(
                 'Debe especificar un Diagnostico para cada Equipo.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        }
+
+        if (hasNoServices) {
+            this.uiService.showSnackbar(
+                'Debe seleccionar al menos un Servicio para cada Equipo.',
                 'Cerrar',
                 5000
             );
@@ -267,10 +272,8 @@ export class DiagnosticoDialogComponent implements OnInit {
 
     // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
-
         // Asigna los valores del formulario al objeto a almacenar
         this.setAtributes();
-
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.observacion)) {
             this.diagnosticoService.editarDiagnostico(this.item).subscribe(data => {
@@ -349,27 +352,27 @@ export class DiagnosticoDialogComponent implements OnInit {
                 recepcion.observacion.toLowerCase().includes(filterValue) ||
                 recepcion.usuario.nombre.toLowerCase().includes(filterValue) ||
                 recepcion.sucursal.descripcion.toLowerCase().includes(filterValue) ||
-                recepcion.cliente.razon.toLowerCase().includes(filterValue) ||
+                recepcion.recepcionDetalles[0].equipo.cliente.razon.toLowerCase().includes(filterValue) ||
                 formatDate(recepcion.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
         );
     }
 
-    openDialog(item: Diagnostico, index): void {
+    openDialog(index): void {
         const dialogRef = this.dialog.open(DiagnosticoEquipoDialogComponent, {
             minWidth: '70%',
             // maxWidth: '600px',
             disableClose: true,
             autoFocus: false,
             data: {
-                item: item
+                type: this.formType,
+                item: this.detalles[index].servicios
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            // debugger;
             if (result) {
-               this.detalles[index].servicios = result;
-                // console.log(result);
+                console.log(result);
+                this.detalles[index].servicios = result;
             }
         });
     }

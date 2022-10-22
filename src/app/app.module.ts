@@ -103,7 +103,9 @@ import {
     DiagnosticoEquipoDialogComponent
 } from './frm/servicio/procesos/diagnostico/diagnostico-dialog/diagnostico-equipo-dialog/diagnostico-equipo-dialog.component';
 import {OrdenServicioComponent} from './frm/servicio/procesos/orden-servicio/orden-servicio.component';
-
+import {
+    OrdenServicioDialogComponent
+} from './frm/servicio/procesos/orden-servicio/orden-servicio-dialog/orden-servicio-dialog.component';
 
 @NgModule({
     declarations: [
@@ -184,7 +186,7 @@ import {OrdenServicioComponent} from './frm/servicio/procesos/orden-servicio/ord
         PagoComponent,
         StockComponent,
         OrdenServicioComponent,
-        OrdenCompraDialogComponent,
+        OrdenServicioDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

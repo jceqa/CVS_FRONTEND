@@ -6,6 +6,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UIService } from '../../../../../services/ui.service';
 import { EquipoService } from '../../../../../services/equipo.service';
 import { MarcaService } from '../../../../../services/marca.service';
+import {Observable} from 'rxjs';
+import {Cliente} from '../../../../../models/cliente';
+import {ClienteService} from '../../../../../services/cliente.service';
+import {map, startWith} from 'rxjs/operators';
+import {UtilService} from '../../../../../services/util.service';
 
 @Component({
     selector: 'app-equipo-dialog',
@@ -13,6 +18,14 @@ import { MarcaService } from '../../../../../services/marca.service';
     styleUrls: ['./equipo-dialog.component.css']
 })
 export class EquipoDialogComponent implements OnInit {
+
+
+    clienteControl = new FormControl('');
+    clienteFiltered: Observable<Cliente[]>;
+
+
+    clientes: Cliente[] = [];
+    clienteSelected: Cliente;
 
     item: Equipo;
     companyId = 0;
@@ -25,14 +38,14 @@ export class EquipoDialogComponent implements OnInit {
 
     marcas = [];
 
-    typeSection: Array<{ value: number, viewValue: string }>;
-
     constructor(
         // private store: Store<fromRoot.State>,
         private dialogRef: MatDialogRef<EquipoDialogComponent>,
         private uiService: UIService,
+        private utils: UtilService,
         private equipoService: EquipoService,
         private marcaService: MarcaService,
+        private clienteService: ClienteService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -62,6 +75,20 @@ export class EquipoDialogComponent implements OnInit {
             this.title = 'Nuevo';
             this.formType = FormType.NEW;
         }
+
+        this.utils.startLoading();
+        this.clienteService.getClientes().subscribe(data => {
+            console.log(data);
+            this.clientes = data;
+            this.clienteFiltered = this.clienteControl.valueChanges.pipe(
+                startWith(''),
+                map(value => this._filterCliente(value || '')),
+            );
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
     }
 
     compareFunction(o1: any, o2: any) {
@@ -103,7 +130,8 @@ export class EquipoDialogComponent implements OnInit {
                 descripcion: item.descripcion,
                 serie: item.serie,
                 modelo: item.modelo,
-                marca: item.marca
+                marca: item.marca,
+                cliente: item.cliente,
             });
         }
     }
@@ -115,6 +143,7 @@ export class EquipoDialogComponent implements OnInit {
         this.item.modelo = this.form.get('modelo').value.toString().toUpperCase().trim();
         this.item.serie = this.form.get('serie').value.toString().toUpperCase().trim();
         this.item.marca = this.form.get('marca').value;
+        this.item.cliente = this.clienteSelected;
     }
 
     dismiss(result?: any) {
@@ -123,6 +152,12 @@ export class EquipoDialogComponent implements OnInit {
 
     uploadListItem(dato) {
         console.log(dato);
+    }
+
+    displayCliente(value: Cliente) {
+        if (value) {
+            return value.ruc + ' | ' + value.razon;
+        }
     }
 
     // Metodo que se llama al oprimir el boton guardar
@@ -143,26 +178,27 @@ export class EquipoDialogComponent implements OnInit {
         this.setAtributes();
         console.log(this.item);
         // Llama al servicio que almacena el objeto {PriceListDraft}
-        this.equipoService.guardarEquipo(this.item)
-            .subscribe(data => {
-                console.log(data);
-                this.dialogRef.close(data);
-                this.uiService.showSnackbar(
-                    'Argregado exitosamente.',
-                    'Cerrar',
-                    3000
-                );
-            },
-                (error) => {
-                    console.error('[ERROR]: ', error);
+        if(this.validarCampos){
+            this.equipoService.guardarEquipo(this.item)
+                .subscribe(data => {
+                    console.log(data);
+                    this.dialogRef.close(data);
                     this.uiService.showSnackbar(
-                        'Ha ocurrido un error.',
+                        'Argregado exitosamente.',
                         'Cerrar',
                         3000
                     );
-
-                }
-            );
+                },
+                    (error) => {
+                        console.error('[ERROR]: ', error);
+                        this.uiService.showSnackbar(
+                            'Ha ocurrido un error.',
+                            'Cerrar',
+                            3000
+                        );
+                    }
+                );
+        }
     }
 
     // Metodo que modifica un objeto {PriceListDraft} en base de datos
@@ -188,5 +224,37 @@ export class EquipoDialogComponent implements OnInit {
                     );
                 }
             );
+    }
+
+    validarCampos(): Boolean {
+        if (!this.utils.tieneLetras(this.item.descripcion)) {
+            this.uiService.showSnackbar(
+                'La descripción no puede ser solo númerica.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        } else if (!this.clienteSelected) {
+            this.uiService.showSnackbar(
+                'Debe seleccionar un Cliente.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        }
+    }
+
+    selectedCliente($event): void {
+        console.log($event.source.value);
+        this.clienteSelected = $event.source.value;
+    }
+
+    private _filterCliente(value: any): Cliente[] {
+        const filterValue = value.toString().toLowerCase();
+        return (
+            this.clientes.filter(cliente =>
+                cliente.ruc.toLowerCase().includes(filterValue) ||
+                cliente.razon.toLowerCase().includes(filterValue))
+        );
     }
 }

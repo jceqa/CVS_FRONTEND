@@ -2,12 +2,9 @@
 
 <form (keydown.enter)="$event.preventDefault()">
     <mat-dialog-content>
-
-
-        <div *ngIf="this.formType === 1 && item.servicios.length > 0" >
-            <h4>Notas de Crédito</h4>
-            <div *ngFor="let servicio of item.servicios">
-                <span>Servicios: {{ servicio.descripcion }} | {{ servicio.monto | myCurrency }} </span>
+        <div *ngIf="this.formType === 1 && servicioSelected.length > 0" >
+            <div *ngFor="let servicio of servicioSelected">
+                <span>Servicio: {{ servicio.descripcion }} | {{ servicio.monto | myCurrency }} </span>
                 <br/>
                 <br/>
             </div>
@@ -15,7 +12,7 @@
 
         <div *ngIf="this.formType !== 1 && servicios.length > 0">
             <mat-selection-list #shoes (selectionChange)="selectedNotaCredito($event)">
-                <mat-list-option *ngFor="let servicio of servicios" [value]="servicio">
+                <mat-list-option *ngFor="let servicio of servicios, let i = index" [value]="servicio" [selected]="selected[i]">
                     {{ servicio.descripcion }} | {{ servicio.monto | myCurrency }}
                 </mat-list-option>
             </mat-selection-list>
@@ -23,20 +20,10 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="end" class="mt-4">
-        <!--<button mat-button color="primary" (click)="dismiss()">
-            <mat-icon>cancel</mat-icon>
-            Cerrar
-        </button>-->
-
         <button mat-raised-button color="primary" (click)="ok()">
             <mat-icon>save</mat-icon>
             Aceptar
         </button>
-
-        <!--<button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoOrdenCompra.id !== 1" *ngIf="this.formType === 1">
-            <mat-icon>block</mat-icon>
-            Anular
-        </button>-->
     </mat-dialog-actions>
 
 </form>

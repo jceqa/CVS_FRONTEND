@@ -44,11 +44,17 @@
                     <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.modelo}}</i></mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="descripcion_marca">
+                <ng-container matColumnDef="marca">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Marca</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.marca.descripcion}}</i></mat-cell>
+
+                </ng-container><ng-container matColumnDef="cliente">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Cliente</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.cliente.razon}}</i></mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="actions">

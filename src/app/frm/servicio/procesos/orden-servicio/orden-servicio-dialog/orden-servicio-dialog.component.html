@@ -13,7 +13,7 @@
             </div>
             &nbsp;
             <div class="third-width-field">
-                <span>Estado: {{ estadoPresupuesto }}</span>
+                <span>Estado: {{ estadoOrdenServicio }}</span>
             </div>
         </div>
 
@@ -28,10 +28,10 @@
                 <input type="text"
                        placeholder="Presupuesto de Servicio"
                        matInput
-                       [formControl]=presupuestoServiciosControl"
+                       [formControl]="presupuestoServiciosControl"
                        [matAutocomplete]="autoPresupuestoServicio"
                        class="text">
-                <mat-autocomplete #autoPedido="matAutocomplete" [displayWith]="displayPresupuestoSErvicio">
+                <mat-autocomplete #autoPresupuestoServicio="matAutocomplete" [displayWith]="displayPresupuestoSErvicio">
                     <mat-option *ngFor="let pedido of presupuestoServiciosFiltered | async" [value]="presupuestoServicio"
                                 (onSelectionChange)="selectedPresupuestoServicios($event)">
                         {{ presupuestoServicios.observacion }} | {{ presupuestoServicios.fecha | date: 'dd/MM/yyyy' }} |

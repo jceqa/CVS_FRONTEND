@@ -39,6 +39,28 @@
             </mat-form-field>
         </div>
 
+        <div>
+            <div *ngIf="this.formType === 1">
+                <br/>
+                <span >Cliente: {{ item.cliente.ruc }} | {{ item.cliente.razon }}</span>
+            </div>
+
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
+                <input type="text"
+                       placeholder="Cliente"
+                       matInput
+                       [formControl]="clienteControl"
+                       [matAutocomplete]="autoCliente"
+                       class="text">
+                <mat-autocomplete #autoCliente="matAutocomplete" [displayWith]="displayCliente">
+                    <mat-option *ngFor="let cliente of clienteFiltered | async" [value]="cliente"
+                                (onSelectionChange)="selectedCliente($event)">
+                        {{ cliente.ruc }} | {{ cliente.razon }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
     </mat-dialog-content>
 
     <mat-dialog-actions align="end" class="mt-4">
