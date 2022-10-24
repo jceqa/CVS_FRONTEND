@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AccountService} from './account.service';
 import {Observable} from 'rxjs';
-import {FacturaCompra} from '../models/facturaCompra';
+import {Factura} from '../models/factura';
 
 @Injectable({
     providedIn: 'root'
@@ -24,22 +24,22 @@ export class FacturaService {
         return this.http.get<Factura[]>(this.baseUrl + `?all=${all}`);
     }
 
-    public guardarFacturaCompra(facturaCompra: FacturaCompra): Observable<any> {
-        return this.http.post<any>(this.baseUrl, facturaCompra, {
+    public guardarFactura(factura: Factura): Observable<any> {
+        return this.http.post<any>(this.baseUrl, factura, {
             headers: this.headers,
             observe: 'response'
         });
     }
 
-    public editarFacturaCompra(facturaCompra: FacturaCompra): Observable<any> {
-        return this.http.put<any>(this.baseUrl, facturaCompra);
+    public editarFactura(factura: Factura): Observable<any> {
+        return this.http.put<any>(this.baseUrl, factura);
     }
 
-    public anularFacturaCompra(facturaCompra: FacturaCompra): Observable<any> {
-        return this.http.put<any>(this.baseUrl + 'anular', facturaCompra);
+    public anularFactura(factura: Factura): Observable<any> {
+        return this.http.put<any>(this.baseUrl + 'anular', factura);
     }
 
-    public getFacturasComprasProcesadas(): Observable<FacturaCompra[]> {
-        return this.http.get<FacturaCompra[]>(this.baseUrl + 'procesadas');
+    public getFacturasProcesadas(): Observable<Factura[]> {
+        return this.http.get<Factura[]>(this.baseUrl + 'procesadas');
     }
 }
