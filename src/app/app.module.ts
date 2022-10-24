@@ -106,6 +106,8 @@ import {OrdenServicioComponent} from './frm/servicio/procesos/orden-servicio/ord
 import {
     OrdenServicioDialogComponent
 } from './frm/servicio/procesos/orden-servicio/orden-servicio-dialog/orden-servicio-dialog.component';
+import {FacturaComponent} from './frm/ventas/procesos/factura/factura.component';
+import {FacturaDialogComponent} from './frm/ventas/procesos/factura/factura-dialog/factura-dialog.component';
 
 @NgModule({
     declarations: [
@@ -187,6 +189,8 @@ import {
         StockComponent,
         OrdenServicioComponent,
         OrdenServicioDialogComponent,
+        FacturaComponent,
+        FacturaDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

@@ -1,10 +1,9 @@
-import {PresupuestoCompraDetalle} from './presupuestoCompraDetalle';
-import {Articulo} from './articulo';
+import {PresupuestoServicioDetalle} from './presupuestoServicioDetalle';
+
 
 export class OrdenServicioDetalle {
     id: number;
     estado: string;
-    cantidad: number;
-    articulo: Articulo;
-    presupuestoServicioDetalle: PresupuestoCompraDetalle;
+    monto: number;
+    presupuestoServicioDetalle: PresupuestoServicioDetalle;
 }

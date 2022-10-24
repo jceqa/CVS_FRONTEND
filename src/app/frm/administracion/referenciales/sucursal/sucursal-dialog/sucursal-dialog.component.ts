@@ -146,7 +146,7 @@ export class SucursalDialogComponent implements OnInit {
                     this.dialogRef.close(data);
 
                     this.uiService.showSnackbar(
-                        'Argregado exitosamente.',
+                        'Agregado exitosamente.',
                         'Cerrar',
                         3000
                     );

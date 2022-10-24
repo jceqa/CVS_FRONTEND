@@ -6,7 +6,6 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog
 import {map, startWith} from 'rxjs/operators';
 import {formatDate} from '@angular/common';
 import {Diagnostico} from '../../../../../models/diagnostico';
-import {Servicio} from '../../../../../models/servicio';
 import {PresupuestoServicio} from '../../../../../models/presupuestoServicio';
 import {FormType} from '../../../../../models/enum';
 import {PresupuestoServicioDetalle} from '../../../../../models/presupuestoServicioDetalle';
@@ -98,10 +97,6 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        /**
-         * TODO
-         * diagnostico pendiente
-         */
         this.diagnosticoService.getDiagnosticosPendientes().subscribe(data => {
             console.log(data);
             this.diagnosticos = data;
@@ -146,6 +141,21 @@ export class PresupuestoServicioDialogComponent implements OnInit {
                 this.detalles
             );
         }
+
+        this.detalles.forEach(d => {
+            let subTotal = 0;
+            d.diagnosticoDetalle.servicios.forEach(s => {
+                subTotal += s.monto;
+                if (s.articulo) {
+                    subTotal += s.articulo.precioVenta;
+                }
+            });
+            this.subTotales.push(subTotal);
+            this.total += subTotal;
+        });
+
+        this.totalDescuento = this.total * (item.promoDescuento.porcentaje / 100);
+        this.totalConDescuento = this.total - this.totalDescuento;
     }
 
     setAtributes(): void {
@@ -194,7 +204,11 @@ export class PresupuestoServicioDialogComponent implements OnInit {
             let subTotal = 0;
             d.diagnosticoDetalle.servicios.forEach(s => {
                 subTotal += s.monto;
+                if (s.articulo) {
+                    subTotal += s.articulo.precioVenta;
+                }
             });
+            d.monto = subTotal;
             this.subTotales.push(subTotal);
             this.total += subTotal;
         });
@@ -223,25 +237,6 @@ export class PresupuestoServicioDialogComponent implements OnInit {
             return value.id + ' | '
                 + value.descripcion + ' | '
                 + value.porcentaje.toString() + '%';
-        }
-    }
-
-    displayServicio(value: Servicio) {
-        if (value) {
-            return '';
-            // return value.descripcion;
-        }
-    }
-
-    setNumber($event, index) {
-        // this.total -= this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
-        this.detalles[index].monto = this.utils.getNumber($event.target.value);
-        // this.total += this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
-    }
-
-    onKeydown($event, index) {
-        if ($event.key === 'Enter') {
-            this.setNumber($event, index);
         }
     }
 

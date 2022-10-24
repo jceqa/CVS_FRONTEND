@@ -120,8 +120,9 @@ export class RecepcionDialogComponent implements OnInit {
     private _filter(value: any): Equipo[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.options.filter(option => option.modelo.toString().includes(filterValue) ||
-                option.serie.toString().includes(filterValue) ||
+            this.options.filter(option => option.modelo.toLowerCase().includes(filterValue) ||
+                option.serie.toLowerCase().includes(filterValue) ||
+                option.marca.descripcion.toLowerCase().includes(filterValue) ||
                 option.descripcion.toLowerCase().includes(filterValue))
         );
     }

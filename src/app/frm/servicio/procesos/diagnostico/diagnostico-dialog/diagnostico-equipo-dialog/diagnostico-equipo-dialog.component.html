@@ -4,7 +4,11 @@
     <mat-dialog-content>
         <div *ngIf="this.formType === 1 && servicioSelected.length > 0" >
             <div *ngFor="let servicio of servicioSelected">
-                <span>Servicio: {{ servicio.descripcion }} | {{ servicio.monto | myCurrency }} </span>
+                <span>
+                    Servicio: {{ servicio.descripcion }} |
+                    {{ servicio.monto | myCurrency }}
+                    <span *ngIf="servicio.articulo"> + {{ servicio.articulo.precioVenta | myCurrency}} </span>
+                </span>
                 <br/>
                 <br/>
             </div>
@@ -13,7 +17,11 @@
         <div *ngIf="this.formType !== 1 && servicios.length > 0">
             <mat-selection-list #shoes (selectionChange)="selectedNotaCredito($event)">
                 <mat-list-option *ngFor="let servicio of servicios, let i = index" [value]="servicio" [selected]="selected[i]">
-                    {{ servicio.descripcion }} | {{ servicio.monto | myCurrency }}
+                    <span>
+                        {{ servicio.descripcion }} |
+                        {{ servicio.monto | myCurrency }}
+                        <span *ngIf="servicio.articulo"> + {{ servicio.articulo.precioVenta | myCurrency}} </span>
+                    </span>
                 </mat-list-option>
             </mat-selection-list>
         </div>

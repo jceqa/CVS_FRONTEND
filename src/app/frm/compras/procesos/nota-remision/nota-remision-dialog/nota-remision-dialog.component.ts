@@ -251,7 +251,7 @@ export class NotaRemisionDialogComponent implements OnInit {
                         console.log(data);
                         this.utils.stopLoading();
                         this.uiService.showSnackbar(
-                            'Argregado exitosamente.',
+                            'Agregado exitosamente.',
                             'Cerrar',
                             3000
                         );

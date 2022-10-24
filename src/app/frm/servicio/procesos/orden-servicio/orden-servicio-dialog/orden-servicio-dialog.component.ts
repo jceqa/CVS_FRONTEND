@@ -9,16 +9,18 @@ import {UtilService} from '../../../../../services/util.service';
 import {map, startWith} from 'rxjs/operators';
 import {Usuario} from '../../../../../models/usuario';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
-import {RecepcionService} from '../../../../../services/recepcion.service';
-import {Recepcion} from '../../../../../models/recepcion';
 import {formatDate} from '@angular/common';
-import {Deposito} from '../../../../../models/deposito';
-import {DepositoService} from '../../../../../services/deposito.service';
-import {Sucursal} from '../../../../../models/sucursal';
 import {OrdenServicio} from '../../../../../models/ordenServicio';
 import {OrdenServicioDetalle} from '../../../../../models/ordenServicioDetalle';
-import {SucursalService} from '../../../../../services/sucursal.service';
 import {OrdenServicioService} from '../../../../../services/ordenservicio.service';
+import {PresupuestoServicio} from '../../../../../models/presupuestoServicio';
+import {PresupuestoServicioService} from '../../../../../services/presupuestoservicio.service';
+import {
+    DiagnosticoEquipoDialogComponent
+} from '../../diagnostico/diagnostico-dialog/diagnostico-equipo-dialog/diagnostico-equipo-dialog.component';
+import {PresupuestoServicioDetalle} from '../../../../../models/presupuestoServicioDetalle';
+import {DateAdapter} from '@angular/material/core';
+import {Estado} from '../../../../../models/estado';
 
 @Component({
     selector: 'app-orden-servicio-dialog',
@@ -27,12 +29,8 @@ import {OrdenServicioService} from '../../../../../services/ordenservicio.servic
 })
 export class OrdenServicioDialogComponent implements OnInit {
 
-    recepcionControl = new FormControl('');
-    depositoControl = new FormControl('');
-    sucursalControl = new FormControl('');
-    recepcionesFiltered: Observable<Recepcion[]>;
-    depositoFiltered: Observable<Deposito[]>;
-    sucursalesFiltered: Observable<Sucursal[]>;
+    presupuestoControl = new FormControl('');
+    presupuestoFiltered: Observable<PresupuestoServicio[]>;
 
     item: OrdenServicio;
     companyId = 0;
@@ -43,17 +41,17 @@ export class OrdenServicioDialogComponent implements OnInit {
     title: String;
     editID: number;
     fecha = new Date();
+    fechaEntrega = new Date();
+    fechaVencimiento = new Date();
 
-    displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'precio', 'total'/*, 'actions'*/];
+    minDate = new Date();
+
+    displayedColumns: string[] = ['equipo', 'diagnostico', 'subTotal', 'actions'];
     dataSource = new MatTableDataSource<OrdenServicioDetalle>();
     detalles: OrdenServicioDetalle[] = [];
 
-    recepciones: Recepcion[] = [];
-    depositos: Deposito[] = [];
-    sucursales: Sucursal[] = [];
-    recepcionSelected: Recepcion;
-    depositoSelected: Deposito;
-    sucursalSelected: Sucursal;
+    presupuestos: PresupuestoServicio[] = [];
+    presupuestoSelected: PresupuestoServicio;
 
     estadoOrdenServicio = '';
     total = 0;
@@ -63,20 +61,24 @@ export class OrdenServicioDialogComponent implements OnInit {
         private uiService: UIService,
         private ordenServicioService: OrdenServicioService,
         private utils: UtilService,
-        private recepcionService: RecepcionService,
-        private depositoService: DepositoService,
-        private sucursalService: SucursalService,
+        private presupuestoService: PresupuestoServicioService,
         private dialog: MatDialog,
+        private dateAdapter: DateAdapter<Date>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.dateAdapter.setLocale('en-GB'); // dd/MM/yyyy
         if (data) {
             this.item = data.item;
         }
     }
 
     ngOnInit(): void {
+        this.fechaEntrega.setDate(this.fechaEntrega.getDate() + 3);
+        this.fechaVencimiento.setDate(this.fechaVencimiento.getDate() + 90);
         this.form = new FormGroup({
             id: new FormControl('', []),
             observacion: new FormControl('', [Validators.required]),
+            fechaEntrega: new FormControl(this.fechaEntrega, [Validators.required]),
+            vencimientoGarantia: new FormControl(this.fechaVencimiento, [Validators.required]),
         });
 
         if (this.data.item.id) {
@@ -88,7 +90,7 @@ export class OrdenServicioDialogComponent implements OnInit {
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.form.get('observacion').disable();
-            // this.total = this.item.total;
+            this.total = this.item.total;
         } else {
             // Si no existe es una nueva lista
             this.title = 'Nuevo';
@@ -96,43 +98,13 @@ export class OrdenServicioDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        this.recepcionService.getRecepcionPendientes().subscribe(data => {
+        this.presupuestoService.getPresupuestosServicioPendientes().subscribe(data => {
             console.log(data);
-            this.recepciones = data;
+            this.presupuestos = data;
 
-            this.recepcionesFiltered = this.recepcionControl.valueChanges.pipe(
+            this.presupuestoFiltered = this.presupuestoControl.valueChanges.pipe(
                 startWith(''),
-                map(value => this._filterRecepcion(value || '')),
-            );
-            this.utils.stopLoading();
-        }, error => {
-            console.log(error);
-            this.utils.stopLoading();
-        });
-
-        this.utils.startLoading();
-        this.depositoService.getDepositos().subscribe(data => {
-            console.log(data);
-            this.depositos = data;
-
-            this.depositoFiltered = this.depositoControl.valueChanges.pipe(
-                startWith(''),
-                map(value => this._filterDeposito(value || '')),
-            );
-            this.utils.stopLoading();
-        }, error => {
-            console.log(error);
-            this.utils.stopLoading();
-        });
-
-        this.utils.startLoading();
-        this.sucursalService.getSucursales().subscribe(data => {
-            console.log(data);
-            this.sucursales = data;
-
-            this.sucursalesFiltered = this.sucursalControl.valueChanges.pipe(
-                startWith(''),
-                map(value => this._filterSucursal(value || '')),
+                map(value => this._filterPresupuesto(value || '')),
             );
             this.utils.stopLoading();
         }, error => {
@@ -149,8 +121,8 @@ export class OrdenServicioDialogComponent implements OnInit {
                 observacion: item.observacion,
             });
             this.fecha = item.fecha;
-            // this.detalles = item.presupuestoCompraDetalles;
-            // this.estadoOrdenServicio = item.estadoOrdenServicio.descripcion;
+            this.detalles = item.ordenServicioDetalles;
+            this.estadoOrdenServicio = item.estadoOrdenServicio.descripcion;
             this.dataSource = new MatTableDataSource<OrdenServicioDetalle>(
                 this.detalles
             );
@@ -160,16 +132,16 @@ export class OrdenServicioDialogComponent implements OnInit {
 
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
-        // this.item.estadoOrdenServicio = new Estado(1);
-        this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
-        /* this.item.ordenServicioDetalles = this.detalles;
+        this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
         this.item.total = this.total;
-        this.item.recepcion = this.recepcionSelected;
-        this.item.deposito = this.depositoSelected;
-        this.item.sucursal = this.sucursalSelected;*/
+        this.item.fechaEntrega = this.fechaEntrega;
+        this.item.vencimientoGarantia = this.fechaVencimiento;
+        this.item.estadoOrdenServicio = new Estado(1);
+        this.item.usuario = new Usuario(this.utils.getUserId());
+        this.item.ordenServicioDetalles = this.detalles;
+        this.item.presupuestoServicio = this.presupuestoSelected;
     }
 
     dismiss(result?: any) {
@@ -180,69 +152,38 @@ export class OrdenServicioDialogComponent implements OnInit {
         console.log(dato);
     }
 
-    /*selectedRecepcion($event): void {
+    selectedPresupuesto($event): void {
         console.log($event.source.value);
-        this.recepcionSelected = $event.source.value;
-
+        this.presupuestoSelected = $event.source.value;
+        this.total = 0;
         this.detalles.length = 0;
 
-        this.recepcionSelected.RecepcionDetalle.forEach(dPC => {
+        this.presupuestoSelected.presupuestoServicioDetalles.forEach( (dPC: PresupuestoServicioDetalle) => {
             this.detalles.push(
                 {
                     estado: 'ACTIVO',
                     id: 0,
-                    monto: 0,
-                    recepcionDetalle: dPC
+                    monto: dPC.monto,
+                    presupuestoServicioDetalle: dPC
                 });
+            this.total += dPC.monto;
         });
 
         this.dataSource = new MatTableDataSource<OrdenServicioDetalle>(
             this.detalles
         );
-    }*/
-
-    selectedDeposito($event): void {
-        console.log($event.source.value);
-        this.depositoSelected = $event.source.value;
     }
 
-    selectedSucursal($event): void {
-        console.log($event.source.value);
-        this.sucursalSelected = $event.source.value;
-    }
-
-    displayRecepcion(value) {
+    displayPresupuesto(value: PresupuestoServicio) {
         if (value) {
             return value.observacion + ' | '
                 + formatDate(value.fecha, 'dd/MM/yyyy', 'en-US') + ' | '
                 + value.usuario.nombre + ' | '
-                + value.deposito.descripcion;
+                + value.diagnostico.recepcion.sucursal.descripcion + ' | '
+                + value.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon + ' | '
+                + value.total.toString();
         }
     }
-
-    displayDeposito(value) {
-        if (value) {
-            return value.id + ' | ' + value.descripcion;
-        }
-    }
-
-    displaySucursal(value) {
-        if (value) {
-            return value.id + ' | ' + value.descripcion;
-        }
-    }
-
-    /*setNumber($event, index) {
-        this.total -= this.detalles[index].monto * this.detalles[index].pedidoCompraDetalle.cantidad;
-        this.detalles[index].monto = this.utils.getNumber($event.target.value);
-        this.total += this.detalles[index].monto * this.detalles[index].pedidoCompraDetalle.cantidad;
-    }
-
-    onKeydown($event, index) {
-        if ($event.key === 'Enter') {
-            this.setNumber($event, index);
-        }
-    }*/
 
     // Metodo que se llama al oprimir el boton guardar
     ok(): void {
@@ -265,30 +206,14 @@ export class OrdenServicioDialogComponent implements OnInit {
                 5000
             );
             return false;
-        } else if (!this.recepcionSelected) {
+        } else if (!this.presupuestoSelected) {
             this.uiService.showSnackbar(
-                'Debe seleccionar un Pedido de Compra.',
+                'Debe seleccionar un Prespuesto de Servicio.',
                 'Cerrar',
                 5000
             );
             return false;
         }
-
-        /*let haveZero = false;
-        this.item.ordenServicioDetalles.forEach(pcd => {
-            if (pcd.monto === 0) {
-                haveZero = true;
-            }
-        });
-
-        if (haveZero) {
-            this.uiService.showSnackbar(
-                'Debe especificar un Precio diferente de 0 para cada Articulo.',
-                'Cerrar',
-                5000
-            );
-            return false;
-        }*/
 
         return true;
     }
@@ -401,32 +326,35 @@ export class OrdenServicioDialogComponent implements OnInit {
         });
     }
 
-    private _filterSucursal(value: any): Sucursal[] {
+    private _filterPresupuesto(value: any): PresupuestoServicio[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.sucursales.filter(sucursal =>
-                sucursal.descripcion.toLowerCase().includes(filterValue))
+            this.presupuestos.filter(presupuesto =>
+                presupuesto.observacion.toLowerCase().includes(filterValue) ||
+                presupuesto.usuario.nombre.toLowerCase().includes(filterValue) ||
+                presupuesto.diagnostico.recepcion.sucursal.descripcion.toLowerCase().includes(filterValue) ||
+                presupuesto.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon.toLowerCase().includes(filterValue) ||
+                formatDate(presupuesto.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
         );
     }
 
-    private _filterDeposito(value: any): Deposito[] {
-        const filterValue = value.toString().toLowerCase();
-        return (
-            this.depositos.filter(deposito =>
-                deposito.descripcion.toLowerCase().includes(filterValue) ||
-                deposito.sucursal.descripcion.toLowerCase().includes(filterValue))
-        );
-    }
+    openDialog(index): void {
+        const dialogRef = this.dialog.open(DiagnosticoEquipoDialogComponent, {
+            minWidth: '70%',
+            // maxWidth: '600px',
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                type: FormType.EDIT,
+                item: this.detalles[index].presupuestoServicioDetalle.diagnosticoDetalle.servicios
+            }
+        });
 
-    private _filterRecepcion(value: any): Recepcion[] {
-        const filterValue = value.toString().toLowerCase();
-        return (
-            this.recepciones.filter(recepcion =>
-                recepcion.observacion.toLowerCase().includes(filterValue) ||
-                recepcion.usuario.nombre.toLowerCase().includes(filterValue) ||
-                recepcion.sucursal.descripcion.toLowerCase().includes(filterValue) ||
-                formatDate(recepcion.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
-        );
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                console.log(result);
+                // this.detalles[index].servicios = result;
+            }
+        });
     }
 }
-
