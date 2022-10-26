@@ -18,23 +18,60 @@
             </div>
         </div>
 
+        <div *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field">
+                <input type="text"
+                       placeholder="Cliente"
+                       matInput
+                       [formControl]="myControlCliente"
+                       [matAutocomplete]="autoCliente"
+                       class="text">
+                <mat-autocomplete #autoCliente="matAutocomplete" [displayWith]="displayCliente">
+                    <mat-option *ngFor="let option of filteredOptionsCliente | async" [value]="option"
+                                (onSelectionChange)="selectedCliente($event)">
+                        {{option.ruc}} | {{option.razon}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
         <div>
             <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Orden Compra"
                        matInput
-                       [formControl]="ordenServicioControl"
-                       [matAutocomplete]="autoOrdenServicio"
+                       [formControl]="pedidoVentaControl"
+                       [matAutocomplete]="autoPedidoVenta"
                        class="text">
-                <mat-autocomplete #autoOrdenServicio="matAutocomplete" [displayWith]="displayOrdenServicio">
-                    <mat-option *ngFor="let ordenServicio of ordenServicioFiltered | async" [value]="ordenServicio"
-                                (onSelectionChange)="selectedOrdenServicio($event)">
-                        {{ ordenServicio.observacion }} | {{ ordenServicio.fecha | date: 'dd/MM/yyyy' }} |
-                        {{ ordenServicio.proveedor.razonSocial }} | {{ ordenServicio.usuario.nombre }} |
-                        {{ ordenServicio.monto | myCurrency }}
+                <mat-autocomplete #autoPedidoVenta="matAutocomplete" [displayWith]="displayPedidoVenta">
+                    <mat-option *ngFor="let pedidoVenta of pedidoVentaFiltered | async" [value]="pedidoVenta"
+                                (onSelectionChange)="selectedPedidoVenta($event)">
+                        {{ pedidoVenta.observacion }} | {{ pedidoVenta.fecha | date: 'dd/MM/yyyy' }} |
+                        {{ pedidoVenta.usuario.nombre }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
+        </div>
+
+        <!--<div *ngIf="this.formType === 1" >
+            <h4>Ordenes Servicios</h4>
+            <div *ngFor="let presupuesto of item.ordenServiciosList">
+                <span>Presupuesto de Compra: {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ presupuesto.usuario.nombre }} |  {{ presupuesto.proveedor.razonSocial }} |
+                    {{ presupuesto.total | myCurrency}}</span>
+                <br/>
+                <br/>
+            </div>
+        </div>-->
+
+        <div *ngIf="this.formType !== 1 && ordenesServicio.length > 0">
+            <h4>Ordenes Servicios</h4>
+            <mat-selection-list #shoes (selectionChange)="selectedOrdenServicio($event)">
+                <mat-list-option *ngFor="let ordenServicio of ordenesServicio" [value]="ordenServicio">
+                    {{ ordenServicio.observacion }} | {{ ordenServicio.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ ordenServicio.usuario.nombre }} | {{ ordenServicio.total | myCurrency }}
+                </mat-list-option>
+            </mat-selection-list>
         </div>
 
         <div class="mt-2">
@@ -45,15 +82,15 @@
             </mat-form-field>
         </div>
 
-        <div class="mt-2">
+        <!--<div class="mt-2">
             <mat-form-field class="full-width-field">
                 <input id="numero_factura" formControlName="numeroFactura" required matInput
                        placeholder="Número Factura"
                        autocomplete="off" class="text"/>
             </mat-form-field>
-        </div>
+        </div>-->
 
-        <div *ngIf="ordenServicioSelected">
+        <!--<div *ngIf="ordenServicioSelected">
             <div>
                 <span>Condición Pago: {{ ordenServicioSelected.condicionPago.descripcion }}</span>
             </div>
@@ -74,7 +111,7 @@
             <br/>
         </div>
 
-        <!--<div *ngIf="ordenCompraSelected">
+        <div *ngIf="ordenCompraSelected">
             <h4>Notas de Crédito</h4>
             <div *ngFor="let notaCreditoCompra of ordenCompraSelected.notaCreditoComprasCancelacion">
                 <span>Nota de Crédito: {{ notaCreditoCompra.observacion }} | {{ notaCreditoCompra.fecha | date: 'dd/MM/yyyy' }} |

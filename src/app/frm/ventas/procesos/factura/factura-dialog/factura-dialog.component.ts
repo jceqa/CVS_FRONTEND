@@ -18,6 +18,10 @@ import {Estado} from '../../../../../models/estado';
 import {LibroVenta} from '../../../../../models/libroVenta';
 import {formatDate} from '@angular/common';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
+import {Cliente} from '../../../../../models/cliente';
+import {ClienteService} from '../../../../../services/cliente.service';
+import {PedidoVenta} from '../../../../../models/pedidoVenta';
+import {PedidoVentaService} from '../../../../../services/pedidoventa.service';
 
 @Component({
   selector: 'app-factura-dialog',
@@ -26,8 +30,18 @@ import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dial
 })
 export class FacturaDialogComponent implements OnInit {
 
-    ordenServicioControl = new FormControl('');
-    ordenServicioFiltered: Observable<OrdenServicio[]>;
+    pedidoVentaControl = new FormControl('');
+    pedidoVentaFiltered: Observable<PedidoVenta[]>;
+    pedidosVenta: PedidoVenta[];
+    pedidoVentaSelected: PedidoVenta;
+
+    ordenesServicio: OrdenServicio[] = [];
+    ordenServicioSelected: OrdenServicio[];
+
+    myControlCliente = new FormControl('');
+    optionsCliente: Cliente[] = [];
+    filteredOptionsCliente: Observable<Cliente[]>;
+    clienteSelected: Cliente = null;
 
     item: Factura;
     companyId = 0;
@@ -42,10 +56,6 @@ export class FacturaDialogComponent implements OnInit {
     displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'precio', 'exenta', 'iva5', 'iva10'/*, 'total', 'actions'*/];
     dataSource = new MatTableDataSource<FacturaDetalle>();
     detalles: FacturaDetalle[] = [];
-
-    ordenesServicio: OrdenServicio[];
-    ordenServicioSelected: OrdenServicio;
-
     libroVentaDetalles: LibroVentaDetalle[] = [];
 
     estadoFactura = '';
@@ -58,7 +68,9 @@ export class FacturaDialogComponent implements OnInit {
         private uiService: UIService,
         private facturaService: FacturaService,
         private utils: UtilService,
+        private pedidoVentaService: PedidoVentaService,
         private ordenServicioService: OrdenServicioService,
+        private clienteService: ClienteService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -92,12 +104,13 @@ export class FacturaDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        this.ordenServicioService.getOrdenServicioPendientes().subscribe(data => {
+        this.clienteService.getClientes().subscribe(data => {
             console.log(data);
-            this.ordenesServicio = data;
-            this.ordenServicioFiltered = this.ordenServicioControl.valueChanges.pipe(
+            this.optionsCliente = data;
+
+            this.filteredOptionsCliente = this.myControlCliente.valueChanges.pipe(
                 startWith(''),
-                map(value => this._filterOrdenServicio(value || '')),
+                map(value => this._filterCliente(value || '')),
             );
             this.utils.stopLoading();
         }, error => {
@@ -256,11 +269,16 @@ export class FacturaDialogComponent implements OnInit {
         console.log(dato);
     }
 
-    selectedOrdenServicio($event): void {
+    selectedPedidoVenta($event): void {
         console.log($event.source.value);
-        this.ordenServicioSelected = $event.source.value;
+        this.pedidoVentaSelected = $event.source.value;
+    }
+
+    selectedOrdenServicio($event): void {
+        console.log($event.source._value);
+        this.ordenServicioSelected = $event.source._value;
         this.detalles.length = 0;
-        this.total = this.ordenServicioSelected.total;
+        // this.total = this.ordenServicioSelected.total;
         this.totalIVA = 0;
         this.libroVentaDetalles.length = 0;
         /*this.ordenServicioSelected.notaCreditoVentasCancelacion.forEach( nCCC => {
@@ -285,13 +303,13 @@ export class FacturaDialogComponent implements OnInit {
         );
     }
 
-    displayOrdenServicio(value) {
+    displayPedidoVenta(value: PedidoVenta) {
         if (value) {
             return value.observacion + ' | ' +
                 formatDate(value.fecha, 'dd/MM/yyyy', 'en-US') + ' | ' +
-                value.proveedor.razonSocial + ' | ' +
-                value.usuario.nombre + ' | ' +
-                value.monto.toString();
+                // value.proveedor.razonSocial + ' | ' +
+                value.usuario.nombre;
+                // value.monto.toString();
         }
     }
 
@@ -309,14 +327,14 @@ export class FacturaDialogComponent implements OnInit {
                 5000
             );
             return false;
-        } else if (!this.ordenServicioSelected) {
+        } /*else if (!this.ordenServicioSelected) {
             this.uiService.showSnackbar(
                 'Debe seleccionar una Orden de Servicio.',
                 'Cerrar',
                 5000
             );
             return false;
-        }
+        }*/
         return true;
     }
 
@@ -394,15 +412,58 @@ export class FacturaDialogComponent implements OnInit {
         });
     }
 
-    private _filterOrdenServicio(value: any): OrdenServicio[] {
+    private _filterPedidoVenta(value: any): PedidoVenta[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.ordenesServicio.filter(ordenServicio =>
-                ordenServicio.observacion.toLowerCase().includes(filterValue) ||
-                formatDate(ordenServicio.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue) ||
+            this.pedidosVenta.filter(pedidoVenta =>
+                pedidoVenta.observacion.toLowerCase().includes(filterValue) ||
+                formatDate(pedidoVenta.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue) ||
                 // ordenServicio.proveedor.razonSocial.toLowerCase().includes(filterValue) ||
-                ordenServicio.usuario.nombre.includes(filterValue) ||
-                ordenServicio.total.toString().includes(filterValue))
+                pedidoVenta.usuario.nombre.includes(filterValue))
+                // pedidoVenta.total.toString().includes(filterValue))
         );
+    }
+
+    private _filterCliente(value: any): Cliente[] {
+        const filterValue = value.toString().toLowerCase();
+        return (
+            this.optionsCliente.filter(option => option.ruc.toString().includes(filterValue) ||
+                option.razon.toLowerCase().includes(filterValue))
+        );
+    }
+
+    selectedCliente($event): void {
+        console.log($event.source.value);
+        this.clienteSelected = $event.source.value;
+
+        this.utils.startLoading();
+        this.pedidoVentaService.getPedidosVentaPendientesByCliente(this.clienteSelected.id).subscribe(data => {
+            console.log(data);
+            this.pedidosVenta = data;
+            this.pedidoVentaFiltered = this.pedidoVentaControl.valueChanges.pipe(
+                startWith(''),
+                map(value => this._filterPedidoVenta(value || '')),
+            );
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
+
+        this.utils.startLoading();
+        this.ordenServicioService.getOrdenServicioPendientesByCliente(this.clienteSelected.id).subscribe(data => {
+            console.log(data);
+            this.ordenesServicio = data;
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
+    }
+
+    displayCliente(value: Cliente) {
+        if (value) {
+            return value.ruc.toString() + ' - ' + value.razon;
+        }
     }
 }

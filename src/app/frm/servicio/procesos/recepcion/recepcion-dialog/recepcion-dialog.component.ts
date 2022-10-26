@@ -161,6 +161,7 @@ export class RecepcionDialogComponent implements OnInit {
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
         this.item.recepcionDetalles = this.detalles;
+        this.item.cliente = this.detalles[0].equipo.cliente;
     }
 
     dismiss(result?: any) {

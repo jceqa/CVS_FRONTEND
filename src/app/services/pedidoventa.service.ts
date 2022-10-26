@@ -42,4 +42,8 @@ export class PedidoVentaService {
     public getPedidosVentaPendientes(): Observable<PedidoVenta[]> {
         return this.http.get<PedidoVenta[]>(this.baseUrl + 'pendientes');
     }
+
+    public getPedidosVentaPendientesByCliente(idCliente: number): Observable<PedidoVenta[]> {
+        return this.http.get<PedidoVenta[]>(this.baseUrl + `pendientes/cliente/${idCliente}`);
+    }
 }

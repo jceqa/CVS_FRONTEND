@@ -42,4 +42,8 @@ export class OrdenServicioService {
     public getOrdenServicioPendientes(): Observable<OrdenServicio[]> {
         return this.http.get<OrdenServicio[]>(this.baseUrl + 'pendientes');
     }
+
+    public getOrdenServicioPendientesByCliente(idCliente: number): Observable<OrdenServicio[]> {
+        return this.http.get<OrdenServicio[]>(this.baseUrl + `pendientes/cliente/${idCliente}`);
+    }
 }

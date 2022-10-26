@@ -2,6 +2,7 @@ import {Estado} from './estado';
 import {Usuario} from './usuario';
 import {RecepcionDetalle} from './recepcionDetalle';
 import {Sucursal} from './sucursal';
+import {Cliente} from './cliente';
 
 export class Recepcion {
     id: number;
@@ -12,4 +13,5 @@ export class Recepcion {
     usuario: Usuario;
     observacion: string;
     sucursal: Sucursal;
+    cliente: Cliente;
 }
