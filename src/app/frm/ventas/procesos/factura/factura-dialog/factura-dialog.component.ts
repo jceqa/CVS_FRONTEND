@@ -36,7 +36,7 @@ export class FacturaDialogComponent implements OnInit {
     pedidoVentaSelected: PedidoVenta;
 
     ordenesServicio: OrdenServicio[] = [];
-    ordenServicioSelected: OrdenServicio[];
+    ordenServicioSelected: OrdenServicio[] = [];
 
     myControlCliente = new FormControl('');
     optionsCliente: Cliente[] = [];
@@ -53,7 +53,7 @@ export class FacturaDialogComponent implements OnInit {
     editID: number;
     fecha = new Date();
 
-    displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'precio', 'exenta', 'iva5', 'iva10'/*, 'total', 'actions'*/];
+    displayedColumns: string[] = ['item-servicio', 'cantidad', 'precio', 'exenta', 'iva5', 'iva10'/*, 'total', 'actions'*/];
     dataSource = new MatTableDataSource<FacturaDetalle>();
     detalles: FacturaDetalle[] = [];
     libroVentaDetalles: LibroVentaDetalle[] = [];
@@ -145,12 +145,21 @@ export class FacturaDialogComponent implements OnInit {
         this.item.estado = 'ACTIVO';
         this.item.fecha = this.fecha;
         this.item.monto = this.total;
-        this.item.numeroFactura = this.form.get('numeroFactura').value.toString().toUpperCase().trim();
+        /**
+         * TODO
+         * GENERAR NUMERO FACTURA
+         */
+        // this.item.numeroFactura = this.form.get('numeroFactura').value.toString().toUpperCase().trim();
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.estadoFactura = new Estado(4);
-        // this.item.ordenServicio = this.ordenServicioSelected;
+        /**
+         * TIMBRADO
+         * CONDICION PAGO
+         * CAJA
+         */
+        this.item.pedidoVenta = this.pedidoVentaSelected;
+        this.item.ordenServiciosList = this.ordenServicioSelected;
         this.item.facturaDetalles = this.detalles;
-
         this.item.libroVenta = this.crearLibroVenta();
         /*this.item.notaRemisionList = this.crearNotaRemision();
         this.item.notaDebitoCompraList = this.crearNotaDebito();*/
@@ -271,36 +280,104 @@ export class FacturaDialogComponent implements OnInit {
 
     selectedPedidoVenta($event): void {
         console.log($event.source.value);
+        this.unselectPedidoVenta();
         this.pedidoVentaSelected = $event.source.value;
+
+        this.pedidoVentaSelected.pedidoVentaDetalles.forEach( pVD => {
+            const monto = pVD.articulo.precioVenta * pVD.cantidad;
+            this.detalles.push({
+                id: 0,
+                estado: 'ACTIVO',
+                monto: monto,
+                pedidoVentaDetalle : pVD,
+                ordenServicioDetalle: null
+            });
+            const fact =  ( pVD.articulo.impuesto.porcentajeImpuesto + 100 ) / 100;
+            const montoSinIVA = Math.round(monto / fact);
+            const iva = monto - montoSinIVA;
+            this.totalIVA += iva;
+            this.total += monto;
+            this.libroVentaDetalles.push(new LibroVentaDetalle(montoSinIVA, iva, pVD.articulo.impuesto));
+        });
+        this.dataSource = new MatTableDataSource<FacturaDetalle>(
+            this.detalles
+        );
+    }
+
+    unselectPedidoVenta() {
+        if (this.pedidoVentaSelected) {
+            this.pedidoVentaSelected.pedidoVentaDetalles.forEach( pVD => {
+                const monto = pVD.articulo.precioVenta * pVD.cantidad;
+                const fact =  ( pVD.articulo.impuesto.porcentajeImpuesto + 100 ) / 100;
+                const montoSinIVA = Math.round(monto / fact);
+                const iva = monto - montoSinIVA;
+                this.totalIVA -= iva;
+                this.total -= monto;
+                this.detalles = this.detalles.filter(d => d.pedidoVentaDetalle.id !== pVD.id);
+                this.dataSource = new MatTableDataSource<FacturaDetalle>(
+                    this.detalles
+                );
+                // this.libroVentaDetalles.push(new LibroVentaDetalle(montoSinIVA, iva, pDV.articulo.impuesto));
+            });
+        }
+
     }
 
     selectedOrdenServicio($event): void {
         console.log($event.source._value);
+        this.unselectOrdenServicio($event.source._value);
         this.ordenServicioSelected = $event.source._value;
-        this.detalles.length = 0;
-        // this.total = this.ordenServicioSelected.total;
-        this.totalIVA = 0;
-        this.libroVentaDetalles.length = 0;
-        /*this.ordenServicioSelected.notaCreditoVentasCancelacion.forEach( nCCC => {
-            this.totalNotasCredito += nCCC.monto;
-        });*/
-
-        /*this.ordenServicioSelected.ordenServicioDetalle.forEach(oCD => {
-            this.detalles.push({
-                id: 0,
-                estado: 'ACTIVO',
-                ordenServicioDetalle: oCD
+        this.ordenServicioSelected.forEach(oSS => {
+            oSS.ordenServicioDetalles.forEach( oSD => {
+                this.detalles.push({
+                    id: 0,
+                    estado: 'ACTIVO',
+                    monto: oSD.monto,
+                    pedidoVentaDetalle: null,
+                    ordenServicioDetalle: oSD
+                });
+                const fact =  ( oSD.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.porcentajeImpuesto + 100 ) / 100;
+                const montoSinIVA = Math.round(oSD.monto / fact);
+                const iva = oSD.monto - montoSinIVA;
+                this.totalIVA += iva;
+                this.total += oSD.monto;
+                this.libroVentaDetalles.push(new LibroVentaDetalle(montoSinIVA, iva, oSD.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.porcentajeImpuesto));
             });
-            const fact =  ( oCD.presupuestoServicioDetalle.pedidoServicioDetalle.articulo.impuesto.porcentajeImpuesto + 100 ) / 100;
-            const montoSinIVA = Math.round(oCD.monto / fact);
-            const iva = oCD.monto - montoSinIVA;
-            this.totalIVA += iva;
-            this.libroVentaDetalles.push(new LibroVentaDetalle(montoSinIVA, iva, oCD.presupuestoServicioDetalle.pedidoServicioDetalle.articulo.impuesto));
-        });*/
+        });
 
         this.dataSource = new MatTableDataSource<FacturaDetalle>(
             this.detalles
         );
+    }
+
+    unselectOrdenServicio(newSelected: OrdenServicio[]) {
+        if (this.ordenServicioSelected.length > 0 && this.ordenServicioSelected.length > newSelected.length) {
+            let removed: OrdenServicio;
+            this.ordenServicioSelected.forEach( oSS => {
+                let exists = false;
+                newSelected.forEach( nS => {
+                    if (nS.id === oSS.id) {
+                        exists = true;
+                    }
+                });
+                if (!exists) {
+                    removed = oSS;
+                }
+            });
+            removed.ordenServicioDetalles.forEach( oSD => {
+                const fact =  ( oSD.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.porcentajeImpuesto + 100 ) / 100;
+                const montoSinIVA = Math.round(oSD.monto / fact);
+                const iva = oSD.monto - montoSinIVA;
+                this.totalIVA -= iva;
+                this.total -= oSD.monto;
+                this.detalles = this.detalles.filter(d => d.ordenServicioDetalle.id !== oSD.id);
+                this.dataSource = new MatTableDataSource<FacturaDetalle>(
+                    this.detalles
+                );
+                // this.libroVentaDetalles.push(new LibroVentaDetalle(montoSinIVA, iva, pDV.articulo.impuesto));
+            });
+        }
+
     }
 
     displayPedidoVenta(value: PedidoVenta) {

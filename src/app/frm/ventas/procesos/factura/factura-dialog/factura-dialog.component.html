@@ -38,7 +38,7 @@
         <div>
             <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
-                       placeholder="Orden Compra"
+                       placeholder="Pedido Venta"
                        matInput
                        [formControl]="pedidoVentaControl"
                        [matAutocomplete]="autoPedidoVenta"
@@ -127,27 +127,27 @@
         <h4>Detalles</h4>
         <div align="end">
             <h3>Total: {{ total | myCurrency }}</h3>
-            <h4>Total Notas Crédito : {{ totalNotasCredito | myCurrency }}</h4>
             <h4>Total I.V.A. : {{ totalIVA | myCurrency }}</h4>
         </div>
 
         <div>
             <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
-                <ng-container matColumnDef="codigo">
+                <!--<ng-container matColumnDef="codigo">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Código</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span> {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.codigoGenerico }} </span>
+                        <span> {{ dato.pedidoVentaDetalle.articulo.codigoGenerico }} </span>
                     </mat-cell>
-                </ng-container>
+                </ng-container>-->
 
-                <ng-container matColumnDef="item">
+                <ng-container matColumnDef="item-servicio">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Item</strong></h4>
+                        <h4><strong>Item/Servicio</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.descripcion }}
+                        <span *ngIf="dato.pedidoVentaDetalle">{{ dato.pedidoVentaDetalle.articulo.descripcion }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle">{{ dato.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.diagnostico }}</span>
                     </mat-cell>
                 </ng-container>
 
@@ -156,7 +156,8 @@
                         <h4><strong>Cantidad</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad }}
+                        <span *ngIf="dato.pedidoVentaDetalle">{{ dato.pedidoVentaDetalle.cantidad }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle"> 1 </span>
                     </mat-cell>
                 </ng-container>
 
@@ -165,7 +166,8 @@
                         <h4><strong>Precio</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.monto | myCurrency }}
+                        <span *ngIf="dato.pedidoVentaDetalle">{{ dato.pedidoVentaDetalle.articulo.precioVenta | myCurrency }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle"> {{dato.ordenServicioDetalle.monto | myCurrency}} </span>
                     </mat-cell>
                 </ng-container>
 
@@ -174,9 +176,12 @@
                         <h4><strong>Exenta</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span *ngIf="dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 3">
-                            {{  dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
-                        dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
+                        <span *ngIf="dato.pedidoVentaDetalle && dato.pedidoVentaDetalle.articulo.impuesto.id === 3">
+                            {{  dato.pedidoVentaDetalle.articulo.precioVenta *
+                        dato.pedidoVentaDetalle.cantidad | myCurrency }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle &&
+                        dato.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.id === 3">
+                            {{  dato.ordenServicioDetalle.monto | myCurrency }}</span>
                     </mat-cell>
                 </ng-container>
 
@@ -185,9 +190,12 @@
                         <h4><strong>I.V.A. 5%</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span *ngIf="dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 1">
-                            {{  dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
-                        dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
+                        <span *ngIf="dato.pedidoVentaDetalle && dato.pedidoVentaDetalle.articulo.impuesto.id === 1">
+                            {{  dato.pedidoVentaDetalle.articulo.precioVenta *
+                        dato.pedidoVentaDetalle.cantidad | myCurrency }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle &&
+                        dato.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.id === 1">
+                            {{  dato.ordenServicioDetalle.monto | myCurrency }}</span>
                     </mat-cell>
                 </ng-container>
 
@@ -196,9 +204,12 @@
                         <h4><strong>I.V.A. 10%</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span *ngIf="dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.articulo.impuesto.id === 2">
-                            {{  dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
-                        dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}</span>
+                        <span *ngIf="dato.pedidoVentaDetalle && dato.pedidoVentaDetalle.articulo.impuesto.id === 2">
+                            {{  dato.pedidoVentaDetalle.articulo.precioVenta *
+                        dato.pedidoVentaDetalle.cantidad | myCurrency }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle &&
+                        dato.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.id === 2">
+                            {{  dato.ordenServicioDetalle.monto | myCurrency }}</span>
                     </mat-cell>
                 </ng-container>
 
