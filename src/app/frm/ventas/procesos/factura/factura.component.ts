@@ -100,7 +100,7 @@ export class FacturaComponent implements OnInit {
             // width: '50vw',
             data: {
                 title: 'Anular Factura ',
-                msg: '¿Está seguro que desea anular esta Factura de ?'
+                msg: '¿Está seguro que desea anular esta Factura?'
             }
         });
 

@@ -42,4 +42,8 @@ export class FacturaService {
     public getFacturasProcesadas(): Observable<Factura[]> {
         return this.http.get<Factura[]>(this.baseUrl + 'procesadas');
     }
+
+    public getNumeroActual(): Observable<number> {
+        return this.http.get<number>(this.baseUrl + 'numeroactual');
+    }
 }

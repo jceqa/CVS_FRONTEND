@@ -41,6 +41,7 @@ import {EntidadEmisoraComponent} from './frm/ventas/referenciales/entidademisora
 import {RecepcionComponent} from './frm/servicio/procesos/recepcion/recepcion.component';
 import {OrdenServicioComponent} from './frm/servicio/procesos/orden-servicio/orden-servicio.component';
 import {FacturaComponent} from './frm/ventas/procesos/factura/factura.component';
+import {TimbradoComponent} from './frm/ventas/referenciales/timbrado/timbrado.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -84,6 +85,7 @@ const routes: Routes = [
     { path: 'recepcion', component: RecepcionComponent},
     { path: 'ordenservicio', component: OrdenServicioComponent},
     { path: 'factura', component: FacturaComponent},
+    { path: 'timbrado', component: TimbradoComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

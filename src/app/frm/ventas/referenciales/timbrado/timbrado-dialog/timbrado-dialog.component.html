@@ -1,0 +1,53 @@
+<h4 mat-dialog-title>{{title}} Timbrado</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <div class="mt-2" *ngIf="formType === 1">
+            <mat-form-field class="full-width-field" >
+                <input id="id" formControlName="id" matInput placeholder="Id" readonly />
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="descripcion" type="number" formControlName="numero" required matInput placeholder="Numero"
+                       autocomplete="off"/>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field class="middle-width-field">
+                <mat-label>Inicio Vigencia</mat-label>
+                <input matInput [matDatepicker]="picker1" [min]="minDate" formControlName="inicioVigencia" readonly
+                       [value]="form.get('inicioVigencia').value">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="picker1" [disabled]></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="middle-width-field">
+                <mat-label>Fin Vigencia</mat-label>
+                <input matInput [matDatepicker]="picker2" [min]="minDate" formControlName="finVigencia" readonly>
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon> Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid">
+            <mat-icon>save</mat-icon> Aceptar
+        </button>
+
+    </mat-dialog-actions>
+
+</form>

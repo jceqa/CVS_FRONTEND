@@ -9,7 +9,7 @@ export class LibroVentaDetalle {
     impuesto: Impuesto;
     facturaDetalle: FacturaDetalle;
 
-    constructor(montoNeto, montoImpuesto, impuesto) {
+    constructor(montoNeto: number, montoImpuesto: number, impuesto: Impuesto) {
         this.id = 0;
         this.estado = 'ACTIVO';
         this.montoNeto = montoNeto;

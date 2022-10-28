@@ -108,6 +108,8 @@ import {
 } from './frm/servicio/procesos/orden-servicio/orden-servicio-dialog/orden-servicio-dialog.component';
 import {FacturaComponent} from './frm/ventas/procesos/factura/factura.component';
 import {FacturaDialogComponent} from './frm/ventas/procesos/factura/factura-dialog/factura-dialog.component';
+import {TimbradoComponent} from './frm/ventas/referenciales/timbrado/timbrado.component';
+import {TimbradoDialogComponent} from './frm/ventas/referenciales/timbrado/timbrado-dialog/timbrado-dialog.component';
 
 @NgModule({
     declarations: [
@@ -191,6 +193,8 @@ import {FacturaDialogComponent} from './frm/ventas/procesos/factura/factura-dial
         OrdenServicioDialogComponent,
         FacturaComponent,
         FacturaDialogComponent,
+        TimbradoComponent,
+        TimbradoDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

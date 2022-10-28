@@ -6,7 +6,7 @@
 
         <div style="display: flex">
             <div class="third-width-field">
-                <span>Nro Factura: {{ item.id }}</span>
+                <span>Nro Factura: {{ numeroFactura }}</span>
             </div>
             &nbsp;
             <div class="third-width-field">
@@ -16,6 +16,26 @@
             <div class="third-width-field">
                 <span>Estado: {{ estadoFactura }}</span>
             </div>
+        </div>
+
+        <div>
+            <mat-form-field class="middle-width-field">
+                <mat-label>Sucursal</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listCajas()" required>
+                    <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
+                        {{ sucursal.descripcion }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="middle-width-field">
+                <mat-label>Caja</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="caja" (selectionChange)="cajaSelected()" required>
+                    <mat-option *ngFor="let caja of cajas" [value]="caja">
+                        {{ caja.descripcion }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
 
         <div *ngIf="this.formType !== 1">
@@ -34,6 +54,15 @@
                 </mat-autocomplete>
             </mat-form-field>
         </div>
+
+        <div *ngIf="this.formType === 1">
+            <br/>
+            <span *ngIf="item.pedidoVenta">Cliente: {{ item.pedidoVenta.cliente.ruc }} |
+                {{ item.pedidoVenta.cliente.razon }}</span>
+            <span *ngIf="!item.pedidoVenta">Cliente: {{ item.ordenServiciosList[0].presupuestoServicio.diagnostico.recepcion.cliente.ruc }} |
+                {{ item.ordenServiciosList[0].presupuestoServicio.diagnostico.recepcion.cliente.razon }}</span>
+        </div>
+        <br/>
 
         <div>
             <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
@@ -90,28 +119,28 @@
             </mat-form-field>
         </div>-->
 
-        <!--<div *ngIf="ordenServicioSelected">
+        <div *ngIf="formType === 1">
             <div>
-                <span>Condición Pago: {{ ordenServicioSelected.condicionPago.descripcion }}</span>
+                <span>Condición Pago: {{ item.condicionPago.descripcion }}</span>
             </div>
             <br/>
-            <div style="display: flex" *ngIf="this.ordenServicioSelected.condicionPago.id === 2">
+            <div style="display: flex" *ngIf="this.item.condicionPago.id === 2">
                 <div class="third-width-field">
-                    <span>Cantidad Cuotas: {{ ordenServicioSelected.cantidadCuota }}</span>
+                    <span>Cantidad Cuotas: {{ this.item.cantidadCuota }}</span>
                 </div>
                 &nbsp;
                 <div class="third-width-field">
-                    <span>Intervalo (días): {{ ordenCompraSelected.intervalo }}</span>
+                    <span>Intervalo (días): {{ this.item.intervalo }}</span>
                 </div>
                 &nbsp;
                 <div class="third-width-field">
-                    <span>Monto Cuota: {{ ordenCompraSelected.montoCuota | myCurrency }}</span>
+                    <span>Monto Cuota: {{ this.item.montoCuota | myCurrency }}</span>
                 </div>
             </div>
             <br/>
         </div>
 
-        <div *ngIf="ordenCompraSelected">
+        <!--<div *ngIf="ordenCompraSelected">
             <h4>Notas de Crédito</h4>
             <div *ngFor="let notaCreditoCompra of ordenCompraSelected.notaCreditoComprasCancelacion">
                 <span>Nota de Crédito: {{ notaCreditoCompra.observacion }} | {{ notaCreditoCompra.fecha | date: 'dd/MM/yyyy' }} |
@@ -121,6 +150,44 @@
                 <br/>
             </div>
         </div>-->
+
+        <div *ngIf="this.formType !== 1">
+            <mat-form-field class="middle-width-field">
+                <mat-label>Condición Pago</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="condicionPago" required>
+                    <mat-option *ngFor="let condicionPago of condicionesPago" [value]="condicionPago" (onSelectionChange)="tipoPagoSelected($event)">
+                        {{condicionPago.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="condicionPagoType === 2">
+            <mat-form-field class="third-width-field">
+                <mat-label>Cantidad Cuotas</mat-label>
+                <mat-select formControlName="cantidadCuota">
+                    <mat-option *ngFor="let cantidadCuota of cantidadCuotas" [value]="cantidadCuota"
+                                (onSelectionChange)="cantidadCuotaSelected($event)">
+                        {{cantidadCuota}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="third-width-field">
+                <mat-label>Intervalo</mat-label>
+                <mat-select formControlName="intervalo">
+                    <mat-option *ngFor="let intervalo of intervalos" [value]="intervalo">
+                        {{intervalo}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="third-width-field">
+                <mat-label>Monto Cuota</mat-label>
+                <input readonly id="montoCuota" formControlName="montoCuota" matInput placeholder="Monto Cuota"
+                       autocomplete="off" myCurrencyFormatter (change)="setNumber($event, 'montoCuota')"/>
+            </mat-form-field>
+        </div>
 
         <mat-divider></mat-divider>
 

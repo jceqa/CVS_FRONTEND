@@ -35,6 +35,13 @@
             </mat-form-field>
         </div>
 
+        <div *ngIf="this.formType === 1">
+            <br/>
+            <span >Cliente: {{ item.cliente.ruc }} |
+                {{ item.cliente.razon }}</span>
+        </div>
+        <br/>
+
         <div>
             <mat-form-field class="middle-width-field">
                 <mat-label>Sucursal</mat-label>
@@ -53,7 +60,6 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-
         </div>
 
         <div class="mt-2">

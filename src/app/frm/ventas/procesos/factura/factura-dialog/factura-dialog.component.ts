@@ -22,6 +22,14 @@ import {Cliente} from '../../../../../models/cliente';
 import {ClienteService} from '../../../../../services/cliente.service';
 import {PedidoVenta} from '../../../../../models/pedidoVenta';
 import {PedidoVentaService} from '../../../../../services/pedidoventa.service';
+import {Timbrado} from '../../../../../models/timbrado';
+import {TimbradoService} from '../../../../../services/timbrado.service';
+import {SucursalService} from '../../../../../services/sucursal.service';
+import {CajaService} from '../../../../../services/caja.service';
+import {Sucursal} from '../../../../../models/sucursal';
+import {Caja} from '../../../../../models/caja';
+import {CondicionPagoService} from '../../../../../services/condicionpago.service';
+import {CondicionPago} from '../../../../../models/condicionPago';
 
 @Component({
   selector: 'app-factura-dialog',
@@ -61,7 +69,17 @@ export class FacturaDialogComponent implements OnInit {
     estadoFactura = '';
     total = 0;
     totalIVA = 0;
-    totalNotasCredito = 0;
+
+    timbrado: Timbrado;
+    sucursales: Sucursal[] = [];
+    cajas: Caja[] = [];
+    condicionesPago: CondicionPago[] = [];
+    condicionPagoType = 1;
+    cantidadCuotas = [3, 6, 12, 18, 24];
+    intervalos = [7, 15, 30, 60, 90];
+
+    numeroFactura = '012-';
+    numeroActual;
 
     constructor(
         private dialogRef: MatDialogRef<FacturaDialogComponent>,
@@ -71,6 +89,10 @@ export class FacturaDialogComponent implements OnInit {
         private pedidoVentaService: PedidoVentaService,
         private ordenServicioService: OrdenServicioService,
         private clienteService: ClienteService,
+        private timbradoService: TimbradoService,
+        private sucursalService: SucursalService,
+        private cajaService: CajaService,
+        private condicionPagoService: CondicionPagoService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -82,7 +104,12 @@ export class FacturaDialogComponent implements OnInit {
         this.form = new FormGroup({
             id: new FormControl('', []),
             observacion: new FormControl('', [Validators.required]),
-            numeroFactura: new FormControl('', [Validators.required]),
+            sucursal: new FormControl('', [Validators.required]),
+            caja: new FormControl('', [Validators.required]),
+            condicionPago: new FormControl('', [Validators.required]),
+            cantidadCuota: new FormControl(''),
+            intervalo: new FormControl(''),
+            montoCuota: new FormControl(0),
         });
 
         if (this.data.item.id) {
@@ -91,11 +118,8 @@ export class FacturaDialogComponent implements OnInit {
             this.editID = this.data.item.id;
             this.formType = FormType.EDIT;
             this.setForm(this.item);
+            this.listCajas();
             this.total = this.item.monto;
-            /*this.item.ordenServicio.notaCreditoComprasCancelacion.forEach( nCCC => {
-                this.totalNotasCredito += nCCC.monto;
-            });*/
-            // this.totalNotasCredito = this.item.ordenCompra.notaCreditoComprasCancelacion
             this.totalIVA = this.item.libroVenta.montoIVA10 + this.item.libroVenta.montoIVA5;
         } else {
             // Si no existe es una nueva lista
@@ -117,6 +141,48 @@ export class FacturaDialogComponent implements OnInit {
             console.log(error);
             this.utils.stopLoading();
         });
+
+        this.utils.startLoading();
+        this.timbradoService.getTimbrados().subscribe(data => {
+            console.log(data);
+            this.timbrado = data[0];
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
+
+        this.utils.startLoading();
+        this.sucursalService.getSucursalByUserId(this.utils.getUserId()).subscribe(data => {
+            console.log(data);
+            this.sucursales = data;
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
+
+        this.utils.startLoading();
+        this.condicionPagoService.getCondicionPagos().subscribe(data => {
+            console.log(data);
+            this.condicionesPago = data;
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
+
+        this.utils.startLoading();
+        this.facturaService.getNumeroActual().subscribe(
+            number => {
+                console.log(number);
+                this.numeroActual = number;
+                this.utils.stopLoading();
+            }, error => {
+                console.log(error);
+                this.utils.stopLoading();
+            }
+        );
     }
 
     setForm(item: Factura) {
@@ -125,10 +191,13 @@ export class FacturaDialogComponent implements OnInit {
             this.form.patchValue({
                 id: item.id,
                 observacion: item.observacion,
-                numeroFactura: item.numeroFactura
+                sucursal: item.caja.sucursal,
+                caja: item.caja
             });
+            this.numeroFactura = item.numeroFactura,
             this.form.get('observacion').disable();
-            this.form.get('numeroFactura').disable();
+            this.form.get('sucursal').disable();
+            this.form.get('caja').disable();
             // this.ordenServicioSelected = this.item.ordenServiciosList;
             this.fecha = item.fecha;
             this.detalles = item.facturaDetalles;
@@ -145,18 +214,12 @@ export class FacturaDialogComponent implements OnInit {
         this.item.estado = 'ACTIVO';
         this.item.fecha = this.fecha;
         this.item.monto = this.total;
-        /**
-         * TODO
-         * GENERAR NUMERO FACTURA
-         */
-        // this.item.numeroFactura = this.form.get('numeroFactura').value.toString().toUpperCase().trim();
+        this.item.numeroFactura = this.numeroFactura;
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.estadoFactura = new Estado(4);
-        /**
-         * TIMBRADO
-         * CONDICION PAGO
-         * CAJA
-         */
+        this.item.timbrado = this.timbrado;
+        this.item.caja = this.form.get('caja').value;
+        this.item.condicionPago = this.form.get('condicionPago').value;
         this.item.pedidoVenta = this.pedidoVentaSelected;
         this.item.ordenServiciosList = this.ordenServicioSelected;
         this.item.facturaDetalles = this.detalles;
@@ -165,6 +228,68 @@ export class FacturaDialogComponent implements OnInit {
         this.item.notaDebitoCompraList = this.crearNotaDebito();*/
 
         // this.item.notaCreditoComprasCancelacion = this.notasCreditoSelected;
+    }
+
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
+    }
+
+    listCajas() {
+        this.form.get('caja').setValue('');
+        this.utils.startLoading();
+        this.cajaService.listCajasBySucursal([this.form.get('sucursal').value]).subscribe(
+            data => {
+                console.log(data);
+                this.cajas = data;
+                this.utils.stopLoading();
+                if (this.formType === FormType.EDIT) {
+                    this.form.get('caja').setValue(this.item.caja);
+                }
+                this.utils.stopLoading();
+            }, error => {
+                console.log(error);
+                this.utils.stopLoading();
+            }
+        );
+    }
+
+    cajaSelected(): void {
+        const nroCaja = this.form.get('caja').value.numero;
+        switch (nroCaja.toString().length) {
+            case 1 :
+                this.numeroFactura += '00' + nroCaja.toString();
+                break;
+            case 2 :
+                this.numeroFactura += '0' + nroCaja.toString();
+                break;
+            default :
+                this.numeroFactura += nroCaja.toString();
+                break;
+        }
+
+        this.numeroFactura += '-';
+
+        const cantCeros = 7 - this.numeroActual.toString().length;
+        for (let i = 0; i < cantCeros; i++) {
+            this.numeroFactura += '0';
+        }
+
+        this.numeroFactura += this.numeroActual.toString();
+    }
+
+    tipoPagoSelected($event): void {
+        if ($event.isUserInput) {
+            console.log($event.source.value);
+            this.condicionPagoType = $event.source.value.id;
+        }
+    }
+
+    cantidadCuotaSelected($event): void {
+        if ($event.isUserInput) {
+            console.log($event.source.value);
+            const montoCuota = Math.round(this.total / this.utils.getNumber($event.source.value));
+            this.form.get('montoCuota').setValue(montoCuota);
+        }
     }
 
     crearLibroVenta(): LibroVenta {
@@ -302,6 +427,9 @@ export class FacturaDialogComponent implements OnInit {
         this.dataSource = new MatTableDataSource<FacturaDetalle>(
             this.detalles
         );
+
+        const montoCuota = Math.round(this.total / this.utils.getNumber(this.form.get('cantidadCuota').value));
+        this.form.get('montoCuota').setValue(montoCuota);
     }
 
     unselectPedidoVenta() {
@@ -341,13 +469,16 @@ export class FacturaDialogComponent implements OnInit {
                 const iva = oSD.monto - montoSinIVA;
                 this.totalIVA += iva;
                 this.total += oSD.monto;
-                this.libroVentaDetalles.push(new LibroVentaDetalle(montoSinIVA, iva, oSD.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.porcentajeImpuesto));
+                this.libroVentaDetalles.push(new LibroVentaDetalle(montoSinIVA, iva, oSD.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto));
             });
         });
 
         this.dataSource = new MatTableDataSource<FacturaDetalle>(
             this.detalles
         );
+
+        const montoCuota = Math.round(this.total / this.utils.getNumber(this.form.get('cantidadCuota').value));
+        this.form.get('montoCuota').setValue(montoCuota);
     }
 
     unselectOrdenServicio(newSelected: OrdenServicio[]) {
@@ -404,14 +535,21 @@ export class FacturaDialogComponent implements OnInit {
                 5000
             );
             return false;
-        } /*else if (!this.ordenServicioSelected) {
+        } else if (!this.clienteSelected) {
             this.uiService.showSnackbar(
-                'Debe seleccionar una Orden de Servicio.',
+                'Debe seleccionar un cliente.',
                 'Cerrar',
                 5000
             );
             return false;
-        }*/
+        } else if (!this.pedidoVentaSelected && this.ordenServicioSelected.length <= 0) {
+            this.uiService.showSnackbar(
+                'Debe seleccionar una Orden de Servicio o un Pedido de Venta.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        }
         return true;
     }
 
@@ -477,7 +615,7 @@ export class FacturaDialogComponent implements OnInit {
             // width: '50vw',
             data: {
                 title: 'Anular Factura ',
-                msg: '¿Está seguro que desea anular esta Factura de ?'
+                msg: '¿Está seguro que desea anular esta Factura?'
             }
         });
 
