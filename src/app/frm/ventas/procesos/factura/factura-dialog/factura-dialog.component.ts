@@ -30,6 +30,7 @@ import {Sucursal} from '../../../../../models/sucursal';
 import {Caja} from '../../../../../models/caja';
 import {CondicionPagoService} from '../../../../../services/condicionpago.service';
 import {CondicionPago} from '../../../../../models/condicionPago';
+import {CuentaACobrar} from '../../../../../models/cuentaACobrar';
 
 @Component({
   selector: 'app-factura-dialog',
@@ -215,18 +216,19 @@ export class FacturaDialogComponent implements OnInit {
         this.item.fecha = this.fecha;
         this.item.monto = this.total;
         this.item.numeroFactura = this.numeroFactura;
-        this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.estadoFactura = new Estado(4);
         this.item.timbrado = this.timbrado;
-        this.item.caja = this.form.get('caja').value;
         this.item.condicionPago = this.form.get('condicionPago').value;
         this.item.pedidoVenta = this.pedidoVentaSelected;
         this.item.ordenServiciosList = this.ordenServicioSelected;
-        this.item.facturaDetalles = this.detalles;
+        this.item.caja = this.form.get('caja').value;
         this.item.libroVenta = this.crearLibroVenta();
+        this.item.facturaDetalles = this.detalles;
+        this.item.cuentaACobrarList = this.crearCuentaACobrar();
         /*this.item.notaRemisionList = this.crearNotaRemision();
         this.item.notaDebitoCompraList = this.crearNotaDebito();*/
 
+        this.item.usuario = new Usuario(this.utils.getUserId());
         // this.item.notaCreditoComprasCancelacion = this.notasCreditoSelected;
     }
 
@@ -388,6 +390,25 @@ export class FacturaDialogComponent implements OnInit {
         }
         return notaDebitoCompraList;
     }*/
+
+    crearCuentaACobrar(): CuentaACobrar[] {
+        const cuentaACobrarList: CuentaACobrar[] = [];
+        const cantidadCuotas = this.form.get('cantidadCuota').value ? this.form.get('cantidadCuota').value : 1;
+        for (let i = 0; i < cantidadCuotas; i++) {
+             cuentaACobrarList.push({
+                id: 0,
+                monto: cantidadCuotas === 1 ? this.total : this.utils.getNumber(this.form.get('montoCuota').value),
+                fechaVencimiento: cantidadCuotas === 1 ? new Date() : this.calcularVencimiento(i + 1, this.form.get('intervalo').value),
+                cantidadCuotas: cantidadCuotas,
+                numeroCuota: i + 1,
+                estado: 'ACTIVO',
+                estadoCuentaACobrar: new Estado(1),
+                cobro: null
+            });
+        }
+
+        return cuentaACobrarList;
+    }
 
     calcularVencimiento(numeroCuota: number, plazo: number): Date {
         const fecha = new Date();

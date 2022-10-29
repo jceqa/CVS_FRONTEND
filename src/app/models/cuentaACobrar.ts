@@ -11,4 +11,3 @@ export class CuentaACobrar {
     estadoCuentaACobrar: Estado;
     cobro: Cobro;
 }
-

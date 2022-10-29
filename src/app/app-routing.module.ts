@@ -42,6 +42,8 @@ import {RecepcionComponent} from './frm/servicio/procesos/recepcion/recepcion.co
 import {OrdenServicioComponent} from './frm/servicio/procesos/orden-servicio/orden-servicio.component';
 import {FacturaComponent} from './frm/ventas/procesos/factura/factura.component';
 import {TimbradoComponent} from './frm/ventas/referenciales/timbrado/timbrado.component';
+import {LibroVentaComponent} from './frm/ventas/procesos/libro-venta/libro-venta.component';
+import {CuentaACobrarComponent} from './frm/ventas/procesos/cuenta-a-cobrar/cuenta-a-cobrar.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -85,6 +87,9 @@ const routes: Routes = [
     { path: 'recepcion', component: RecepcionComponent},
     { path: 'ordenservicio', component: OrdenServicioComponent},
     { path: 'factura', component: FacturaComponent},
+    { path: 'timbrado', component: TimbradoComponent},
+    { path: 'libroventa', component: LibroVentaComponent},
+    { path: 'cuentaacobrar', component: CuentaACobrarComponent},
     { path: 'timbrado', component: TimbradoComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
