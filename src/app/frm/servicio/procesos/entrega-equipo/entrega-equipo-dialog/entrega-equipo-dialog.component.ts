@@ -1,40 +1,36 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {PresupuestoCompra} from '../../../../../models/presupuestoCompra';
+import {EntregaEquipo} from '../../../../../models/entregaEquipo';
 import {FormType} from '../../../../../models/enum';
 import {MatTableDataSource} from '@angular/material/table';
-import {PresupuestoServicioDetalle} from '../../../../../models/presupuestoServicioDetalle';
+import {EntregaEquipoDetalle} from '../../../../../models/entregaEquipoDetalle';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
-import {PresupuestoCompraService} from '../../../../../services/presupuestocompra.service';
+import {EntregaEquipoService} from '../../../../../services/entregaequipo.service';
 import {UtilService} from '../../../../../services/util.service';
 import {map, startWith} from 'rxjs/operators';
 import {Estado} from '../../../../../models/estado';
 import {Usuario} from '../../../../../models/usuario';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
-import {RecepcionService} from '../../../../../services/recepcion.service';
-import {Recepcion} from '../../../../../models/recepcion';
+import {FacturaService} from '../../../../../services/factura.service';
+import {Factura} from '../../../../../models/factura';
 import {formatDate} from '@angular/common';
-import {Deposito} from '../../../../../models/deposito';
-import {DepositoService} from '../../../../../services/deposito.service';
-import {Sucursal} from '../../../../../models/sucursal';
-import {SucursalService} from '../../../../../services/sucursal.service';
+import {Proveedor} from '../../../../../models/proveedor';
+import {ProveedorService} from '../../../../../services/proveedor.service';
 
 @Component({
-    selector: 'app-orden-servicio-dialog',
-    templateUrl: './orden-servicio-dialog.component.html',
-    styleUrls: ['./orden-servicio-dialog.component.scss']
-})export class OrdenServicioDialogComponent implements OnInit {
+    selector: 'app-presupuesto-compra-dialog',
+    templateUrl: './presupuesto-compra-dialog.component.html',
+    styleUrls: ['./presupuesto-compra-dialog.component.scss']
+})
+export class EntregaEquipoDialogComponent implements OnInit {
 
-    recepcionesControl = new FormControl('');
-    depositoControl = new FormControl('');
-    sucursalControl = new FormControl('');
-    recepcionesFiltered: Observable<Recepcion[]>;
-    depositoFiltered: Observable<Deposito[]>;
-    sucursalFiltered: Observable<Sucursal[]>;
+    facturasControl = new FormControl('');
 
-    item: OrdenSevicio;
+    facturasFiltered: Observable<Factura[]>;
+
+    item: EntregaEquipo;
     companyId = 0;
     form: FormGroup;
 
@@ -45,27 +41,21 @@ import {SucursalService} from '../../../../../services/sucursal.service';
     fecha = new Date();
 
     displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'precio', 'total'/*, 'actions'*/];
-    dataSource = new MatTableDataSource<OrdenServicioDetalle>();
-    detalles: OrdenServicioDetalle[] = [];
+    dataSource = new MatTableDataSource<EntregaEquipoDetalle>();
+    detalles: EntregaEquipoDetalle[] = [];
 
-    recepciones: Recepcion[] = [];
-    depositos: Deposito[] = [];
-    sucursal: Sucursal[] = [];
-    recepcionSelected: Recepcion;
-    depositoSelected: Deposito;
-    sucursalSelected: Sucursal;
+    facturas: Factura[] = [];
+    facturaSelected: Factura;
 
-    estadoOrdenServicio = '';
+    estadoEntregaEquipo = '';
     total = 0;
 
     constructor(
-        private dialogRef: MatDialogRef<OrdenServicioDialogComponent>,
+        private dialogRef: MatDialogRef<EntregaEquipoDialogComponent>,
         private uiService: UIService,
-        private presupuestoCompraService: PresupuestoCompraService,
+        private entregaEquipoService: EntregaEquipoService,
         private utils: UtilService,
-        private recepcionService: RecepcionService,
-        private depositoService: DepositoService,
-        private sucursalService: DepositoService,
+        private facturaService: FacturaService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -96,11 +86,10 @@ import {SucursalService} from '../../../../../services/sucursal.service';
         }
 
         this.utils.startLoading();
-        this.recepcionService.getRecepcionPendientes().subscribe(data => {
+        this.facturaService.getFacturasPendientes().subscribe(data => {
             console.log(data);
-            this.recepciones = data;
-
-            this.recepcionesFiltered = this.recepcionControl.valueChanges.pipe(
+            this.facturas = data;
+            this.facturasFiltered = this.facturasControl.valueChanges.pipe(
                 startWith(''),
                 map(value => this._filterPedido(value || '')),
             );
@@ -109,39 +98,9 @@ import {SucursalService} from '../../../../../services/sucursal.service';
             console.log(error);
             this.utils.stopLoading();
         });
-
-        this.utils.startLoading();
-        this.depositoService.getDepositos().subscribe(data => {
-            console.log(data);
-            this.depositos = data;
-
-            this.depositoFiltered = this.depositoControl.valueChanges.pipe(
-                startWith(''),
-                map(value => this._filterDeposito(value || '')),
-            );
-            this.utils.stopLoading();
-        }, error => {
-            console.log(error);
-            this.utils.stopLoading();
-        });
-
-        this.utils.startLoading();
-        this.sucursalService.getSucursales().subscribe(data => {
-            console.log(data);
-            this.sucursales = data;
-
-            this.sucursalesFiltered = this.sucursalControl.valueChanges.pipe(
-                startWith(''),
-                map(value => this._filterSucursal(value || '')),
-            );
-            this.utils.stopLoading();
-        }, error => {
-            console.log(error);
-            this.utils.stopLoading();
-        });
     }
 
-    setForm(item: OrdenServicio) {
+    setForm(item: EntregaEquipo) {
         console.log(item);
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({
@@ -149,9 +108,9 @@ import {SucursalService} from '../../../../../services/sucursal.service';
                 observacion: item.observacion,
             });
             this.fecha = item.fecha;
-            this.detalles = item.presupuestoCompraDetalles;
-            this.estadoOrdenServicio = item.estadoOrdenServicio.descripcion;
-            this.dataSource = new MatTableDataSource<OrdenServicioDetalle>(
+            this.detalles = item.entregaEquipoDetalles;
+            this.estadoEntregaEquipo = item.estadoEntregaEquipo.descripcion;
+            this.dataSource = new MatTableDataSource<EntregaEquipoDetalle>(
                 this.detalles
             );
 
@@ -161,15 +120,13 @@ import {SucursalService} from '../../../../../services/sucursal.service';
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
-        this.item.estadoOrdenServicio = new Estado(1);
+        this.item.estadoEntregaEquipo = new Estado(1);
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
-        this.item.ordenServicioDetalles = this.detalles;
+        this.item.entregaEquipoDetalles = this.detalles;
         this.item.total = this.total;
-        this.item.recepcion = this.recepcionSelected;
-        this.item.deposito = this.depositoSelected;
-        this.item.sucursal = this.sucursalSelected;
+        this.item.factura = this.fcaturaSelected;
     }
 
     dismiss(result?: any) {
@@ -180,38 +137,33 @@ import {SucursalService} from '../../../../../services/sucursal.service';
         console.log(dato);
     }
 
-    selectedRecepcion($event): void {
+    selectedPedido($event): void {
         console.log($event.source.value);
-        this.recepcionSelected = $event.source.value;
+        this.pedidoSelected = $event.source.value;
 
         this.detalles.length = 0;
 
-        this.recepcionSelected.RecepcionDetalle.forEach(dPC => {
+        this.pedidoSelected.detalleFacturas.forEach(dPC => {
             this.detalles.push(
                 {
                     estado: 'ACTIVO',
                     id: 0,
                     monto: 0,
-                    recepcionDetalle: dPC
+                    facturaDetalle: dPC
                 });
         });
 
-        this.dataSource = new MatTableDataSource<OrdenServicioDetalle>(
+        this.dataSource = new MatTableDataSource<EntregaEquipoDetalle>(
             this.detalles
         );
     }
 
-    selectedDeposito($event): void {
+    selectedProveedor($event): void {
         console.log($event.source.value);
-        this.depositoSelected = $event.source.value;
+        this.proveedorSelected = $event.source.value;
     }
 
-    selectedSucursal($event): void {
-        console.log($event.source.value);
-        this.sucursalSelected = $event.source.value;
-    }
-
-    displayRecepcion(value) {
+    displayPedido(value) {
         if (value) {
             return value.observacion + ' | '
                 + formatDate(value.fecha, 'dd/MM/yyyy', 'en-US') + ' | '
@@ -220,22 +172,16 @@ import {SucursalService} from '../../../../../services/sucursal.service';
         }
     }
 
-    displayDeposito(value) {
+    displayProveedor(value) {
         if (value) {
-            return value.id + ' | ' + value.descripcion;
-        }
-    }
-
-    displaySucursal(value) {
-        if (value) {
-            return value.id + ' | ' + value.descripcion;
+            return value.ruc + ' | ' + value.razonSocial;
         }
     }
 
     setNumber($event, index) {
-        this.total -= this.detalles[index].monto * this.detalles[index].pedidoCompraDetalle.cantidad;
+        this.total -= this.detalles[index].monto * this.detalles[index].facturaDetalle.cantidad;
         this.detalles[index].monto = this.utils.getNumber($event.target.value);
-        this.total += this.detalles[index].monto * this.detalles[index].pedidoCompraDetalle.cantidad;
+        this.total += this.detalles[index].monto * this.detalles[index].facturaDetalle.cantidad;
     }
 
     onKeydown($event, index) {
@@ -265,9 +211,16 @@ import {SucursalService} from '../../../../../services/sucursal.service';
                 5000
             );
             return false;
-        } else if (!this.recepcionSelected) {
+        } else if (!this.pedidoSelected) {
             this.uiService.showSnackbar(
                 'Debe seleccionar un Pedido de Compra.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        } else if (!this.proveedorSelected) {
+            this.uiService.showSnackbar(
+                'Debe seleccionar un Proveedor.',
                 'Cerrar',
                 5000
             );
@@ -275,7 +228,7 @@ import {SucursalService} from '../../../../../services/sucursal.service';
         }
 
         let haveZero = false;
-        this.item.ordenServicioDetalles.forEach(pcd => {
+        this.item.entregaEquipoDetalles.forEach( pcd => {
             if (pcd.monto === 0) {
                 haveZero = true;
             }
@@ -298,12 +251,12 @@ import {SucursalService} from '../../../../../services/sucursal.service';
         this.item.id = 0;
         if (this.validarCampos()) {
             this.utils.startLoading();
-            this.presupuestoCompraService.guardarOrdenServicio(this.item)
+            this.entregaEquipoService.guardarEntregaEquipo(this.item)
                 .subscribe(data => {
                         console.log(data);
                         this.utils.stopLoading();
                         this.uiService.showSnackbar(
-                            'Agregado exitosamente.',
+                            'Argregado exitosamente.',
                             'Cerrar',
                             3000
                         );
@@ -332,7 +285,7 @@ import {SucursalService} from '../../../../../services/sucursal.service';
 
         // Llama al servicio http que actualiza el objeto.
         if (this.utils.tieneLetras(this.item.observacion)) {
-            this.ordenServicioService.editarOrdenServicio(this.item).subscribe(data => {
+            this.entregaEquipoService.editarEntregaEquipo(this.item).subscribe(data => {
                 console.log(data);
                 this.uiService.showSnackbar(
                     'Modificado exitosamente.',
@@ -359,9 +312,9 @@ import {SucursalService} from '../../../../../services/sucursal.service';
         }
     }
 
-    anular(dato: OrdenServicio): void {
+    anular(dato: EntregaEquipo): void {
         this.utils.startLoading();
-        this.ordenServicioService.anularOrdenServicio(dato).subscribe(
+        this.entregaEquipoService.anularEntregaEquipo(dato).subscribe(
             data => {
                 console.log(data);
                 this.utils.stopLoading();
@@ -388,8 +341,8 @@ import {SucursalService} from '../../../../../services/sucursal.service';
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Orden de Servicio',
-                msg: '¿Está seguro que desea anular esta Orden de Servicio?'
+                title: 'Anular Presupuesto Compra',
+                msg: '¿Está seguro que desea anular este Presupuesto de Compra?'
             }
         });
 
@@ -401,15 +354,23 @@ import {SucursalService} from '../../../../../services/sucursal.service';
         });
     }
 
-    private _filterRecepcion(value: any): Recepcion[] {
+    private _filterPedido(value: any): Factura[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.recepciones.filter(recepcion =>
-                recepcion.observacion.toLowerCase().includes(filterValue) ||
-                recepcion.usuario.nombre.toLowerCase().includes(filterValue) ||
-                recepcion.deposito.descripcion.toLowerCase().includes(filterValue) ||
-                formatDate(recepcion.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
+            this.pedidos.filter(pedido =>
+                pedido.observacion.toLowerCase().includes(filterValue) ||
+                pedido.usuario.nombre.toLowerCase().includes(filterValue) ||
+                pedido.deposito.descripcion.toLowerCase().includes(filterValue) ||
+                formatDate(pedido.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
+        );
+    }
+
+    private _filterProveedor(value: any): Proveedor[] {
+        const filterValue = value.toString().toLowerCase();
+        return (
+            this.proveedores.filter(proveedor =>
+                proveedor.ruc.toLowerCase().includes(filterValue) ||
+                proveedor.razonSocial.toLowerCase().includes(filterValue))
         );
     }
 }
-
