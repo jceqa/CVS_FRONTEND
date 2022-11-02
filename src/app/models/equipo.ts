@@ -1,4 +1,5 @@
 import { Marca } from './marca';
+import {Cliente} from './cliente';
 
 export class Equipo {
     id: number;
@@ -6,4 +7,5 @@ export class Equipo {
     serie: string;
     modelo: string;
     marca: Marca;
+    cliente: Cliente;
 }

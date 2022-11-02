@@ -194,7 +194,7 @@ export class PedidoCompraDialogComponent implements OnInit {
         this.articuloSelected = $event.source.value;
     }
 
-    display(value) {
+    display(value: Articulo) {
         if (value) {
             return value.codigoGenerico.toString() + ' - ' + value.descripcion;
         }
@@ -282,7 +282,7 @@ export class PedidoCompraDialogComponent implements OnInit {
                             console.log(data);
                             this.utils.stopLoading();
                             this.uiService.showSnackbar(
-                                'Argregado exitosamente.',
+                                'Agregado exitosamente.',
                                 'Cerrar',
                                 3000
                             );

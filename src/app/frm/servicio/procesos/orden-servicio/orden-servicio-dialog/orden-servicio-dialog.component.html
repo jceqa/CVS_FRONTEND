@@ -13,36 +13,64 @@
             </div>
             &nbsp;
             <div class="third-width-field">
-                <span>Estado: {{ estadoPresupuesto }}</span>
+                <span>Estado: {{ estadoOrdenServicio }}</span>
             </div>
         </div>
 
         <div>
             <div *ngIf="this.formType === 1">
                 <br/>
-                <span >Presupuesto de Servicio: {{ item.presupuestoServicio.observacion }} | {{ item.presupuestoServicio.fecha | date: 'dd/MM/yyyy' }} |
-                    {{ item.presupuestoServicio.usuario.nombre }} </span>
+                <span >
+                    Presupuesto de Servicio: {{ item.presupuestoServicio.observacion }} |
+                    {{ item.presupuestoServicio.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ item.presupuestoServicio.usuario.nombre }} |
+                    {{ item.presupuestoServicio.diagnostico.recepcion.sucursal.descripcion }} |
+                    {{ item.presupuestoServicio.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon}} |
+                    {{ item.presupuestoServicio.total | myCurrency }}
+                </span>
+                <br/>
             </div>
 
-            <mat-form-field class="full-with-field" *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Presupuesto de Servicio"
                        matInput
-                       [formControl]=presupuestoServiciosControl"
-                       [matAutocomplete]="autoPresupuestoServicio"
+                       [formControl]="presupuestoControl"
+                       [matAutocomplete]="autoPresupuesto"
                        class="text">
-                <mat-autocomplete #autoPedido="matAutocomplete" [displayWith]="displayPresupuestoSErvicio">
-                    <mat-option *ngFor="let pedido of presupuestoServiciosFiltered | async" [value]="presupuestoServicio"
-                                (onSelectionChange)="selectedPresupuestoServicios($event)">
-                        {{ presupuestoServicios.observacion }} | {{ presupuestoServicios.fecha | date: 'dd/MM/yyyy' }} |
-                        {{ presupuestoServicios.usuario.nombre }}
+                <mat-autocomplete #autoPresupuesto="matAutocomplete" [displayWith]="displayPresupuesto">
+                    <mat-option *ngFor="let presupuesto of presupuestoFiltered | async" [value]="presupuesto"
+                                (onSelectionChange)="selectedPresupuesto($event)">
+                        {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
+                        {{ presupuesto.usuario.nombre }} | {{ presupuesto.diagnostico.recepcion.sucursal.descripcion }} |
+                        {{ presupuesto.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon}} |
+                        {{ presupuesto.total | myCurrency }}
                     </mat-option>
                 </mat-autocomplete>
+            </mat-form-field>
+
+        </div>
+        <br/>
+        <div>
+            <mat-form-field class="third-width-field">
+                <mat-label>Fecha Entrega</mat-label>
+                <input matInput [matDatepicker]="picker1" [min]="minDate" formControlName="fechaEntrega" readonly>
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="picker1" [disabled] *ngIf="this.formType !== 1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="third-width-field">
+                <mat-label>Vencimiento Garantía</mat-label>
+                <input matInput [matDatepicker]="picker2" [min]="minDate" formControlName="vencimientoGarantia" readonly>
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="picker2" *ngIf="this.formType !== 1"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-with-field">
+            <mat-form-field class="full-width-field">
                 <input id="descripcion" formControlName="observacion" required matInput placeholder="Observación"
                        autocomplete="off" class="text"/>
             </mat-form-field>
@@ -57,68 +85,42 @@
 
         <div>
             <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
-                <ng-container matColumnDef="codigo">
+                <ng-container matColumnDef="equipo">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Código</strong></h4>
+                        <h4><strong>Equipo</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span> {{ dato.presupuestoServicioDetalle.servicio.codigoGenerico }} </span>
+                        <span>
+                            {{ dato.presupuestoServicioDetalle.diagnosticoDetalle.recepcionDetalle.equipo.descripcion }} -
+                            {{ dato.presupuestoServicioDetalle.diagnosticoDetalle.recepcionDetalle.equipo.serie }}
+                        </span>
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="item">
+                <ng-container matColumnDef="diagnostico">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Item</strong></h4>
+                        <h4><strong>Diagnostico</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.presupuestoServicioDetalle.servicio.descripcion }}
+                        {{ dato.presupuestoServicioDetalle.diagnosticoDetalle.diagnostico }}
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="codigo">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Código</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span> {{ dato.presupuestoServicioDetalle.articulo.codigoGenerico }} </span>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="item">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Item</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.presupuestoServicioDetalle.articulo.descripcion }}
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="cantidad">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Cantidad</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.presupuestoServicioDetalle.cantidad }}
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="precio">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Precio</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato;let index = index" class="texto-tabla">
-                        <input id="monto" matInput [value]="dato.monto"
-                               autocomplete="off" myCurrencyFormatter (blur)="setNumber($event, index)"
-                               (keydown)="onKeydown($event, index)"/>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="total">
+                <ng-container matColumnDef="subTotal">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Sub Total</strong></h4>
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.monto * dato.presupuestoServicioDetalle.cantidad | myCurrency }}
+                    <mat-cell *matCellDef="let dato;let index = index" class="texto-tabla">
+                        {{ dato.monto | myCurrency}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Servicios</mat-header-cell>
+                    <mat-cell *matCellDef="let dato, let i = index">
+                        <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(i)">
+                            <mat-icon aria-label="Ver detalle">view_list</mat-icon>
+                        </button>
                     </mat-cell>
                 </ng-container>
 

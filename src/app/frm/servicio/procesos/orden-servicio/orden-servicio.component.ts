@@ -16,7 +16,7 @@ import {OrdenServicioService} from '../../../../services/ordenservicio.service';
 })
 export class OrdenServicioComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'proveedor', 'estado', 'total', 'actions'];
+    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'cliente', 'estado', 'total', 'actions'];
     dataSource = new MatTableDataSource<OrdenServicio>();
 
     @ViewChild(MatPaginator)

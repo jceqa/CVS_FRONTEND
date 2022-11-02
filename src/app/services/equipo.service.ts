@@ -34,4 +34,8 @@ export class EquipoService {
     public eliminarEquipo(idEquipo: number): Observable<any> {
         return this.http.delete<any>(this.baseUrl + `${idEquipo}`);
     }
+
+    public listEquiposByCliente(idCliente: number): Observable<any> {
+        return this.http.get<any>(this.baseUrl + `cliente/${idCliente}`);
+    }
 }

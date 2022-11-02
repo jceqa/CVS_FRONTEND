@@ -35,7 +35,8 @@
                     <mat-option *ngFor="let recepcion of recepcionFiltered | async" [value]="recepcion"
                                 (onSelectionChange)="selectedRecepcion($event)">
                         {{ recepcion.observacion }} | {{ recepcion.fecha | date: 'dd/MM/yyyy' }} |
-                        {{ recepcion.usuario.nombre }} | {{ recepcion.sucursal.descripcion }} | {{ recepcion.cliente.razon }}
+                        {{ recepcion.usuario.nombre }}  | {{ recepcion.recepcionDetalles[0].equipo.cliente.razon}} |
+                        {{ recepcion.sucursal.descripcion }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
@@ -108,7 +109,7 @@
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef>Servicios</mat-header-cell>
                     <mat-cell *matCellDef="let dato, let i = index">
-                        <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(dato, i)">
+                        <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(i)">
                             <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                         </button>
                     </mat-cell>

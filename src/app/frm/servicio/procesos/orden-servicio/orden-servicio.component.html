@@ -63,12 +63,12 @@
                         </mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="proveedor">
+                    <ng-container matColumnDef="cliente">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Proveedor</strong></h4>
+                            <h4><strong>Cliente</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.proveedor.razonSocial }}
+                            {{ dato.presupuestoServicio.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon }}
                         </mat-cell>
                     </ng-container>
 
@@ -77,7 +77,7 @@
                             <h4><strong>Estado</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.estadoPresupuestoCompra.descripcion }}
+                            {{ dato.estadoOrdenServicio.descripcion }}
                         </mat-cell>
                     </ng-container>
 
@@ -98,7 +98,7 @@
                                 <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                             </button>
 
-                            <button [disabled]="dato.estadoPresupuestoCompra.id !== 1" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                            <button [disabled]="dato.estadoOrdenServicio.id !== 1" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
                                 <mat-icon aria-label="Anular item">block</mat-icon>
                             </button>
 

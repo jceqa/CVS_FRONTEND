@@ -48,12 +48,12 @@ export class CajaService {
         return this.http.delete<any>(this.baseUrl + `${idCaja}`);
     }
 
-    public listCajasBySucursal(idSucursal: Sucursal[]): Observable<Caja[]> {
+    public listCajasBySucursal(sucursales: Sucursal[]): Observable<Caja[]> {
         let url = this.baseUrl + `sucursal/?`;
 
         let firstTime = true;
 
-        idSucursal.forEach(s => {
+        sucursales.forEach(s => {
             if (firstTime) {
                 url += `id=${s.id}`;
                 firstTime = false;

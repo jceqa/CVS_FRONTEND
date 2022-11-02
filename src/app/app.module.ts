@@ -103,7 +103,21 @@ import {
     DiagnosticoEquipoDialogComponent
 } from './frm/servicio/procesos/diagnostico/diagnostico-dialog/diagnostico-equipo-dialog/diagnostico-equipo-dialog.component';
 import {OrdenServicioComponent} from './frm/servicio/procesos/orden-servicio/orden-servicio.component';
-
+import {
+    OrdenServicioDialogComponent
+} from './frm/servicio/procesos/orden-servicio/orden-servicio-dialog/orden-servicio-dialog.component';
+import {FacturaComponent} from './frm/ventas/procesos/factura/factura.component';
+import {FacturaDialogComponent} from './frm/ventas/procesos/factura/factura-dialog/factura-dialog.component';
+import {TimbradoComponent} from './frm/ventas/referenciales/timbrado/timbrado.component';
+import {TimbradoDialogComponent} from './frm/ventas/referenciales/timbrado/timbrado-dialog/timbrado-dialog.component';
+import {LibroVentaComponent} from './frm/ventas/procesos/libro-venta/libro-venta.component';
+import {
+    LibroVentaDialogComponent
+} from './frm/ventas/procesos/libro-venta/libro-venta-dialog/libro-venta-dialog.component';
+import {CuentaACobrarComponent} from './frm/ventas/procesos/cuenta-a-cobrar/cuenta-a-cobrar.component';
+import {
+    CuentaACobrarDialogComponent
+} from './frm/ventas/procesos/cuenta-a-cobrar/cuenta-a-cobrar-dialog/cuenta-a-cobrar-dialog.component';
 
 @NgModule({
     declarations: [
@@ -184,7 +198,15 @@ import {OrdenServicioComponent} from './frm/servicio/procesos/orden-servicio/ord
         PagoComponent,
         StockComponent,
         OrdenServicioComponent,
-        OrdenCompraDialogComponent,
+        OrdenServicioDialogComponent,
+        FacturaComponent,
+        FacturaDialogComponent,
+        TimbradoComponent,
+        TimbradoDialogComponent,
+        LibroVentaComponent,
+        LibroVentaDialogComponent,
+        CuentaACobrarComponent,
+        CuentaACobrarDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

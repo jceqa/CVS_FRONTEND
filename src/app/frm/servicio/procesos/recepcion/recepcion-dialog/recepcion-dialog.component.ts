@@ -30,8 +30,10 @@ export class RecepcionDialogComponent implements OnInit {
     myControl = new FormControl('');
     clienteControl = new FormControl('');
     options: Equipo[] = [];
+    clientes: Cliente[] = [];
     filteredOptions: Observable<Equipo[]>;
     clienteFiltered: Observable<Cliente[]>;
+    clienteSelected: Cliente;
 
     item: Recepcion;
     companyId = 0;
@@ -45,7 +47,6 @@ export class RecepcionDialogComponent implements OnInit {
     fecha = new Date();
 
     equipoSelected: Equipo = null;
-    clientes: Cliente[] = [];
     sucursales: Sucursal[] = [];
 
     displayedColumns: string[] = ['codigo', 'descripcion', 'marca', 'modelo', 'serie',  'actions'];
@@ -53,7 +54,6 @@ export class RecepcionDialogComponent implements OnInit {
     detalles: RecepcionDetalle[] = [];
 
     estadoRecepcion = '';
-    clienteSelected: Cliente;
 
     constructor(
         private dialogRef: MatDialogRef<RecepcionDialogComponent>,
@@ -93,21 +93,6 @@ export class RecepcionDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        this.equipoService.listEquipos().subscribe(data => {
-            console.log(data);
-            this.options = data;
-
-            this.filteredOptions = this.myControl.valueChanges.pipe(
-                startWith(''),
-                map(value => this._filter(value || '')),
-            );
-            this.utils.stopLoading();
-        }, error => {
-            console.log(error);
-            this.utils.stopLoading();
-        });
-
-        this.utils.startLoading();
         this.clienteService.getClientes().subscribe(data => {
             console.log(data);
             this.clientes = data;
@@ -135,8 +120,9 @@ export class RecepcionDialogComponent implements OnInit {
     private _filter(value: any): Equipo[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.options.filter(option => option.modelo.toString().includes(filterValue) ||
-                option.serie.toString().includes(filterValue) ||
+            this.options.filter(option => option.modelo.toLowerCase().includes(filterValue) ||
+                option.serie.toLowerCase().includes(filterValue) ||
+                option.marca.descripcion.toLowerCase().includes(filterValue) ||
                 option.descripcion.toLowerCase().includes(filterValue))
         );
     }
@@ -152,8 +138,7 @@ export class RecepcionDialogComponent implements OnInit {
             this.form.patchValue({
                 id: item.id,
                 observacion: item.observacion,
-                sucursal: item.sucursal,
-                cliente: item.cliente,
+                sucursal: item.sucursal
             });
             this.fecha = item.fecha;
             this.detalles = item.recepcionDetalles;
@@ -170,13 +155,13 @@ export class RecepcionDialogComponent implements OnInit {
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
         this.item.observacion = this.form.get('observacion').value.toString().toUpperCase().trim();
-        this.item.cliente = this.clienteSelected;
         this.item.sucursal = this.form.get('sucursal').value;
         this.item.estadoRecepcion = new Estado(1);
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
         this.item.recepcionDetalles = this.detalles;
+        this.item.cliente = this.detalles[0].equipo.cliente;
     }
 
     dismiss(result?: any) {
@@ -388,6 +373,21 @@ export class RecepcionDialogComponent implements OnInit {
     selectedCliente($event): void {
         console.log($event.source.value);
         this.clienteSelected = $event.source.value;
+
+        this.utils.startLoading();
+        this.equipoService.listEquiposByCliente(this.clienteSelected.id).subscribe(data => {
+            console.log(data);
+            this.options = data;
+
+            this.filteredOptions = this.myControl.valueChanges.pipe(
+                startWith(''),
+                map(value => this._filter(value || '')),
+            );
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
     }
 
     private _filterCliente(value: any): Cliente[] {

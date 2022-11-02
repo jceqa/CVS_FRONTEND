@@ -6,7 +6,6 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog
 import {map, startWith} from 'rxjs/operators';
 import {formatDate} from '@angular/common';
 import {Diagnostico} from '../../../../../models/diagnostico';
-import {Servicio} from '../../../../../models/servicio';
 import {PresupuestoServicio} from '../../../../../models/presupuestoServicio';
 import {FormType} from '../../../../../models/enum';
 import {PresupuestoServicioDetalle} from '../../../../../models/presupuestoServicioDetalle';
@@ -19,6 +18,9 @@ import {PromoDescuentoService} from '../../../../../services/promodescuento.serv
 import {Usuario} from '../../../../../models/usuario';
 import {Estado} from '../../../../../models/estado';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
+import {
+    DiagnosticoEquipoDialogComponent
+} from '../../diagnostico/diagnostico-dialog/diagnostico-equipo-dialog/diagnostico-equipo-dialog.component';
 
 
 @Component({
@@ -43,7 +45,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
     editID: number;
     fecha = new Date();
 
-    displayedColumns: string[] = ['equipo', 'diagnostico', 'servicio', 'precio'];
+    displayedColumns: string[] = ['equipo', 'diagnostico', 'subTotal', 'actions'];
     dataSource = new MatTableDataSource<PresupuestoServicioDetalle>();
     detalles: PresupuestoServicioDetalle[] = [];
 
@@ -51,10 +53,12 @@ export class PresupuestoServicioDialogComponent implements OnInit {
     promoDescuento: PromoDescuento[] = [];
     diagnosticoSelected: Diagnostico;
     promoDescuentoSelected: PromoDescuento;
-    servicioSelected: Servicio;
 
     estadoPresupuestoServicio = '';
     total = 0;
+    totalDescuento = 0;
+    totalConDescuento = 0;
+    subTotales: number[] = [];
 
     constructor(
         private dialogRef: MatDialogRef<PresupuestoServicioDialogComponent>,
@@ -93,10 +97,6 @@ export class PresupuestoServicioDialogComponent implements OnInit {
         }
 
         this.utils.startLoading();
-        /**
-         * TODO
-         * diagnostico pendiente
-         */
         this.diagnosticoService.getDiagnosticosPendientes().subscribe(data => {
             console.log(data);
             this.diagnosticos = data;
@@ -140,8 +140,22 @@ export class PresupuestoServicioDialogComponent implements OnInit {
             this.dataSource = new MatTableDataSource<PresupuestoServicioDetalle>(
                 this.detalles
             );
-
         }
+
+        this.detalles.forEach(d => {
+            let subTotal = 0;
+            d.diagnosticoDetalle.servicios.forEach(s => {
+                subTotal += s.monto;
+                if (s.articulo) {
+                    subTotal += s.articulo.precioVenta;
+                }
+            });
+            this.subTotales.push(subTotal);
+            this.total += subTotal;
+        });
+
+        this.totalDescuento = this.total * (item.promoDescuento.porcentaje / 100);
+        this.totalConDescuento = this.total - this.totalDescuento;
     }
 
     setAtributes(): void {
@@ -179,18 +193,33 @@ export class PresupuestoServicioDialogComponent implements OnInit {
                     id: 0,
                     monto: 0,
                     diagnosticoDetalle: dPC,
-                    servicio: null
                 });
         });
 
         this.dataSource = new MatTableDataSource<PresupuestoServicioDetalle>(
             this.detalles
         );
+
+        this.detalles.forEach(d => {
+            let subTotal = 0;
+            d.diagnosticoDetalle.servicios.forEach(s => {
+                subTotal += s.monto;
+                if (s.articulo) {
+                    subTotal += s.articulo.precioVenta;
+                }
+            });
+            d.monto = subTotal;
+            this.subTotales.push(subTotal);
+            this.total += subTotal;
+        });
     }
 
     selectedPromoDescuento($event): void {
         console.log($event.source.value);
         this.promoDescuentoSelected = $event.source.value;
+
+        this.totalDescuento = this.total * (this.promoDescuentoSelected.porcentaje / 100);
+        this.totalConDescuento = this.total - this.totalDescuento;
     }
 
     displayDiagnostico(value: Diagnostico) {
@@ -198,7 +227,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
             return value.observacion + ' | '
                 + formatDate(value.fecha, 'dd/MM/yyyy', 'en-US') + ' | '
                 + value.usuario.nombre + ' | '
-                + value.recepcion.cliente.razon + ' | '
+                + value.recepcion.recepcionDetalles[0].equipo.cliente.razon + ' | '
                 + value.recepcion.sucursal.descripcion;
         }
     }
@@ -208,25 +237,6 @@ export class PresupuestoServicioDialogComponent implements OnInit {
             return value.id + ' | '
                 + value.descripcion + ' | '
                 + value.porcentaje.toString() + '%';
-        }
-    }
-
-    displayServicio(value: Servicio) {
-        if (value) {
-            return '';
-            // return value.descripcion;
-        }
-    }
-
-    setNumber($event, index) {
-        // this.total -= this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
-        this.detalles[index].monto = this.utils.getNumber($event.target.value);
-        // this.total += this.detalles[index].monto * this.detalles[index].diagnosticoDetalle.recepcionDetalle.cantidad;
-    }
-
-    onKeydown($event, index) {
-        if ($event.key === 'Enter') {
-            this.setNumber($event, index);
         }
     }
 
@@ -258,25 +268,9 @@ export class PresupuestoServicioDialogComponent implements OnInit {
                 5000
             );
             return false;
-        } else if (!this.servicioSelected) {
+        } else if (!this.promoDescuentoSelected) {
             this.uiService.showSnackbar(
-                'Debe seleccionar un Servicio.',
-                'Cerrar',
-                5000
-            );
-            return false;
-        }
-
-        let haveZero = false;
-        this.item.presupuestoServicioDetalles.forEach(pcd => {
-            if (pcd.monto === 0) {
-                haveZero = true;
-            }
-        });
-
-        if (haveZero) {
-            this.uiService.showSnackbar(
-                'Debe especificar un Precio diferente de 0 para cada Servicio.',
+                'Debe seleccionar una Promo/Descuento.',
                 'Cerrar',
                 5000
             );
@@ -401,7 +395,7 @@ export class PresupuestoServicioDialogComponent implements OnInit {
                 diagnostico.observacion.toLowerCase().includes(filterValue) ||
                 diagnostico.usuario.nombre.toLowerCase().includes(filterValue) ||
                 diagnostico.recepcion.sucursal.descripcion.toLowerCase().includes(filterValue) ||
-                diagnostico.recepcion.cliente.razon.toLowerCase().includes(filterValue) ||
+                diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon.toLowerCase().includes(filterValue) ||
                 formatDate(diagnostico.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
         );
     }
@@ -414,5 +408,25 @@ export class PresupuestoServicioDialogComponent implements OnInit {
                 promoDescuento.porcentaje.toString().toLowerCase().includes(filterValue) ||
                 promoDescuento.descripcion.toLowerCase().includes(filterValue))
         );
+    }
+
+    openDialog(index): void {
+        const dialogRef = this.dialog.open(DiagnosticoEquipoDialogComponent, {
+            minWidth: '70%',
+            // maxWidth: '600px',
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                type: FormType.EDIT,
+                item: this.detalles[index].diagnosticoDetalle.servicios
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                console.log(result);
+                // this.detalles[index].servicios = result;
+            }
+        });
     }
 }

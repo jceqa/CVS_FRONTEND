@@ -44,7 +44,7 @@ export class PresupuestoServicioService {
         return this.http.get<PresupuestoServicio[]>(this.baseUrl + 'pendientes');
     }
 
-    public getPresupuestosServicioPendientesByProveedor(idProveedor: number): Observable<PresupuestoServicio[]> {
+    /*public getPresupuestosServicioPendientesByProveedor(idProveedor: number): Observable<PresupuestoServicio[]> {
         return this.http.get<PresupuestoServicio[]>(this.baseUrl + `pendientes/${idProveedor}`);
-    }
+    }*/
 }

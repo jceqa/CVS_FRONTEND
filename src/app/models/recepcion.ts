@@ -1,8 +1,8 @@
 import {Estado} from './estado';
 import {Usuario} from './usuario';
-import {Cliente} from './cliente';
 import {RecepcionDetalle} from './recepcionDetalle';
 import {Sucursal} from './sucursal';
+import {Cliente} from './cliente';
 
 export class Recepcion {
     id: number;
@@ -11,7 +11,7 @@ export class Recepcion {
     estadoRecepcion: Estado;
     recepcionDetalles: RecepcionDetalle[];
     usuario: Usuario;
-    cliente: Cliente;
     observacion: string;
     sucursal: Sucursal;
+    cliente: Cliente;
 }

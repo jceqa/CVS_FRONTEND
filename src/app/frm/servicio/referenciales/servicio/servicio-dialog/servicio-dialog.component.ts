@@ -8,6 +8,10 @@ import { ServicioService } from '../../../../../services/servicio.service';
 import {UtilService} from '../../../../../services/util.service';
 import {Impuesto} from '../../../../../models/impuesto';
 import {ImpuestoService} from '../../../../../services/impuesto.service';
+import {Articulo} from '../../../../../models/articulo';
+import {Observable} from 'rxjs';
+import {ArticuloService} from '../../../../../services/articulo.service';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
     selector: 'app-equipo-dialog',
@@ -26,11 +30,17 @@ export class ServicioDialogComponent implements OnInit {
     editID: number;
     impuestos: Impuesto[] = [];
 
+    myControl = new FormControl('');
+    options: Articulo[] = [];
+    filteredOptions: Observable<Articulo[]>;
+    articuloSelected: Articulo = null;
+
     constructor(
         // private store: Store<fromRoot.State>,
         private dialogRef: MatDialogRef<ServicioDialogComponent>,
         private uiService: UIService,
         private servicioService: ServicioService,
+        private articuloService: ArticuloService,
         private utils: UtilService,
         private impuestoService: ImpuestoService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -76,6 +86,21 @@ export class ServicioDialogComponent implements OnInit {
                 );
             }
         );
+
+        this.utils.startLoading();
+        this.articuloService.listArticulosByTipoArticulo(2).subscribe(data => {
+            console.log(data);
+            this.options = data;
+
+            this.filteredOptions = this.myControl.valueChanges.pipe(
+                startWith(''),
+                map(value => this._filter(value || '')),
+            );
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
     }
 
     // Rellena los campos del formulario con los valores dados
@@ -88,6 +113,8 @@ export class ServicioDialogComponent implements OnInit {
                 monto: item.monto,
                 impuesto: item.impuesto
             });
+            this.articuloSelected = item.articulo;
+            this.myControl.setValue(this.articuloSelected);
         }
     }
 
@@ -97,6 +124,7 @@ export class ServicioDialogComponent implements OnInit {
         this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
         this.item.monto = this.utils.getNumber(this.form.get('monto').value);
         this.item.impuesto = this.form.get('impuesto').value;
+        this.item.articulo = this.articuloSelected;
     }
 
     dismiss(result?: any) {
@@ -109,6 +137,17 @@ export class ServicioDialogComponent implements OnInit {
 
     compareFunction(o1: any, o2: any) {
         return (o1 && o2 && o1.id === o2.id);
+    }
+
+    selected($event): void {
+        console.log($event.source.value);
+        this.articuloSelected = $event.source.value;
+    }
+
+    display(value: Articulo) {
+        if (value) {
+            return value.codigoGenerico.toString() + ' - ' + value.descripcion;
+        }
     }
 
 
@@ -180,5 +219,13 @@ export class ServicioDialogComponent implements OnInit {
 
     setNumber($event, type) {
         this.form.get(type).setValue($event.target.value);
+    }
+
+    private _filter(value: any): Articulo[] {
+        const filterValue = value.toString().toLowerCase();
+        return (
+            this.options.filter(option => option.codigoGenerico.toString().includes(filterValue) ||
+                option.descripcion.toLowerCase().includes(filterValue))
+        );
     }
 }

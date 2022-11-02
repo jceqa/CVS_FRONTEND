@@ -1,0 +1,320 @@
+<h4 mat-dialog-title>{{ title }} Factura</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <div style="display: flex">
+            <div class="third-width-field">
+                <span>Nro Factura: {{ numeroFactura }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Estado: {{ estadoFactura }}</span>
+            </div>
+        </div>
+
+        <div>
+            <mat-form-field class="middle-width-field">
+                <mat-label>Sucursal</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="sucursal" (selectionChange)="listCajas()" required>
+                    <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
+                        {{ sucursal.descripcion }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="middle-width-field">
+                <mat-label>Caja</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="caja" (selectionChange)="cajaSelected()" required>
+                    <mat-option *ngFor="let caja of cajas" [value]="caja">
+                        {{ caja.descripcion }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="this.formType !== 1">
+            <mat-form-field class="full-width-field">
+                <input type="text"
+                       placeholder="Cliente"
+                       matInput
+                       [formControl]="myControlCliente"
+                       [matAutocomplete]="autoCliente"
+                       class="text">
+                <mat-autocomplete #autoCliente="matAutocomplete" [displayWith]="displayCliente">
+                    <mat-option *ngFor="let option of filteredOptionsCliente | async" [value]="option"
+                                (onSelectionChange)="selectedCliente($event)">
+                        {{option.ruc}} | {{option.razon}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="this.formType === 1">
+            <br/>
+            <span *ngIf="item.pedidoVenta">Cliente: {{ item.pedidoVenta.cliente.ruc }} |
+                {{ item.pedidoVenta.cliente.razon }}</span>
+            <span *ngIf="!item.pedidoVenta">Cliente: {{ item.ordenServiciosList[0].presupuestoServicio.diagnostico.recepcion.cliente.ruc }} |
+                {{ item.ordenServiciosList[0].presupuestoServicio.diagnostico.recepcion.cliente.razon }}</span>
+        </div>
+        <br/>
+
+        <div>
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
+                <input type="text"
+                       placeholder="Pedido Venta"
+                       matInput
+                       [formControl]="pedidoVentaControl"
+                       [matAutocomplete]="autoPedidoVenta"
+                       class="text">
+                <mat-autocomplete #autoPedidoVenta="matAutocomplete" [displayWith]="displayPedidoVenta">
+                    <mat-option *ngFor="let pedidoVenta of pedidoVentaFiltered | async" [value]="pedidoVenta"
+                                (onSelectionChange)="selectedPedidoVenta($event)">
+                        {{ pedidoVenta.observacion }} | {{ pedidoVenta.fecha | date: 'dd/MM/yyyy' }} |
+                        {{ pedidoVenta.usuario.nombre }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <!--<div *ngIf="this.formType === 1" >
+            <h4>Ordenes Servicios</h4>
+            <div *ngFor="let presupuesto of item.ordenServiciosList">
+                <span>Presupuesto de Compra: {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ presupuesto.usuario.nombre }} |  {{ presupuesto.proveedor.razonSocial }} |
+                    {{ presupuesto.total | myCurrency}}</span>
+                <br/>
+                <br/>
+            </div>
+        </div>-->
+
+        <div *ngIf="this.formType !== 1 && ordenesServicio.length > 0">
+            <h4>Ordenes Servicios</h4>
+            <mat-selection-list #shoes (selectionChange)="selectedOrdenServicio($event)">
+                <mat-list-option *ngFor="let ordenServicio of ordenesServicio" [value]="ordenServicio">
+                    {{ ordenServicio.observacion }} | {{ ordenServicio.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ ordenServicio.usuario.nombre }} | {{ ordenServicio.total | myCurrency }}
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="descripcion" formControlName="observacion" required matInput
+                       placeholder="Observación"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <!--<div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="numero_factura" formControlName="numeroFactura" required matInput
+                       placeholder="Número Factura"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>-->
+
+        <div *ngIf="formType === 1">
+            <div>
+                <span>Condición Pago: {{ item.condicionPago.descripcion }}</span>
+            </div>
+            <br/>
+            <div style="display: flex" *ngIf="this.item.condicionPago.id === 2">
+                <div class="third-width-field">
+                    <span>Cantidad Cuotas: {{ this.item.cantidadCuota }}</span>
+                </div>
+                &nbsp;
+                <div class="third-width-field">
+                    <span>Intervalo (días): {{ this.item.intervalo }}</span>
+                </div>
+                &nbsp;
+                <div class="third-width-field">
+                    <span>Monto Cuota: {{ this.item.montoCuota | myCurrency }}</span>
+                </div>
+            </div>
+            <br/>
+        </div>
+
+        <!--<div *ngIf="ordenCompraSelected">
+            <h4>Notas de Crédito</h4>
+            <div *ngFor="let notaCreditoCompra of ordenCompraSelected.notaCreditoComprasCancelacion">
+                <span>Nota de Crédito: {{ notaCreditoCompra.observacion }} | {{ notaCreditoCompra.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ notaCreditoCompra.usuario.nombre }} |  {{ notaCreditoCompra.proveedor.razonSocial }} |
+                    {{ notaCreditoCompra.monto | myCurrency }}</span>
+                <br/>
+                <br/>
+            </div>
+        </div>-->
+
+        <div *ngIf="this.formType !== 1">
+            <mat-form-field class="middle-width-field">
+                <mat-label>Condición Pago</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="condicionPago" required>
+                    <mat-option *ngFor="let condicionPago of condicionesPago" [value]="condicionPago" (onSelectionChange)="tipoPagoSelected($event)">
+                        {{condicionPago.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="condicionPagoType === 2">
+            <mat-form-field class="third-width-field">
+                <mat-label>Cantidad Cuotas</mat-label>
+                <mat-select formControlName="cantidadCuota">
+                    <mat-option *ngFor="let cantidadCuota of cantidadCuotas" [value]="cantidadCuota"
+                                (onSelectionChange)="cantidadCuotaSelected($event)">
+                        {{cantidadCuota}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="third-width-field">
+                <mat-label>Intervalo</mat-label>
+                <mat-select formControlName="intervalo">
+                    <mat-option *ngFor="let intervalo of intervalos" [value]="intervalo">
+                        {{intervalo}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="third-width-field">
+                <mat-label>Monto Cuota</mat-label>
+                <input readonly id="montoCuota" formControlName="montoCuota" matInput placeholder="Monto Cuota"
+                       autocomplete="off" myCurrencyFormatter (change)="setNumber($event, 'montoCuota')"/>
+            </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h4>Detalles</h4>
+        <div align="end">
+            <h3>Total: {{ total | myCurrency }}</h3>
+            <h4>Total I.V.A. : {{ totalIVA | myCurrency }}</h4>
+        </div>
+
+        <div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <!--<ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Código</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span> {{ dato.pedidoVentaDetalle.articulo.codigoGenerico }} </span>
+                    </mat-cell>
+                </ng-container>-->
+
+                <ng-container matColumnDef="item-servicio">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Item/Servicio</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.pedidoVentaDetalle">{{ dato.pedidoVentaDetalle.articulo.descripcion }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle">{{ dato.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.diagnostico }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cantidad">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Cantidad</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.pedidoVentaDetalle">{{ dato.pedidoVentaDetalle.cantidad }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle"> 1 </span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="precio">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Precio</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.pedidoVentaDetalle">{{ dato.pedidoVentaDetalle.articulo.precioVenta | myCurrency }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle"> {{dato.ordenServicioDetalle.monto | myCurrency}} </span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="exenta">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Exenta</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.pedidoVentaDetalle && dato.pedidoVentaDetalle.articulo.impuesto.id === 3">
+                            {{  dato.pedidoVentaDetalle.articulo.precioVenta *
+                        dato.pedidoVentaDetalle.cantidad | myCurrency }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle &&
+                        dato.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.id === 3">
+                            {{  dato.ordenServicioDetalle.monto | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="iva5">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>I.V.A. 5%</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.pedidoVentaDetalle && dato.pedidoVentaDetalle.articulo.impuesto.id === 1">
+                            {{  dato.pedidoVentaDetalle.articulo.precioVenta *
+                        dato.pedidoVentaDetalle.cantidad | myCurrency }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle &&
+                        dato.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.id === 1">
+                            {{  dato.ordenServicioDetalle.monto | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="iva10">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>I.V.A. 10%</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.pedidoVentaDetalle && dato.pedidoVentaDetalle.articulo.impuesto.id === 2">
+                            {{  dato.pedidoVentaDetalle.articulo.precioVenta *
+                        dato.pedidoVentaDetalle.cantidad | myCurrency }}</span>
+                        <span *ngIf="dato.ordenServicioDetalle &&
+                        dato.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.servicios[0].impuesto.id === 2">
+                            {{  dato.ordenServicioDetalle.monto | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <!--<ng-container matColumnDef="total">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Sub Total</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.ordenCompraDetalle.presupuestoCompraDetalle.monto *
+                    dato.ordenCompraDetalle.presupuestoCompraDetalle.pedidoCompraDetalle.cantidad | myCurrency }}
+                    </mat-cell>
+                </ng-container>-->
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid" *ngIf="this.formType !== 1">
+            <mat-icon>save</mat-icon>
+            Aceptar
+        </button>
+
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoFactura.id === 2"
+                *ngIf="this.formType === 1">
+            <mat-icon>block</mat-icon>
+            Anular
+        </button>
+
+    </mat-dialog-actions>
+
+</form>
