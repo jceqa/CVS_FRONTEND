@@ -118,6 +118,20 @@ import {CuentaACobrarComponent} from './frm/ventas/procesos/cuenta-a-cobrar/cuen
 import {
     CuentaACobrarDialogComponent
 } from './frm/ventas/procesos/cuenta-a-cobrar/cuenta-a-cobrar-dialog/cuenta-a-cobrar-dialog.component';
+import {FormularioComponent} from './frm/administracion/referenciales/formulario/formulario.component';
+import {
+    FormularioDialogComponent
+} from './frm/administracion/referenciales/formulario/formulario-dialog/formulario-dialog.component';
+import {PermisoComponent} from './frm/administracion/referenciales/permiso/permiso.component';
+import {
+    PermisoDialogComponent
+} from './frm/administracion/referenciales/permiso/permiso-dialog/permiso-dialog.component';
+import {RolComponent} from './frm/administracion/referenciales/rol/rol.component';
+import {RolDialogComponent} from './frm/administracion/referenciales/rol/rol-dialog/rol-dialog.component';
+import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuario.component';
+import {
+    UsuarioDialogComponent
+} from './frm/administracion/referenciales/usuario/usuario-dialog/usuario-dialog.component';
 
 @NgModule({
     declarations: [
@@ -207,6 +221,14 @@ import {
         LibroVentaDialogComponent,
         CuentaACobrarComponent,
         CuentaACobrarDialogComponent,
+        FormularioComponent,
+        FormularioDialogComponent,
+        PermisoComponent,
+        PermisoDialogComponent,
+        RolComponent,
+        RolDialogComponent,
+        UsuarioComponent,
+        UsuarioDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

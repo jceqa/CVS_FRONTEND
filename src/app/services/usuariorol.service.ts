@@ -15,6 +15,6 @@ export class UsuarioRolService {
     private baseUrl = 'api/usuariorol/';
 
     public getByUserId(userId: number): Observable<UsuarioRol[]> {
-        return this.http.get<UsuarioRol[]>(this.baseUrl + `${userId}`);
+        return this.http.get<UsuarioRol[]>(this.baseUrl + `usuario/${userId}`);
     }
 }
