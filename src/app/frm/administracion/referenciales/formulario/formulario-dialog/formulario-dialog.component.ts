@@ -6,6 +6,9 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {UIService} from '../../../../../services/ui.service';
 import {FormularioService} from '../../../../../services/formulario.service';
 import {UtilService} from '../../../../../services/util.service';
+import {MenuService} from '../../../../../services/menu.service';
+import {Sistema} from '../../../../../models/sistema';
+import {SubMenu} from '../../../../../models/subMenu';
 
 @Component({
   selector: 'app-formulario-dialog',
@@ -23,12 +26,16 @@ export class FormularioDialogComponent implements OnInit {
     title: String;
     editID: number;
 
+    sistemas: Sistema[];
+    subMenus: SubMenu[];
+
     constructor(
         // private store: Store<fromRoot.State>,
         private dialogRef: MatDialogRef<FormularioDialogComponent>,
         private uiService: UIService,
         private formularioService: FormularioService,
         private utils: UtilService,
+        private menuService: MenuService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -39,6 +46,9 @@ export class FormularioDialogComponent implements OnInit {
         this.form = new FormGroup({
             id: new FormControl('', []),
             nombre: new FormControl('', [Validators.required]),
+            url: new FormControl('', [Validators.required]),
+            sistema: new FormControl('', [Validators.required]),
+            subMenu: new FormControl('', [Validators.required]),
         });
 
         if (this.data.item.id) {
@@ -53,6 +63,18 @@ export class FormularioDialogComponent implements OnInit {
             this.title = 'Nuevo';
             this.formType = FormType.NEW;
         }
+
+        this.utils.startLoading();
+        this.menuService.getMenu().subscribe( data => {
+                console.log(data);
+                this.sistemas = data.sistemas;
+                this.subMenus = data.subMenus;
+                this.utils.stopLoading();
+            },
+            error => {
+                this.utils.stopLoading();
+                console.log(error);
+            });
     }
 
     getFormularioById(id: number): void {
@@ -73,7 +95,10 @@ export class FormularioDialogComponent implements OnInit {
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({
                 id: item.id,
-                nombre: item.nombre
+                nombre: item.nombre,
+                url: item.url,
+                sistema: item.sistema,
+                subMenu: item.subMenu
             });
         }
     }
@@ -81,7 +106,10 @@ export class FormularioDialogComponent implements OnInit {
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.nombre = this.form.get('nombre').value.toString().toUpperCase().trim();
+        this.item.nombre = this.form.get('nombre').value;
+        this.item.url = this.form.get('url').value;
+        this.item.sistema = this.form.get('sistema').value;
+        this.item.subMenu = this.form.get('subMenu').value;
     }
 
     dismiss(result?: any) {
@@ -90,6 +118,10 @@ export class FormularioDialogComponent implements OnInit {
 
     uploadListItem(dato) {
         console.log(dato);
+    }
+
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
     }
 
     // Metodo que se llama al oprimir el boton guardar
