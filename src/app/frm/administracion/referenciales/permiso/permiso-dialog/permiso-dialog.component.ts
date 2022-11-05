@@ -31,6 +31,12 @@ export class PermisoDialogComponent implements OnInit {
     formularios: Formulario[];
     sistemas: Sistema[];
     subMenus: SubMenu[];
+    menu;
+
+    menuLoaded = false;
+    formularioLoaded = false;
+
+    colors = ['primary', 'accent', 'warn', 'success'];
 
     constructor(
         // private store: Store<fromRoot.State>,
@@ -73,6 +79,7 @@ export class PermisoDialogComponent implements OnInit {
                 console.log(data);
                 this.sistemas = data.sistemas;
                 this.subMenus = data.subMenus;
+                this.menuLoaded = true;
                 this.generarMenu();
                 this.utils.stopLoading();
             },
@@ -85,6 +92,8 @@ export class PermisoDialogComponent implements OnInit {
         this.formularioService.getFormularios().subscribe( data => {
                 console.log(data);
                 this.formularios = data;
+                this.formularioLoaded = true;
+                this.generarMenu();
                 this.utils.stopLoading();
             },
             error => {
@@ -226,53 +235,63 @@ export class PermisoDialogComponent implements OnInit {
     }
 
     generarMenu() {
-        const newMenu = [];
-        this.sistemas.forEach(s =>
-            newMenu.push({
-                Icon : null,
-                Name : s.nombre,
-                Items: []
-            })
-        );
-
-        newMenu.forEach(nm =>
-            this.subMenus.forEach(sm =>
-                nm.Items.push({
-                    Name : sm.nombre,
-                    SubItems : []
-                })
-
-            )
-        );
-
-
-        this.formularios.forEach(f =>
-            newMenu.find( nm => nm.Name === f.sistema.nombre).Items.
-            find(i => i.Name === f.subMenu.nombre).SubItems.
-            push({
-                Url : f.url,
-                Name : f.nombre
-            })
-        );
-
-        console.log(newMenu);
-        /*this.menus = newMenu;
-
-        this.menus.forEach(menu => {
-            menu.Items = menu.Items.sort( (a, b) => {
-                return (a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()));
-            });
-
-            menu.Items.forEach(item => {
-                item.SubItems = item.SubItems.sort( (a, b) => {
-                    return (a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()));
+        if (this.menuLoaded && this.formularioLoaded) {
+            const newMenu = [];
+            let j = 0;
+            this.sistemas.forEach(s => {
+                newMenu.push({
+                    Icon : null,
+                    Name : s.nombre,
+                    Items: [],
+                    checked: false,
+                    color: this.colors[j]
                 });
-            });
-        });
+                j++;
+            }
+            );
 
-        this.menus = this.menus.sort( (a, b) => {
-            return (a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()));
-        });*/
+            newMenu.forEach(nm =>
+                this.subMenus.forEach(sm => {
+                    nm.Items.push({
+                        Name : sm.nombre,
+                        SubItems : [],
+                        checked: false,
+                    });
+                }
+
+                )
+            );
+
+            this.formularios.forEach(f =>
+                newMenu.find( nm => nm.Name === f.sistema.nombre).Items.
+                find(i => i.Name === f.subMenu.nombre).SubItems.
+                push({
+                    Url : f.url,
+                    Name : f.nombre,
+                    checked: false
+                })
+            );
+
+            console.log(newMenu);
+            this.menu = newMenu;
+        }
+    }
+
+    selectAll(checked: boolean) {
+       /* this.allComplete = completed;
+        if (this.task.subtasks == null) {
+            return;
+        }*/
+        this.menu.sistemas.forEach(s => (s.checked = checked));
+    }
+
+    checkedSubMenu(sistema): boolean {
+        return this.menu.find( m => m.nombre = sistema.Name).Items.filter(si => si.checked).length > 0;
+    }
+
+
+    checkedFormulario(Item): boolean {
+        return this.menu.find( m => m.nombre = sistema.Name).Items.filter(si => si.checked).length > 0;
     }
 
 }
