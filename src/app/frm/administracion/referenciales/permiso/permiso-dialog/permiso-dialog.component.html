@@ -11,7 +11,7 @@
             </mat-checkbox>
             <div *ngFor="let subMenu of sistema.Items">
                 <mat-checkbox *ngIf="subMenu.SubItems.length > 0" class="example-margin" style="display: table-cell"
-                              [color]="sistema.color" [checked]="subMenu.checked" [indeterminate]="checkedFormulario(subMenu)"
+                              [color]="sistema.color" [checked]="subMenu.checked" [indeterminate]="checkedFormulario(sistema,subMenu)"
                               (change)="selectAllSubMenu($event.checked)">
                     <h4>{{subMenu.Name}}</h4>
                 </mat-checkbox>

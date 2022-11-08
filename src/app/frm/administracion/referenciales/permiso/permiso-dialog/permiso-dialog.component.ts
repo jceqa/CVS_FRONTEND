@@ -285,13 +285,26 @@ export class PermisoDialogComponent implements OnInit {
         this.menu.sistemas.forEach(s => (s.checked = checked));
     }
 
+    selectAllSubMenu(checked: boolean) {
+        /* this.allComplete = completed;
+         if (this.task.subtasks == null) {
+             return;
+         }*/
+        this.menu.sistemas.forEach(s =>  {
+            s.checked = checked;
+            s.SubItems.forEach( si => {
+                si.checked = checked;
+            });
+        });
+    }
+
     checkedSubMenu(sistema): boolean {
         return this.menu.find( m => m.nombre = sistema.Name).Items.filter(si => si.checked).length > 0;
     }
 
 
-    checkedFormulario(Item): boolean {
-        return this.menu.find( m => m.nombre = sistema.Name).Items.filter(si => si.checked).length > 0;
+    checkedFormulario(sistema, subMenu): boolean {
+        return this.menu.find( m => m.nombre = sistema.Name).Items.find(s => s.nombre = subMenu.Name).SubItems.filter(si => si.checked).length > 0;
     }
 
 }
