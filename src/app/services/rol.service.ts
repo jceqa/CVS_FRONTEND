@@ -3,6 +3,7 @@ import {AccountService} from './account.service';
 import {Observable} from 'rxjs';
 import {Rol} from '../models/rol';
 import {Injectable} from '@angular/core';
+import {RolPermiso} from '../models/rolPermiso';
 
 @Injectable({
     providedIn: 'root'
@@ -31,8 +32,8 @@ export class RolService {
         return this.http.get<Rol>(this.baseUrl + `${idRol}`);
     }
 
-    public guardarRol(rol: Rol): Observable<any> {
-        return this.http.post<any>(this.baseUrl, rol, {
+    public guardarRol(rolPermiso: RolPermiso): Observable<any> {
+        return this.http.post<any>(this.baseUrl, rolPermiso, {
             headers: this.headers,
             observe: 'response'
         });

@@ -45,7 +45,6 @@ import {TimbradoComponent} from './frm/ventas/referenciales/timbrado/timbrado.co
 import {LibroVentaComponent} from './frm/ventas/procesos/libro-venta/libro-venta.component';
 import {CuentaACobrarComponent} from './frm/ventas/procesos/cuenta-a-cobrar/cuenta-a-cobrar.component';
 import {FormularioComponent} from './frm/administracion/referenciales/formulario/formulario.component';
-import {PermisoComponent} from './frm/administracion/referenciales/permiso/permiso.component';
 import {RolComponent} from './frm/administracion/referenciales/rol/rol.component';
 import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuario.component';
 
@@ -96,7 +95,6 @@ const routes: Routes = [
     { path: 'cuentaacobrar', component: CuentaACobrarComponent},
     { path: 'timbrado', component: TimbradoComponent},
     { path: 'formulario', component: FormularioComponent},
-    { path: 'permiso', component: PermisoComponent},
     { path: 'rol', component: RolComponent},
     { path: 'usuario', component: UsuarioComponent},
     { path: '', component: MainContentComponent },

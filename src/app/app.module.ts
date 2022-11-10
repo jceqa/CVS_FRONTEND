@@ -122,10 +122,6 @@ import {FormularioComponent} from './frm/administracion/referenciales/formulario
 import {
     FormularioDialogComponent
 } from './frm/administracion/referenciales/formulario/formulario-dialog/formulario-dialog.component';
-import {PermisoComponent} from './frm/administracion/referenciales/permiso/permiso.component';
-import {
-    PermisoDialogComponent
-} from './frm/administracion/referenciales/permiso/permiso-dialog/permiso-dialog.component';
 import {RolComponent} from './frm/administracion/referenciales/rol/rol.component';
 import {RolDialogComponent} from './frm/administracion/referenciales/rol/rol-dialog/rol-dialog.component';
 import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuario.component';
@@ -223,8 +219,6 @@ import {
         CuentaACobrarDialogComponent,
         FormularioComponent,
         FormularioDialogComponent,
-        PermisoComponent,
-        PermisoDialogComponent,
         RolComponent,
         RolDialogComponent,
         UsuarioComponent,
