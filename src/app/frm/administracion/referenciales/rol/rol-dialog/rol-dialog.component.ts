@@ -1,5 +1,4 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Rol} from '../../../../../models/rol';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -13,6 +12,7 @@ import {Sistema} from '../../../../../models/sistema';
 import {SubMenu} from '../../../../../models/subMenu';
 import {RolPermiso} from '../../../../../models/rolPermiso';
 import {PermisoService} from '../../../../../services/permiso.service';
+import {Rol} from '../../../../../models/rol';
 
 @Component({
   selector: 'app-rol-dialog',
@@ -21,7 +21,7 @@ import {PermisoService} from '../../../../../services/permiso.service';
 })
 export class RolDialogComponent implements OnInit {
 
-    item: Rol;
+    item: RolPermiso;
     companyId = 0;
     form: FormGroup;
 
@@ -50,7 +50,7 @@ export class RolDialogComponent implements OnInit {
         private menuService: MenuService,
         private formularioService: FormularioService,
         private permisoService: PermisoService,
-        @Inject(MAT_DIALOG_DATA) public data: any) {
+        @Inject(MAT_DIALOG_DATA) public data: {item: RolPermiso}) {
         if (data) {
             this.item = data.item;
         }
@@ -62,11 +62,11 @@ export class RolDialogComponent implements OnInit {
             nombre: new FormControl('', [Validators.required]),
         });
 
-        if (this.data.item.id) {
+        if (this.data.item.rol.id) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
             this.title = 'Editar';
-            this.editID = this.data.item.id;
-            this.getRolById(this.data.item.id);
+            this.editID = this.data.item.rol.id;
+            this.getRolById(this.data.item.rol.id);
             this.formType = FormType.EDIT;
             // this.setForm(this.item);
         } else {
@@ -108,10 +108,14 @@ export class RolDialogComponent implements OnInit {
         this.utils.startLoading();
         this.rolService.getRolById(id).subscribe(
             data => {
-                this.item = data as Rol;
-                this.permisoService.getPermisosByRolId(this.item.id).subscribe(result => {
+                this.item = data as RolPermiso;
+                this.permisoService.getPermisosByRolId(this.item.rol.id).subscribe(result => {
                     // console.log(result);
-                    this.setForm(this.item, result);
+                    const formularios = [];
+                    result.forEach( r => {
+                        formularios.push(r.formulario);
+                    });
+                    this.setForm(this.item.rol, formularios);
                     this.utils.stopLoading();
                 }, (error) => {
                     this.utils.stopLoading();
@@ -134,7 +138,7 @@ export class RolDialogComponent implements OnInit {
 
             this.menu.forEach( m => {
                 m.Items.forEach( i => {
-                    i.SubItems( si => {
+                    i.SubItems.forEach( si => {
                         const exist = formulario.find(f => f.id === si.id);
                         if (exist) {
                             si.checked = true;
@@ -147,8 +151,8 @@ export class RolDialogComponent implements OnInit {
 
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
-        this.item.id = this.form.get('id').value;
-        this.item.nombre = this.form.get('nombre').value.toString().toUpperCase().trim();
+        this.item.rol.id = this.form.get('id').value;
+        this.item.rol.nombre = this.form.get('nombre').value.toString().toUpperCase().trim();
 
         // console.log(this.menu);
         const formularios: Formulario[] = [];
@@ -175,7 +179,7 @@ export class RolDialogComponent implements OnInit {
         });
 
         this.rolPermiso = {
-            rol: this.item,
+            rol: this.item.rol,
             formularios: formularios
         };
     }
@@ -205,8 +209,8 @@ export class RolDialogComponent implements OnInit {
     add(): void {
 
         this.setAtributes();
-        this.item.id = 0;
-        if (this.utils.tieneLetras(this.item.nombre)) {
+        this.item.rol.id = 0;
+        if (this.utils.tieneLetras(this.item.rol.nombre)) {
             // Llama al servicio que almacena el objeto {PriceListDraft}
             this.rolService.guardarRol(this.rolPermiso)
                 .subscribe(data => {
@@ -247,8 +251,8 @@ export class RolDialogComponent implements OnInit {
         this.setAtributes();
 
         // Llama al servicio http que actualiza el objeto.
-        if (this.utils.tieneLetras(this.item.nombre)) {
-            this.rolService.editarRol(this.item).subscribe(data => {
+        if (this.utils.tieneLetras(this.item.rol.nombre)) {
+            this.rolService.editarRol(this.rolPermiso).subscribe(data => {
                 console.log(data);
                 this.uiService.showSnackbar(
                     'Modificado exitosamente.',

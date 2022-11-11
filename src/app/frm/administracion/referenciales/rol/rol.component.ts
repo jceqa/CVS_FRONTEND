@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {Rol} from '../../../../models/rol';
 import {MatPaginator} from '@angular/material/paginator';
 import {RolService} from '../../../../services/rol.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -8,6 +7,7 @@ import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
 import {RolDialogComponent} from './rol-dialog/rol-dialog.component';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
+import {RolPermiso} from '../../../../models/rolPermiso';
 
 @Component({
   selector: 'app-rol',
@@ -18,12 +18,12 @@ export class RolComponent implements OnInit {
 
     displayedColumns: string[] = ['id', 'nombre', 'actions'];
 
-    dataSource = new MatTableDataSource<Rol>();
+    dataSource = new MatTableDataSource<RolPermiso>();
 
     @ViewChild(MatPaginator)
     paginator!: MatPaginator;
 
-    rol: Rol[] = [];
+    rolPermisosList: RolPermiso[] = [];
 
     pagina = 1;
     numeroResultados = 5;
@@ -48,10 +48,9 @@ export class RolComponent implements OnInit {
         this.rolService.getRoles(this.all).subscribe(
             (data) => {
                 console.log(data);
-                this.rol = data;
-
-                this.dataSource = new MatTableDataSource<Rol>(
-                    this.rol
+                this.rolPermisosList = data;
+                this.dataSource = new MatTableDataSource<RolPermiso>(
+                    this.rolPermisosList
                 );
                 this.dataSource.paginator = this.paginator;
                 // this.store.dispatch(new UI.StopLoading());
@@ -74,13 +73,13 @@ export class RolComponent implements OnInit {
 
     addItem(): void {
 
-        const item = new Rol();
+        const item = new RolPermiso();
 
         this.editItem(item);
 
     }
 
-    editItem(item: Rol): void {
+    editItem(item: RolPermiso): void {
         const dialogRef = this.dialog.open(RolDialogComponent, {
             minWidth: '60%',
             // maxWidth: '600px',
@@ -120,9 +119,9 @@ export class RolComponent implements OnInit {
         );
     }
 
-    reactivateItem(rol: Rol): void {
-        rol.estado = 'ACTIVO';
-        this.rolService.editarRol(rol).subscribe(
+    reactivateItem(rolPermiso: RolPermiso): void {
+        rolPermiso.rol.estado = 'ACTIVO';
+        this.rolService.editarRol(rolPermiso).subscribe(
             result => {
                 console.log(result);
                 this.cargar();
@@ -143,7 +142,7 @@ export class RolComponent implements OnInit {
         );
     }
 
-    delete(event: any, rol: Rol): void {
+    delete(event: any, rolPermiso: RolPermiso): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
@@ -156,12 +155,12 @@ export class RolComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.deleteItem(rol.id);
+                this.deleteItem(rolPermiso.rol.id);
             }
         });
     }
 
-    reactivate(event: any, rol: Rol): void {
+    reactivate(event: any, rolPermiso: RolPermiso): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
@@ -174,7 +173,7 @@ export class RolComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.reactivateItem(rol);
+                this.reactivateItem(rolPermiso);
             }
         });
     }

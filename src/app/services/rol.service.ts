@@ -1,7 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {AccountService} from './account.service';
 import {Observable} from 'rxjs';
-import {Rol} from '../models/rol';
 import {Injectable} from '@angular/core';
 import {RolPermiso} from '../models/rolPermiso';
 
@@ -24,12 +23,12 @@ export class RolService {
         return this.http.get<any>(this.baseUrl + `buscar/nombre?registros_pagina=${cantRegistros}&pagina=${pag}&buscar_texto=${texto}`);
     }
 
-    public getRoles(all: boolean = false): Observable<Rol[]> {
-        return this.http.get<Rol[]>(this.baseUrl + `?all=${all}`);
+    public getRoles(all: boolean = false): Observable<RolPermiso[]> {
+        return this.http.get<RolPermiso[]>(this.baseUrl + `?all=${all}`);
     }
 
-    public getRolById(idRol: number): Observable<Rol> {
-        return this.http.get<Rol>(this.baseUrl + `${idRol}`);
+    public getRolById(idRol: number): Observable<RolPermiso> {
+        return this.http.get<RolPermiso>(this.baseUrl + `${idRol}`);
     }
 
     public guardarRol(rolPermiso: RolPermiso): Observable<any> {
@@ -39,8 +38,8 @@ export class RolService {
         });
     }
 
-    public editarRol(rol: Rol): Observable<any> {
-        return this.http.put<any>(this.baseUrl, rol);
+    public editarRol(rolPermiso: RolPermiso): Observable<any> {
+        return this.http.put<any>(this.baseUrl, rolPermiso);
     }
 
     public eliminarRol(idRol: number): Observable<any> {

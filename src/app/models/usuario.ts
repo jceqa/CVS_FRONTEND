@@ -8,7 +8,8 @@ export class Usuario {
     estado: string;
     sucursal: Sucursal;
 
-    constructor(id: number) {
+    constructor();
+    constructor(id?: number) {
         this.id = id;
     }
 }
