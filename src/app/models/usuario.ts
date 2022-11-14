@@ -6,10 +6,12 @@ export class Usuario {
     usuario: string;
     clave: string;
     estado: string;
+    intentosFallidos: number;
     sucursal: Sucursal;
 
-    constructor();
     constructor(id?: number) {
-        this.id = id;
+        if (id) {
+            this.id = id;
+        }
     }
 }

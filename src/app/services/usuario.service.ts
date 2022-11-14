@@ -26,7 +26,7 @@ export class UsuarioService {
     }
 
     public getUserByToken(token: string): Observable<Usuario> {
-        return this.http.get<Usuario>(this.baseUrl + `?token=${token}`);
+        return this.http.get<Usuario>(this.baseUrl + `token/?token=${token}`);
     }
 
     public getUsuarios(all: boolean = false): Observable<Usuario[]> {
