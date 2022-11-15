@@ -39,7 +39,7 @@
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Id</strong></h4>
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla"><span [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}"> {{ dato.id }} </span></mat-cell>>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><span [ngClass]="{'eliminado':dato.usuario.estado === 'INACTIVO'}"> {{ dato.usuario.id }} </span></mat-cell>>
                 </ng-container>
 
 
@@ -47,7 +47,25 @@
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Nombre</strong></h4>
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla"><span [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}"> {{ dato.nombre }} </span></mat-cell>>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><span [ngClass]="{'eliminado':dato.usuario.estado === 'INACTIVO'}"> {{ dato.usuario.nombre }} </span></mat-cell>>
+                </ng-container>
+
+                <ng-container matColumnDef="usuario">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Usuario</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><span [ngClass]="{'eliminado':dato.usuario.estado === 'INACTIVO'}"> {{ dato.usuario.usuario }} </span></mat-cell>>
+                </ng-container>
+
+                <ng-container matColumnDef="sucursal">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Sucursal</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span [ngClass]="{'eliminado':dato.usuario.estado === 'INACTIVO'}" *ngIf="dato.usuario.sucursal">
+                            {{ dato.usuario.sucursal.descripcion }}
+                        </span>
+                    </mat-cell>>
                 </ng-container>
 
                 <ng-container matColumnDef="actions">
@@ -58,15 +76,15 @@
                             <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                         </button>-->
 
-                        <button matTooltip="Editar" *ngIf="dato.estado === 'ACTIVO'" color="primary" mat-icon-button (click)="editItem(dato)">
+                        <button matTooltip="Editar" *ngIf="dato.usuario.estado === 'ACTIVO'" color="primary" mat-icon-button (click)="editItem(dato)">
                             <mat-icon aria-label="Editar item">mode_edit</mat-icon>
                         </button>
 
-                        <button matTooltip="Eliminar" *ngIf="dato.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">
+                        <button matTooltip="Eliminar" *ngIf="dato.usuario.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">
                             <mat-icon>delete</mat-icon>
                         </button>
 
-                        <button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
+                        <button matTooltip="Reactivar" *ngIf="dato.usuario.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
                             <mat-icon>refresh</mat-icon>
                         </button>
 

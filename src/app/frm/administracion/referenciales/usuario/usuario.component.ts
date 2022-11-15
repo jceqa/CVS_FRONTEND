@@ -6,8 +6,9 @@ import {UsuarioService} from '../../../../services/usuario.service';
 import {MatDialog} from '@angular/material/dialog';
 import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
-import {UsuarioDialogComponent} from '../usuario/usuario-dialog/usuario-dialog.component';
+import {UsuarioDialogComponent} from './usuario-dialog/usuario-dialog.component';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
+import {UsuarioDto} from '../../../../models/usuarioDto';
 
 @Component({
   selector: 'app-usuario',
@@ -16,14 +17,14 @@ import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.
 })
 export class UsuarioComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'nombre', 'actions'];
+    displayedColumns: string[] = ['id', 'nombre', 'usuario', 'sucursal', 'actions'];
 
-    dataSource = new MatTableDataSource<Usuario>();
+    dataSource = new MatTableDataSource<UsuarioDto>();
 
     @ViewChild(MatPaginator)
     paginator!: MatPaginator;
 
-    usuariosList: Usuario[] = [];
+    usuariosList: UsuarioDto[] = [];
 
     pagina = 1;
     numeroResultados = 5;
@@ -49,7 +50,7 @@ export class UsuarioComponent implements OnInit {
             (data) => {
                 console.log(data);
                 this.usuariosList = data;
-                this.dataSource = new MatTableDataSource<Usuario>(
+                this.dataSource = new MatTableDataSource<UsuarioDto>(
                     this.usuariosList
                 );
                 this.dataSource.paginator = this.paginator;
@@ -119,9 +120,9 @@ export class UsuarioComponent implements OnInit {
         );
     }
 
-    reactivateItem(usuario: Usuario): void {
-        usuario.estado = 'ACTIVO';
-        this.usuarioService.editarUsuario(usuario).subscribe(
+    reactivateItem(usuarioDto: UsuarioDto): void {
+        usuarioDto.usuario.estado = 'ACTIVO';
+        this.usuarioService.editarUsuario(usuarioDto).subscribe(
             result => {
                 console.log(result);
                 this.cargar();
@@ -160,7 +161,7 @@ export class UsuarioComponent implements OnInit {
         });
     }
 
-    reactivate(event: any, usuario: Usuario): void {
+    reactivate(event: any, usuarioDto: UsuarioDto): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
@@ -173,7 +174,7 @@ export class UsuarioComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.reactivateItem(usuario);
+                this.reactivateItem(usuarioDto);
             }
         });
     }

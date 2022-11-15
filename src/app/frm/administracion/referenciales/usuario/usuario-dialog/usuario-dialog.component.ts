@@ -1,5 +1,4 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Usuario} from '../../../../../models/usuario';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -10,6 +9,8 @@ import {SucursalService} from '../../../../../services/sucursal.service';
 import {Sucursal} from '../../../../../models/sucursal';
 import {RolService} from '../../../../../services/rol.service';
 import {RolPermiso} from '../../../../../models/rolPermiso';
+import {UsuarioDto} from '../../../../../models/usuarioDto';
+import {Usuario} from '../../../../../models/usuario';
 
 @Component({
   selector: 'app-usuario-dialog',
@@ -18,7 +19,7 @@ import {RolPermiso} from '../../../../../models/rolPermiso';
 })
 export class UsuarioDialogComponent implements OnInit {
 
-    item: Usuario;
+    item: UsuarioDto;
     companyId = 0;
     form: FormGroup;
 
@@ -89,11 +90,10 @@ export class UsuarioDialogComponent implements OnInit {
     }
 
     getUsuarioById(id: number): void {
-
         // Realiza la llamada http para obtener el objeto
         this.usuarioService.getUsuarioById(id).subscribe(
             data => {
-                this.item = data as Usuario;
+                this.item = data as UsuarioDto;
                 this.setForm(this.item);
             }, (error) => {
                 console.error(error);
@@ -101,28 +101,39 @@ export class UsuarioDialogComponent implements OnInit {
     }
 
     // Rellena los campos del formulario con los valores dados
-    setForm(item: Usuario) {
+    setForm(item: UsuarioDto) {
         console.log(item);
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({
-                id: item.id,
-                nombre: item.nombre,
-                usuario: item.usuario,
-                sucursal: item.sucursal,
+                id: item.usuario.id,
+                nombre: item.usuario.nombre,
+                usuario: item.usuario.usuario,
+                sucursal: item.usuario.sucursal,
             });
         }
     }
 
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
-        this.item.id = this.form.get('id').value;
-        this.item.nombre = this.form.get('nombre').value.toString().toUpperCase().trim();
-        this.item.usuario = this.form.get('usuario').value.toString().toUpperCase().trim();
-        this.item.sucursal = this.form.get('sucursal').value;
+        if (!this.item.usuario) {
+            this.item.usuario = new Usuario();
+        }
+        this.item.usuario.id = this.form.get('id').value;
+        this.item.usuario.nombre = this.form.get('nombre').value.toString().toUpperCase().trim();
+        this.item.usuario.usuario = this.form.get('usuario').value.toString().toUpperCase().trim();
+        this.item.usuario.sucursal = this.form.get('sucursal').value;
 
         if (this.formType === FormType.NEW) {
-            this.item.clave = this.form.get('clave').value.toString();
+            this.item.usuario.clave = this.form.get('clave').value.toString();
         }
+
+        if (!this.item.roles) {
+            this.item.roles = [];
+        }
+
+        this.rolesSelected.forEach(r => {
+            this.item.roles.push(r.rol);
+        });
     }
 
     compareFunction(o1: any, o2: any) {
@@ -150,18 +161,16 @@ export class UsuarioDialogComponent implements OnInit {
         }
     }
 
-    // Metodo para agregar una nueva lista de precios
     add(): void {
-
         this.setAtributes();
-        this.item.id = 0;
-        if (this.utils.tieneLetras(this.item.nombre)) {
-            // Llama al servicio que almacena el objeto {PriceListDraft}
+        this.item.usuario.id = 0;
+        if (this.validarCampos()) {
+            this.utils.startLoading();
             this.usuarioService.guardarUsuario(this.item)
                 .subscribe(data => {
                         console.log(data);
+                        this.utils.stopLoading();
                         this.dialogRef.close(data);
-
                         this.uiService.showSnackbar(
                             'Agregado exitosamente.',
                             'Cerrar',
@@ -169,9 +178,8 @@ export class UsuarioDialogComponent implements OnInit {
                         );
                     },
                     (error) => {
-
                         console.error('[ERROR]: ', error);
-
+                        this.utils.stopLoading();
                         this.uiService.showSnackbar(
                             error.error,
                             'Cerrar',
@@ -180,53 +188,63 @@ export class UsuarioDialogComponent implements OnInit {
 
                     }
                 );
-        } else {
-            this.uiService.showSnackbar(
-                'La descripción no puede ser solo númerica.',
-                'Cerrar',
-                5000
-            );
         }
     }
 
-    // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
-
-        // Asigna los valores del formulario al objeto a almacenar
         this.setAtributes();
-
-        // Llama al servicio http que actualiza el objeto.
-        if (this.utils.tieneLetras(this.item.nombre)) {
+        if (this.validarCampos()) {
+            this.utils.startLoading();
             this.usuarioService.editarUsuario(this.item).subscribe(data => {
                 console.log(data);
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Modificado exitosamente.',
                     'Cerrar',
                     3000
                 );
-
                 this.dialogRef.close(data);
             }, (error) => {
                 console.error('[ERROR]: ', error);
-
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
                     3000
                 );
             });
-        } else {
-            this.uiService.showSnackbar(
-                'La descripción no puede ser solo númerica.',
-                'Cerrar',
-                5000
-            );
         }
     }
 
     selectedRoles($event): void {
         console.log($event.source._value);
         this.rolesSelected = $event.source._value;
+    }
+
+    validarCampos(): boolean {
+        if (!this.utils.tieneLetras(this.item.usuario.nombre)) {
+            this.uiService.showSnackbar(
+                'El nombre no puede ser solo númerico.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        } else if (!this.utils.tieneLetras(this.item.usuario.usuario)) {
+            this.uiService.showSnackbar(
+                'El usuario no puede ser solo númerico.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        } else if (this.rolesSelected.length <= 0) {
+            this.uiService.showSnackbar(
+                'Debe seleccionar al menos un rol.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        }
+        return true;
     }
 
 }

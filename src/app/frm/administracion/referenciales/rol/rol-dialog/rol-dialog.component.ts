@@ -62,7 +62,7 @@ export class RolDialogComponent implements OnInit {
             nombre: new FormControl('', [Validators.required]),
         });
 
-        if (this.data.item.rol.id) {
+        if (this.data.item.rol) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
             this.title = 'Editar';
             this.editID = this.data.item.rol.id;
@@ -151,8 +151,11 @@ export class RolDialogComponent implements OnInit {
 
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
-        this.item.rol.id = this.form.get('id').value;
-        this.item.rol.nombre = this.form.get('nombre').value.toString().toUpperCase().trim();
+        this.item.rol = {
+            id: this.form.get('id').value,
+            nombre: this.form.get('nombre').value.toString().toUpperCase().trim(),
+            estado: 'ACTIVO'
+        };
 
         // console.log(this.menu);
         const formularios: Formulario[] = [];

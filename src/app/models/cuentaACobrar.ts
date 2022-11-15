@@ -1,5 +1,5 @@
 import {Estado} from './estado';
-import {Cobro} from './Cobro';
+import {Cobro} from './cobro';
 
 export class CuentaACobrar {
     id: number;
