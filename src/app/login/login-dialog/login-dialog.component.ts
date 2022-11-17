@@ -8,6 +8,7 @@ import { Usuario } from '../../models/usuario';
 import { UsuarioService } from '../../services/usuario.service';
 import * as fromRoot from '../../app.reducer';
 import {UtilService} from '../../services/util.service';
+import {UIService} from '../../services/ui.service';
 
 @Component({
     selector: 'app-login-dialog',
@@ -41,6 +42,7 @@ export class LoginDialogComponent implements OnInit, AfterViewInit {
     constructor(
         private dialogRef: MatDialogRef<LoginDialogComponent>,
         private usuarioService: UsuarioService,
+        private uiService: UIService,
         private snackBar: MatSnackBar,
         private store: Store<fromRoot.State>,
         private util: UtilService
@@ -51,10 +53,6 @@ export class LoginDialogComponent implements OnInit, AfterViewInit {
         this.hidePwd = true;
         this.isLoading$ = this.store.select(fromRoot.getIsLoading);
         this.setLoginMode();
-    }
-
-    ConvertToLower(evt: any) {
-        if (evt) this.fields['usuario'].setValue(evt.target.value.toLowerCase());
     }
 
     loginSuccess(result: any) {
@@ -108,8 +106,13 @@ export class LoginDialogComponent implements OnInit, AfterViewInit {
                 }
                 this.util.stopLoading();
             }, (error: any) => {
-                console.log('Error..');
-                console.log(error);
+                console.error('[ERROR]: ', error);
+
+                this.uiService.showSnackbar(
+                    error.error,
+                    'Cerrar',
+                    5000
+                );
                 this.loginError(error);
                 this.util.stopLoading();
             }

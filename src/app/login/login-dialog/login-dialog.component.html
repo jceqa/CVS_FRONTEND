@@ -19,7 +19,7 @@
 
                 <mat-form-field *ngIf="!recoverMode">
                     <input #userNameInput matInput placeholder="Usuario" maxlength="50" formControlName="usuario"
-                        (input)="ConvertToLower($event)" (keydown)="onKeydown('userName', $event)" />
+                        (keydown)="onKeydown('userName', $event)" />
                     <!--<mat-error *ngIf="fields['username'].invalid">{{ getErrorMessage(fields['username']) }}</mat-error>-->
                 </mat-form-field>
 

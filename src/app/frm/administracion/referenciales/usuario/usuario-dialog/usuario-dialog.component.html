@@ -51,10 +51,10 @@
             </div>
         </div>-->
 
-        <div *ngIf="this.formType !== 1">
+        <div>
             <h4>Roles</h4>
             <mat-selection-list #shoes (selectionChange)="selectedRoles($event)">
-                <mat-list-option *ngFor="let rolPermiso of roles" [value]="rolPermiso">
+                <mat-list-option *ngFor="let rolPermiso of roles, let i = index" [value]="selected[i]">
                     {{ rolPermiso.rol.nombre }}
                 </mat-list-option>
             </mat-selection-list>

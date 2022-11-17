@@ -124,9 +124,7 @@ export class MarcaDialogComponent implements OnInit {
                         );
                     },
                     (error) => {
-
                         console.error('[ERROR]: ', error);
-
                         this.uiService.showSnackbar(
                             error.error,
                             'Cerrar',

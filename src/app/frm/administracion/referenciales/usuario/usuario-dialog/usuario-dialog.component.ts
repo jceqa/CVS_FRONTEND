@@ -32,6 +32,8 @@ export class UsuarioDialogComponent implements OnInit {
     roles: RolPermiso[] = [];
     rolesSelected: RolPermiso[] = [];
 
+    selected = [];
+
     constructor(
         // private store: Store<fromRoot.State>,
         private dialogRef: MatDialogRef<UsuarioDialogComponent>,
@@ -55,11 +57,11 @@ export class UsuarioDialogComponent implements OnInit {
             sucursal: new FormControl('', [Validators.required]),
         });
 
-        if (this.data.item.id) {
+        if (this.data.item.usuario) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
             this.title = 'Editar';
-            this.editID = this.data.item.id;
-            this.getUsuarioById(this.data.item.id);
+            this.editID = this.data.item.usuario.id;
+            this.getUsuarioById(this.data.item.usuario.id);
             this.formType = FormType.EDIT;
             // this.setForm(this.item);
         } else {
@@ -109,6 +111,15 @@ export class UsuarioDialogComponent implements OnInit {
                 nombre: item.usuario.nombre,
                 usuario: item.usuario.usuario,
                 sucursal: item.usuario.sucursal,
+            });
+
+            this.roles.forEach(r => {
+                const exist = item.roles.find( rol => rol.id === r.rol.id);
+                if (exist) {
+                    this.selected.push(true);
+                } else {
+                    this.selected.push(false);
+                }
             });
         }
     }
