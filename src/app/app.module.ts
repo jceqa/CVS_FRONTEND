@@ -128,6 +128,7 @@ import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuar
 import {
     UsuarioDialogComponent
 } from './frm/administracion/referenciales/usuario/usuario-dialog/usuario-dialog.component';
+import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
 
 @NgModule({
     declarations: [
@@ -223,6 +224,7 @@ import {
         RolDialogComponent,
         UsuarioComponent,
         UsuarioDialogComponent,
+        ReportePagoComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

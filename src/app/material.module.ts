@@ -35,7 +35,7 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import { CdkTableModule } from '@angular/cdk/table';
 import { RegisterComponent } from './register/register.component';
 import { LocalCurrencyPipe } from './pipes/local-currency.pipe';
-//import { GMapComponent } from './components/g-map/g-map.component';
+// import { GMapComponent } from './components/g-map/g-map.component';
 import {ExtendedModule, FlexModule, MediaMarshaller} from '@angular/flex-layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -121,7 +121,7 @@ import {MatBadgeModule} from '@angular/material/badge';
     MatToolbarModule,
     MatTooltipModule,
     CdkTableModule,
-    //GMapComponent,
+    // GMapComponent,
     DragDropModule,
     MatBadgeModule,
     MatBottomSheetModule,
@@ -133,14 +133,6 @@ import {MatBadgeModule} from '@angular/material/badge';
     declarations: [RegisterComponent, LocalCurrencyPipe, /*GMapComponent*/]
 })
 export class MaterialModule {
-
-  /**
-   * 11/02/2021 clobo solución temporal al dar imprimir a la página
-   * 11/02/2021 rompe el css de FxLayout.
-    */
-
-  lastedValue : any;
-
   public constructor(
     m: MediaMarshaller,
   ) {        // @ts-ignore

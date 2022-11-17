@@ -25,7 +25,7 @@
         </div>
 
         <div class="mt-2">
-            <mat-form-field class="full-width-field">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input id="clave" formControlName="clave" required matInput placeholder="Clave"
                        autocomplete="off" class="text"/>
             </mat-form-field>
@@ -54,7 +54,7 @@
         <div>
             <h4>Roles</h4>
             <mat-selection-list #shoes (selectionChange)="selectedRoles($event)">
-                <mat-list-option *ngFor="let rolPermiso of roles, let i = index" [value]="selected[i]">
+                <mat-list-option *ngFor="let rolPermiso of roles, let i = index" [value]="rolPermiso" [selected]="selected[i]">
                     {{ rolPermiso.rol.nombre }}
                 </mat-list-option>
             </mat-selection-list>

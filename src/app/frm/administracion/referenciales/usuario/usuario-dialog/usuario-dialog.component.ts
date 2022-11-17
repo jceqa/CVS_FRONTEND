@@ -84,6 +84,15 @@ export class UsuarioDialogComponent implements OnInit {
         this.rolService.getRoles().subscribe(data => {
             console.log(data);
             this.roles = data;
+            this.roles.forEach(r => {
+                const exist = this.item.roles.find( rol => rol.id === r.rol.id);
+                if (exist) {
+                    this.selected.push(true);
+                } else {
+                    this.selected.push(false);
+                }
+            });
+            console.log(this.selected);
             this.utils.stopLoading();
         }, error => {
             console.log(error);
@@ -110,16 +119,13 @@ export class UsuarioDialogComponent implements OnInit {
                 id: item.usuario.id,
                 nombre: item.usuario.nombre,
                 usuario: item.usuario.usuario,
+                clave: item.usuario.clave,
                 sucursal: item.usuario.sucursal,
             });
-
-            this.roles.forEach(r => {
-                const exist = item.roles.find( rol => rol.id === r.rol.id);
-                if (exist) {
-                    this.selected.push(true);
-                } else {
-                    this.selected.push(false);
-                }
+            this.item.roles.forEach(r => {
+                this.rolesSelected.push(this.roles.find( rl => {
+                    rl.rol.id = r.id;
+                }));
             });
         }
     }
@@ -137,11 +143,7 @@ export class UsuarioDialogComponent implements OnInit {
         if (this.formType === FormType.NEW) {
             this.item.usuario.clave = this.form.get('clave').value.toString();
         }
-
-        if (!this.item.roles) {
-            this.item.roles = [];
-        }
-
+        this.item.roles = [];
         this.rolesSelected.forEach(r => {
             this.item.roles.push(r.rol);
         });
@@ -228,8 +230,9 @@ export class UsuarioDialogComponent implements OnInit {
     }
 
     selectedRoles($event): void {
-        console.log($event.source._value);
+        // console.log($event.source._value);
         this.rolesSelected = $event.source._value;
+        console.log(this.rolesSelected);
     }
 
     validarCampos(): boolean {

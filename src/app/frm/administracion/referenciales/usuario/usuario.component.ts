@@ -122,10 +122,12 @@ export class UsuarioComponent implements OnInit {
 
     reactivateItem(usuarioDto: UsuarioDto): void {
         usuarioDto.usuario.estado = 'ACTIVO';
+        this.util.startLoading();
         this.usuarioService.editarUsuario(usuarioDto).subscribe(
             result => {
                 console.log(result);
                 this.cargar();
+                this.util.stopLoading();
                 this.uiService.showSnackbar(
                     'Reactivado correctamente.',
                     'Cerrar',
@@ -133,7 +135,7 @@ export class UsuarioComponent implements OnInit {
                 );
             }, error => {
                 console.log(error);
-
+                this.util.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',

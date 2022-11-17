@@ -47,6 +47,7 @@ import {CuentaACobrarComponent} from './frm/ventas/procesos/cuenta-a-cobrar/cuen
 import {FormularioComponent} from './frm/administracion/referenciales/formulario/formulario.component';
 import {RolComponent} from './frm/administracion/referenciales/rol/rol.component';
 import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuario.component';
+import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -97,6 +98,7 @@ const routes: Routes = [
     { path: 'formulario', component: FormularioComponent},
     { path: 'rol', component: RolComponent},
     { path: 'usuario', component: UsuarioComponent},
+    { path: 'reportepago', component: ReportePagoComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];
