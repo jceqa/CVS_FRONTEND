@@ -6,6 +6,8 @@ import {PagoService} from '../../../../services/pago.service';
 import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
 import * as es6printJS from 'print-js';
+import {Filtro} from '../../../../models/filtro';
+import {DateAdapter} from '@angular/material/core';
 
 @Component({
   selector: 'app-reporte-pago',
@@ -33,10 +35,12 @@ export class ReportePagoComponent implements OnInit {
     constructor(
         private pagoService: PagoService,
         private uiService: UIService,
-        private util: UtilService
+        private util: UtilService,
+        private dateAdapter: DateAdapter<Date>,
     ) { }
 
     ngOnInit(): void {
+        this.dateAdapter.setLocale('en-GB');
         this.cargar();
     }
 
@@ -69,10 +73,15 @@ export class ReportePagoComponent implements OnInit {
 
     cargar() {
         this.util.startLoading();
-        this.pagoService.getPagos().subscribe(
+        console.log(this.fechaFin);
+        console.log(this.fechaInicio);
+        const filter = new Filtro();
+        filter.fechaInicio = this.fechaInicio;
+        filter.fechaFin = this.fechaFin;
+        this.pagoService.filterPagosByDate(filter).subscribe(
             (data) => {
-                console.log(data);
-                this.pagos = data;
+                console.log(data.body);
+                this.pagos = data.body;
 
                 this.dataSource = new MatTableDataSource<Pago>(
                     this.pagos
