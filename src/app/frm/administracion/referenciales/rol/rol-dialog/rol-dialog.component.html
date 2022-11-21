@@ -1,0 +1,56 @@
+<h4 mat-dialog-title>{{title}} Rol</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <div class="mt-2" *ngIf="formType === 1">
+            <mat-form-field class="full-width-field" >
+                <input id="id" formControlName="id" matInput placeholder="Id" readonly />
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="nombre" formControlName="nombre" required matInput placeholder="Nombre"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div *ngFor="let sistema of menu">
+            <mat-checkbox class="example-margin" style="display: table-cell" [color]="sistema.color"
+                          [checked]="sistema.checked" [indeterminate]="checkedSubMenu(sistema)" (change)="selectAll($event.checked, sistema)">
+                <h3>{{ sistema.Name }}</h3>
+            </mat-checkbox>
+            <div *ngFor="let subMenu of sistema.Items">
+                <mat-checkbox *ngIf="subMenu.SubItems.length > 0" class="example-margin" style="display: table-cell"
+                              [color]="sistema.color" [checked]="subMenu.checked" [indeterminate]="checkedFormulario(subMenu)"
+                              (change)="selectAllSubMenu($event.checked, subMenu, sistema)">
+                    <h4>{{subMenu.Name}}</h4>
+                </mat-checkbox>
+                <ul *ngIf="subMenu.SubItems.length > 0">
+                    <li *ngFor="let formulario of subMenu.SubItems">
+                        <mat-checkbox class="example-margin" style="display: table-cell" [color]="sistema.color"
+                                      [checked]="formulario.checked" (change)="selectFormulario($event.checked, formulario, subMenu, sistema)">
+                            {{ formulario.Name }}
+                        </mat-checkbox>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon> Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid">
+            <mat-icon>save</mat-icon> Aceptar
+        </button>
+
+    </mat-dialog-actions>
+
+</form>

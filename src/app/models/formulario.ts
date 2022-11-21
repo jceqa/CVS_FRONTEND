@@ -1,10 +1,11 @@
-import { Sistema } from "./sistema";
-import { SubMenu } from "./subMenu";
+import { Sistema } from './sistema';
+import { SubMenu } from './subMenu';
 
-export interface Formulario {
-    id : number;
-    nombre : string;
-    url : string;
-    sistema : Sistema;
-    subMenu : SubMenu;
+export class Formulario {
+    id: number;
+    nombre: string;
+    url: string;
+    estado: string;
+    sistema: Sistema;
+    subMenu: SubMenu;
 }

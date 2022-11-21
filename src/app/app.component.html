@@ -22,7 +22,7 @@
         <mat-accordion class="app-menu mat-elevation-z0">
             <!--<mat-expansion-panel *ngFor="let menu of menus; first as isFirst" [expanded]="isFirst"-->
             <mat-expansion-panel *ngFor="let menu of menus;" class="mat-elevation-z0">
-                <mat-expansion-panel-header *ngIf="menu != null" [expandedHeight]="'40px'"
+                <mat-expansion-panel-header *ngIf="menu != null && (menu.Items[0].SubItems.length > 0 || menu.Items[1].SubItems.length > 0 || menu.Items[2].SubItems.length > 0)" [expandedHeight]="'40px'"
                     style="border-top: solid 1px rgb(224, 224, 224);">
                     <mat-panel-title>
                         <p style="vertical-align: middle" class="title">

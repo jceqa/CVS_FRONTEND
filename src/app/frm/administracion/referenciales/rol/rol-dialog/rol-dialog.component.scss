@@ -1,0 +1,34 @@
+ul {
+    column-count: 4;
+    list-style-type: none;
+    justify-content: space-between;
+}
+
+::ng-deep .mat-checkbox-checked.mat-success {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #155724 !important;
+    }
+
+    .mat-checkbox-background, .mat-checkbox-indeterminate.mat-success .mat-checkbox-background {
+        background-color: #155724;
+    }
+}
+
+::ng-deep .mat-checkbox.mat-success {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #155724 !important;
+    }
+}
+
+::ng-deep .mat-checkbox-checked:not(.mat-checkbox-disabled),
+.mat-checkbox:active:not(.mat-checkbox-disabled) {
+    &.mat-success .mat-ripple-element {
+        background: #155724 !important;
+    }
+}
+
+::ng-deep .mat-checkbox-indeterminate, .mat-checkbox-checked {
+    &.mat-success .mat-checkbox-background {
+        background-color: #155724 !important;
+    }
+}

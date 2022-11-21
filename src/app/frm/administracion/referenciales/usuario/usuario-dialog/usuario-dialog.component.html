@@ -1,0 +1,77 @@
+<h4 mat-dialog-title>{{title}} Usuario</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <div class="mt-2" *ngIf="formType === 1">
+            <mat-form-field class="full-width-field" >
+                <input id="id" formControlName="id" matInput placeholder="Id" readonly />
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="nombre" formControlName="nombre" required matInput placeholder="Nombre"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="usuario" formControlName="usuario" required matInput placeholder="Usuario"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
+                <input id="clave" formControlName="clave" required matInput placeholder="Clave"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field class="full-width-field">
+            <mat-label>Sucursal</mat-label>
+            <mat-select [compareWith]="compareFunction" formControlName="sucursal" required>
+                <mat-option *ngFor="let sucursal of sucursales" [value]="sucursal">
+                    {{ sucursal.descripcion }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!--<div *ngIf="this.formType === 1" >
+            <h4>Roles</h4>
+            <div *ngFor="let presupuesto of item.presupuestosCompra">
+                <span>Presupuesto de Compra: {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
+                    {{ presupuesto.usuario.nombre }} |  {{ presupuesto.proveedor.razonSocial }} |
+                    {{ presupuesto.total | myCurrency}}</span>
+                <br/>
+                <br/>
+            </div>
+        </div>-->
+
+        <div>
+            <h4>Roles</h4>
+            <mat-selection-list #shoes (selectionChange)="selectedRoles($event)">
+                <mat-list-option *ngFor="let rolPermiso of roles, let i = index" [value]="rolPermiso" [selected]="selected[i]">
+                    {{ rolPermiso.rol.nombre }}
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon> Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid">
+            <mat-icon>save</mat-icon> Aceptar
+        </button>
+
+    </mat-dialog-actions>
+
+</form>

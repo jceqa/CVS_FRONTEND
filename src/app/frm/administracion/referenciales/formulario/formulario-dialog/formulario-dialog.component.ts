@@ -1,20 +1,23 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {Marca} from '../../../../../models/marca';
-import {FormGroup, Validators, FormControl} from '@angular/forms';
+import {Component, Inject, OnInit} from '@angular/core';
+import {Formulario} from '../../../../../models/formulario';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MarcaService} from '../../../../../services/marca.service';
 import {UIService} from '../../../../../services/ui.service';
+import {FormularioService} from '../../../../../services/formulario.service';
 import {UtilService} from '../../../../../services/util.service';
+import {MenuService} from '../../../../../services/menu.service';
+import {Sistema} from '../../../../../models/sistema';
+import {SubMenu} from '../../../../../models/subMenu';
 
 @Component({
-    selector: 'app-marca-dialog',
-    templateUrl: './marca-dialog.component.html',
-    styleUrls: ['./marca-dialog.component.css']
+  selector: 'app-formulario-dialog',
+  templateUrl: './formulario-dialog.component.html',
+  styleUrls: ['./formulario-dialog.component.scss']
 })
-export class MarcaDialogComponent implements OnInit {
+export class FormularioDialogComponent implements OnInit {
 
-    item: Marca;
+    item: Formulario;
     companyId = 0;
     form: FormGroup;
 
@@ -23,12 +26,16 @@ export class MarcaDialogComponent implements OnInit {
     title: String;
     editID: number;
 
+    sistemas: Sistema[];
+    subMenus: SubMenu[];
+
     constructor(
         // private store: Store<fromRoot.State>,
-        private dialogRef: MatDialogRef<MarcaDialogComponent>,
+        private dialogRef: MatDialogRef<FormularioDialogComponent>,
         private uiService: UIService,
-        private marcaService: MarcaService,
+        private formularioService: FormularioService,
         private utils: UtilService,
+        private menuService: MenuService,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
             this.item = data.item;
@@ -38,29 +45,44 @@ export class MarcaDialogComponent implements OnInit {
     ngOnInit(): void {
         this.form = new FormGroup({
             id: new FormControl('', []),
-            descripcion: new FormControl('', [Validators.required]),
+            nombre: new FormControl('', [Validators.required]),
+            url: new FormControl('', [Validators.required]),
+            sistema: new FormControl('', [Validators.required]),
+            subMenu: new FormControl('', [Validators.required]),
         });
 
         if (this.data.item.id) {
             // Si existe id, es una edicion, se recupera el objeto a editar y se setean los campos
             this.title = 'Editar';
             this.editID = this.data.item.id;
-            this.getMarcaById(this.data.item.id);
+            this.getFormularioById(this.data.item.id);
             this.formType = FormType.EDIT;
             // this.setForm(this.item);
         } else {
             // Si no existe es una nueva lista
-            this.title = 'Nueva';
+            this.title = 'Nuevo';
             this.formType = FormType.NEW;
         }
+
+        this.utils.startLoading();
+        this.menuService.getMenu().subscribe( data => {
+                console.log(data);
+                this.sistemas = data.sistemas;
+                this.subMenus = data.subMenus;
+                this.utils.stopLoading();
+            },
+            error => {
+                this.utils.stopLoading();
+                console.log(error);
+            });
     }
 
-    getMarcaById(id: number): void {
+    getFormularioById(id: number): void {
 
         // Realiza la llamada http para obtener el objeto
-        this.marcaService.getMarcaById(id).subscribe(
+        this.formularioService.getFormularioById(id).subscribe(
             data => {
-                this.item = data as Marca;
+                this.item = data as Formulario;
                 this.setForm(this.item);
             }, (error) => {
                 console.error(error);
@@ -68,12 +90,15 @@ export class MarcaDialogComponent implements OnInit {
     }
 
     // Rellena los campos del formulario con los valores dados
-    setForm(item: Marca) {
+    setForm(item: Formulario) {
         console.log(item);
         if (this.formType === FormType.EDIT) {
             this.form.patchValue({
                 id: item.id,
-                descripcion: item.descripcion
+                nombre: item.nombre,
+                url: item.url,
+                sistema: item.sistema,
+                subMenu: item.subMenu
             });
         }
     }
@@ -81,7 +106,10 @@ export class MarcaDialogComponent implements OnInit {
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}
     setAtributes(): void {
         this.item.id = this.form.get('id').value;
-        this.item.descripcion = this.form.get('descripcion').value.toString().toUpperCase().trim();
+        this.item.nombre = this.form.get('nombre').value;
+        this.item.url = this.form.get('url').value;
+        this.item.sistema = this.form.get('sistema').value;
+        this.item.subMenu = this.form.get('subMenu').value;
     }
 
     dismiss(result?: any) {
@@ -90,6 +118,10 @@ export class MarcaDialogComponent implements OnInit {
 
     uploadListItem(dato) {
         console.log(dato);
+    }
+
+    compareFunction(o1: any, o2: any) {
+        return (o1 && o2 && o1.id === o2.id);
     }
 
     // Metodo que se llama al oprimir el boton guardar
@@ -110,9 +142,9 @@ export class MarcaDialogComponent implements OnInit {
 
         this.setAtributes();
         this.item.id = 0;
-        if (this.utils.tieneLetras(this.item.descripcion)) {
+        if (this.utils.tieneLetras(this.item.nombre)) {
             // Llama al servicio que almacena el objeto {PriceListDraft}
-            this.marcaService.guardarMarca(this.item)
+            this.formularioService.guardarFormulario(this.item)
                 .subscribe(data => {
                         console.log(data);
                         this.dialogRef.close(data);
@@ -124,7 +156,9 @@ export class MarcaDialogComponent implements OnInit {
                         );
                     },
                     (error) => {
+
                         console.error('[ERROR]: ', error);
+
                         this.uiService.showSnackbar(
                             error.error,
                             'Cerrar',
@@ -144,13 +178,11 @@ export class MarcaDialogComponent implements OnInit {
 
     // Metodo que modifica un objeto {PriceListDraft} en base de datos
     edit(): void {
-
         // Asigna los valores del formulario al objeto a almacenar
         this.setAtributes();
-
         // Llama al servicio http que actualiza el objeto.
-        if (this.utils.tieneLetras(this.item.descripcion)) {
-            this.marcaService.editarMarca(this.item).subscribe(data => {
+        if (this.utils.tieneLetras(this.item.nombre)) {
+            this.formularioService.editarFormulario(this.item).subscribe(data => {
                 console.log(data);
                 this.uiService.showSnackbar(
                     'Modificado exitosamente.',

@@ -1,0 +1,76 @@
+<div style="margin: 8px;">
+    <mat-toolbar>
+        <span>Reportes de Pagos</span>
+        <span class="line-spacer"></span>
+
+        <button color="primary" mat-button (click)="printTest()">
+            <mat-icon>print</mat-icon>
+            <span>Imprimir</span>
+        </button>
+
+    </mat-toolbar>
+    <mat-card>
+        <mat-card-content>
+            <div>
+                <mat-form-field class="third-width-field">
+                    <mat-label>Fecha Desde</mat-label>
+                    <input matInput [matDatepicker]="picker1" readonly [(ngModel)]="fechaInicio">
+                    <mat-hint>DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                &nbsp;
+                <mat-form-field class="third-width-field">
+                    <mat-label>Fecha Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker2" readonly [(ngModel)]="fechaFin">
+                    <mat-hint>DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+
+                <button color="primary" mat-button (click)="cargar()">
+                    <mat-icon>search</mat-icon>
+                    <span>Buscar</span>
+                </button>
+            </div>
+
+            <div class="end" *ngIf="false">
+                <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Inactivos</mat-checkbox>
+            </div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Id</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><span [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}"> {{ dato.id }} </span></mat-cell>>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Descripción</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.descripcion }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Fecha</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.fecha | date : 'dd/MM/yyyy' }}</i></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="monto">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Monto</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.monto | myCurrency }}</i></mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <mat-paginator #painator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+            </mat-paginator>
+        </mat-card-content>
+    </mat-card>
+</div>

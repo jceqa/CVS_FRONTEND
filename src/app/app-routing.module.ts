@@ -44,6 +44,10 @@ import {FacturaComponent} from './frm/ventas/procesos/factura/factura.component'
 import {TimbradoComponent} from './frm/ventas/referenciales/timbrado/timbrado.component';
 import {LibroVentaComponent} from './frm/ventas/procesos/libro-venta/libro-venta.component';
 import {CuentaACobrarComponent} from './frm/ventas/procesos/cuenta-a-cobrar/cuenta-a-cobrar.component';
+import {FormularioComponent} from './frm/administracion/referenciales/formulario/formulario.component';
+import {RolComponent} from './frm/administracion/referenciales/rol/rol.component';
+import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuario.component';
+import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -91,6 +95,10 @@ const routes: Routes = [
     { path: 'libroventa', component: LibroVentaComponent},
     { path: 'cuentaacobrar', component: CuentaACobrarComponent},
     { path: 'timbrado', component: TimbradoComponent},
+    { path: 'formulario', component: FormularioComponent},
+    { path: 'rol', component: RolComponent},
+    { path: 'usuario', component: UsuarioComponent},
+    { path: 'reportepago', component: ReportePagoComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];
