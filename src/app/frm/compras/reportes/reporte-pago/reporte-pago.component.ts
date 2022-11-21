@@ -5,7 +5,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {PagoService} from '../../../../services/pago.service';
 import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
-import print from 'print-js';
+import * as es6printJS from 'print-js';
 
 @Component({
   selector: 'app-reporte-pago',
@@ -27,6 +27,8 @@ export class ReportePagoComponent implements OnInit {
     numeroResultados = 5;
 
     all = false;
+    fechaInicio = null;
+    fechaFin = null;
 
     constructor(
         private pagoService: PagoService,
@@ -38,11 +40,36 @@ export class ReportePagoComponent implements OnInit {
         this.cargar();
     }
 
+    printTest() {
+        const data = [];
+        this.pagos.forEach( p => {
+            const date = new Date(p.fecha);
+            data.push({
+                descripcion: p.descripcion,
+                fecha: date.toLocaleDateString('en-US'),
+                monto: p.monto
+            });
+        });
+        es6printJS({
+            printable: data,
+            properties: [
+                { field: 'descripcion', displayName: 'Descripción'},
+                { field: 'fecha', displayName: 'Fecha'},
+                { field: 'monto', displayName: 'Monto'}
+            ],
+            type: 'json',
+            header: '' +
+                '<img class="logo" src="assets/Innovalogic%20Logo.jpg" style="width: 20%" >' +
+                '<h3 class="custom-h3">Reporte de Pagos</h3>',
+            style: '.custom-h3 { color: black; }',
+            gridHeaderStyle: 'color: black;  border: 2px solid #3971A5;',
+            gridStyle: 'border: 2px solid #3971A5;'
+        });
+    }
+
     cargar() {
-        // this.store.dispatch(new UI.StartLoading());
-        // this.util.localStorageSetItem('loading', 'true');
         this.util.startLoading();
-        this.pagoService.getPagos(this.all).subscribe(
+        this.pagoService.getPagos().subscribe(
             (data) => {
                 console.log(data);
                 this.pagos = data;

@@ -23,4 +23,8 @@ export class PagoService {
     public getPagos(all: boolean = false): Observable<Pago[]> {
         return this.http.get<Pago[]>(this.baseUrl + `?all=${all}`);
     }
+
+    public filterPagosByDate(fechaInicio: Date, fechaFin: Date): Observable<Pago[]> {
+        return this.http.get<Pago[]>(this.baseUrl + `filter?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+    }
 }

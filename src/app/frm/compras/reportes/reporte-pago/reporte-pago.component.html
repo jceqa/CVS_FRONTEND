@@ -3,23 +3,18 @@
         <span>Reportes de Pagos</span>
         <span class="line-spacer"></span>
 
-        <button color="primary" mat-button (click)="printJS({
-                printable: someJSONdata,
-                type: 'json',
-        properties: ['name', 'email', 'phone'],
-        header: '<h3 class="custom-h3">My custom header</h3>',
-        style: '.custom-h3 { color: red; }'
-        })"">
+        <button color="primary" mat-button (click)="printTest()">
             <mat-icon>print</mat-icon>
             <span>Imprimir</span>
         </button>
+
     </mat-toolbar>
     <mat-card>
         <mat-card-content>
             <div>
                 <mat-form-field class="third-width-field">
                     <mat-label>Fecha Desde</mat-label>
-                    <input matInput [matDatepicker]="picker1" readonly>
+                    <input matInput [matDatepicker]="picker1" readonly [ngModel]="fechaInicio">
                     <mat-hint>DD/MM/YYYY</mat-hint>
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
@@ -27,7 +22,7 @@
                 &nbsp;
                 <mat-form-field class="third-width-field">
                     <mat-label>Fecha Hasta</mat-label>
-                    <input matInput [matDatepicker]="picker2" readonly>
+                    <input matInput [matDatepicker]="picker2" readonly [ngModel]="fechaFin">
                     <mat-hint>DD/MM/YYYY</mat-hint>
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
