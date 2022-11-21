@@ -127,7 +127,7 @@ export class NotaCreditoCompraComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Nota de Crédito Comra',
+                title: 'Anular Nota de Crédito Compra',
                 msg: '¿Está seguro que desea anular esta Nota de Crédito Compra?'
             }
         });

@@ -7,4 +7,5 @@ export class Servicio {
     monto: number;
     impuesto: Impuesto;
     articulo: Articulo;
+    estado: string;
 }

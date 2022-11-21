@@ -45,7 +45,6 @@ export class PedidoCompraDialogComponent implements OnInit {
     articuloSelected: Articulo = null;
     sucursales: Sucursal[] = [];
     depositos: Deposito[] = [];
-
     displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'actions'];
     dataSource = new MatTableDataSource<PedidoCompraDetalle>();
     detalles: PedidoCompraDetalle[] = [];

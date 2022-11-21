@@ -10,4 +10,5 @@ export class Proveedor {
     correo: string;
     telefono: string;
     ciudad: Ciudad;
+    estado: string;
 }

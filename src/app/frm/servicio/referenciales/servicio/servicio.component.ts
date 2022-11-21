@@ -1,12 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { Servicio } from '../../../../models/servicio';
-import { MatPaginator } from '@angular/material/paginator';
-import { UIService } from '../../../../services/ui.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ServicioService } from '../../../../services/servicio.service';
-import { ServicioDialogComponent } from './servicio-dialog/servicio-dialog.component';
-import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {Servicio} from '../../../../models/servicio';
+import {MatPaginator} from '@angular/material/paginator';
+import {UIService} from '../../../../services/ui.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ServicioService} from '../../../../services/servicio.service';
+import {ServicioDialogComponent} from './servicio-dialog/servicio-dialog.component';
+import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
+import {UtilService} from '../../../../services/util.service';
+
 
 @Component({
     selector: 'app-servicio',
@@ -26,19 +28,22 @@ export class ServicioComponent implements OnInit {
 
     pagina = 1;
     numeroResultados = 5;
+    all = false;
 
     constructor(
         private servicioService: ServicioService,
         private dialog: MatDialog,
         private uiService: UIService,
-    ) { }
-
-    ngOnInit(): void {
-        this.cargar();
+        private util: UtilService
+    ) {
     }
 
-    cargar() {
-        this.servicioService.listServicios().subscribe(
+    ngOnInit(): void {
+        this.cargarServicios();
+    }
+
+    cargarServicios() {
+        this.servicioService.listServicios(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.servicios = data;
@@ -47,6 +52,7 @@ export class ServicioComponent implements OnInit {
                     this.servicios
                 );
                 this.dataSource.paginator = this.paginator;
+                this.util.stopLoading();
             },
             err => {
                 console.log(err.error);
@@ -79,7 +85,7 @@ export class ServicioComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargar();
+                this.cargarServicios();
             }
         });
     }
@@ -88,7 +94,7 @@ export class ServicioComponent implements OnInit {
         this.servicioService.eliminarServicio(id).subscribe(
             result => {
                 console.log(result);
-                this.cargar();
+                this.cargarServicios();
 
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
@@ -107,20 +113,61 @@ export class ServicioComponent implements OnInit {
         );
     }
 
-    openDialog(event: any, equipo: Servicio): void {
+    reactivateItem(servicio: Servicio): void {
+        servicio.estado = 'ACTIVO';
+        this.servicioService.editarServicio(servicio).subscribe(
+            result => {
+                console.log(result);
+                this.cargarServicios();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, servicio: Servicio): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
                 title: 'Eliminar Servicio',
-                msg: '¿Está seguro que desea eliminar este Servicio?'
+                msg: '¿Está seguro que desea eliminar este servicio?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.deleteItem(equipo.id);
+                this.deleteItem(servicio.id);
+            }
+        });
+    }
+
+    reactivate(event: any, servicio: Servicio): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Servicio',
+                msg: '¿Está seguro que desea reactivar este servicio?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(servicio);
             }
         });
     }

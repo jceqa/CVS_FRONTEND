@@ -1,13 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { Articulo } from '../../../../models/articulo';
-import { MatDialog } from '@angular/material/dialog';
-import { ArticuloDialogComponent } from './articulo-dialog/articulo-dialog.component';
-import { UIService } from '../../../../services/ui.service';
-import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {Articulo} from '../../../../models/articulo';
+import {MatDialog} from '@angular/material/dialog';
+import {ArticuloDialogComponent} from './articulo-dialog/articulo-dialog.component';
+import {UIService} from '../../../../services/ui.service';
+import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
 import {ArticuloService} from '../../../../services/articulo.service';
 import {UtilService} from '../../../../services/util.service';
+
 
 @Component({
     selector: 'app-articulo',
@@ -28,12 +29,15 @@ export class ArticuloComponent implements OnInit {
     pagina = 1;
     numeroResultados = 5;
 
+    all = false;
+
     constructor(
         private articuloService: ArticuloService,
         private dialog: MatDialog,
         private uiService: UIService,
         private utils: UtilService
-    ) { }
+    ) {
+    }
 
     ngOnInit(): void {
         this.cargarArticulos();
@@ -41,7 +45,7 @@ export class ArticuloComponent implements OnInit {
 
     cargarArticulos() {
         this.utils.startLoading();
-        this.articuloService.getArticulos().subscribe(
+        this.articuloService.getArticulos(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.articulos = data;
@@ -94,7 +98,6 @@ export class ArticuloComponent implements OnInit {
             result => {
                 console.log(result);
                 this.cargarArticulos();
-                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
                     'Cerrar',
@@ -102,7 +105,6 @@ export class ArticuloComponent implements OnInit {
                 );
             }, error => {
                 console.log(error);
-                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -112,13 +114,36 @@ export class ArticuloComponent implements OnInit {
         );
     }
 
-    openDialog(event: any, articulo: Articulo): void {
+    reactivateItem(articulo: Articulo): void {
+        articulo.estado = 'ACTIVO';
+        this.articuloService.editarArticulo(articulo).subscribe(
+            result => {
+                console.log(result);
+                this.cargarArticulos();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, articulo: Articulo): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
                 title: 'Eliminar Articulo',
-                msg: '¿Está seguro que desea eliminar esta articulo?'
+                msg: '¿Está seguro que desea eliminar este Articulo?'
             }
         });
 
@@ -126,6 +151,24 @@ export class ArticuloComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.deleteItem(articulo.id);
+            }
+        });
+    }
+
+    reactivate(event: any, articulo: Articulo): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Articulo',
+                msg: '¿Está seguro que desea reactivar este Articulo?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(articulo);
             }
         });
     }

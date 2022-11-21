@@ -148,7 +148,7 @@ export class ImpuestoComponent implements OnInit {
             // width: '50vw',
             data: {
                 title: 'Eliminar Impuesto',
-                msg: '¿Está seguro que desea eliminar est Impuesto?'
+                msg: '¿Está seguro que desea eliminar este Impuesto?'
             }
         });
 

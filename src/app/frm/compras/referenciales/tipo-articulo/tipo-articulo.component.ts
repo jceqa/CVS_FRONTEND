@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { TipoArticuloDialogComponent } from './tipo-articulo-dialog/tipo-articulo-dialog.component';
 import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {UtilService} from '../../../../services/util.service';
+
 
 @Component({
     selector: 'app-tipo-articulo.component.ts',
@@ -26,11 +28,13 @@ export class TipoArticuloComponent implements OnInit {
 
     pagina = 1;
     numeroResultados = 5;
+    all = false;
 
     constructor(
         private tipoarticuloService: TipoArticuloService,
         private dialog: MatDialog,
         private uiService: UIService,
+        private util: UtilService
     ) { }
 
     ngOnInit(): void {
@@ -38,7 +42,7 @@ export class TipoArticuloComponent implements OnInit {
     }
 
     cargarTipoArticulos() {
-        this.tipoarticuloService.getTipoArticulos().subscribe(
+        this.tipoarticuloService.getTipoArticulos(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.tipoarticulos = data;
@@ -49,6 +53,7 @@ export class TipoArticuloComponent implements OnInit {
                 this.dataSource.paginator = this.paginator;
             },
             err => {
+                this.util.stopLoading();
                 console.log(err.error);
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
@@ -104,23 +109,64 @@ export class TipoArticuloComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
-    openDialog(event: any, tipoarticulo: TipoArticulo): void {
+    reactivateItem(tipoArticulo: TipoArticulo): void {
+        tipoArticulo.estado = 'ACTIVO';
+        this.tipoarticuloService.editarTipoArticulo(tipoArticulo).subscribe(
+            result => {
+                console.log(result);
+                this.cargarTipoArticulos();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, tipoArticulo: TipoArticulo): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
                 title: 'Eliminar Tipo de Articulo',
-                msg: '¿Está seguro que desea eliminar este tipo de articulo.component.ts?'
+                msg: '¿Está seguro que desea eliminar este Tipo de Articulo?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.deleteItem(tipoarticulo.id);
+                this.deleteItem(tipoArticulo.id);
+            }
+        });
+    }
+
+    reactivate(event: any, tipoArticulo: TipoArticulo): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Tipo de Articulo',
+                msg: '¿Está seguro que desea reactivar este Tipo de Articulo?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(tipoArticulo);
             }
         });
     }

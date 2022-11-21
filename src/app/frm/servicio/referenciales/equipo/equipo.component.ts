@@ -8,6 +8,8 @@ import { EquipoService } from '../../../../services/equipo.service';
 import { EquipoDialogComponent } from './equipo-dialog/equipo-dialog.component';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
 
+import {UtilService} from '../../../../services/util.service';
+
 @Component({
     selector: 'app-equipo',
     templateUrl: './equipo.component.html',
@@ -26,11 +28,12 @@ export class EquipoComponent implements OnInit {
 
     pagina = 1;
     numeroResultados = 5;
-
+    all = false;
     constructor(
         private equipoService: EquipoService,
         private dialog: MatDialog,
         private uiService: UIService,
+        private utils: UtilService
     ) { }
 
     ngOnInit(): void {
@@ -38,18 +41,20 @@ export class EquipoComponent implements OnInit {
     }
 
     cargarEquipos() {
-        this.equipoService.listEquipos().subscribe(
+        this.utils.startLoading();
+        this.equipoService.listEquipos(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.equipos = data;
-
                 this.dataSource = new MatTableDataSource<Equipo>(
                     this.equipos
                 );
                 this.dataSource.paginator = this.paginator;
+                this.utils.stopLoading();
             },
             err => {
                 console.log(err.error);
+                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -85,13 +90,35 @@ export class EquipoComponent implements OnInit {
     }
 
     deleteItem(id: number): void {
+        this.utils.startLoading();
         this.equipoService.eliminarEquipo(id).subscribe(
             result => {
                 console.log(result);
                 this.cargarEquipos();
-
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    reactivateItem(equipo: Equipo): void {
+        equipo.estado = 'ACTIVO';
+        this.equipoService.editarEquipo(equipo).subscribe(
+            result => {
+                console.log(result);
+                this.cargarEquipos();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
                     'Cerrar',
                     3000
                 );
@@ -104,16 +131,16 @@ export class EquipoComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
-    openDialog(event: any, equipo: Equipo): void {
+    delete(event: any, equipo: Equipo): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
-                title: "Eliminar Equipo",
-                msg: "¿Está seguro que desea eliminar este equipo?"
+                title: 'Eliminar Equipo',
+                msg: '¿Está seguro que desea eliminar este equipo?'
             }
         });
 
@@ -121,6 +148,24 @@ export class EquipoComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.deleteItem(equipo.id);
+            }
+        });
+    }
+
+    reactivate(event: any, equipo: Equipo): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Equipo',
+                msg: '¿Está seguro que desea reactivar este equipo?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(equipo);
             }
         });
     }

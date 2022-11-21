@@ -11,4 +11,5 @@ export class Articulo {
     impuesto: Impuesto;
     marca: Marca;
     tipoArticulo: TipoArticulo;
+    estado: string;
 }

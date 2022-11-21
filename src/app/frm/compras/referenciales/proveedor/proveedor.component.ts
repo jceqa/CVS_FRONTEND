@@ -9,6 +9,7 @@ import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.
 import {ProveedorService} from '../../../../services/proveedor.service';
 import {UtilService} from '../../../../services/util.service';
 
+
 @Component({
     selector: 'app-proveedor',
     templateUrl: './proveedor.component.html',
@@ -27,12 +28,13 @@ export class ProveedorComponent implements OnInit {
 
     pagina = 1;
     numeroResultados = 5;
+    all = false;
 
     constructor(
         private proveedorService: ProveedorService,
         private dialog: MatDialog,
         private uiService: UIService,
-        private utils: UtilService
+        private util: UtilService
     ) {
     }
 
@@ -41,20 +43,19 @@ export class ProveedorComponent implements OnInit {
     }
 
     cargarProveedores() {
-        this.utils.startLoading();
-        this.proveedorService.getProveedores().subscribe(
+        this.util.startLoading();
+        this.proveedorService.getProveedores(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.proveedores = data;
-                this.utils.stopLoading();
                 this.dataSource = new MatTableDataSource<Proveedor>(
                     this.proveedores
                 );
                 this.dataSource.paginator = this.paginator;
+                this.util.stopLoading();
             },
             err => {
                 console.log(err.error);
-                this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -90,12 +91,12 @@ export class ProveedorComponent implements OnInit {
     }
 
     deleteItem(id: number): void {
-        this.utils.startLoading();
+        this.util.startLoading();
         this.proveedorService.eliminarProveedor(id).subscribe(
             result => {
                 console.log(result);
                 this.cargarProveedores();
-                this.utils.stopLoading();
+                this.util.stopLoading();
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
                     'Cerrar',
@@ -103,7 +104,7 @@ export class ProveedorComponent implements OnInit {
                 );
             }, error => {
                 console.log(error);
-                this.utils.stopLoading();
+                this.util.stopLoading();
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -113,7 +114,30 @@ export class ProveedorComponent implements OnInit {
         );
     }
 
-    openDialog(event: any, proveedor: Proveedor): void {
+    reactivateItem(proveedor: Proveedor): void {
+        proveedor.estado = 'ACTIVO';
+        this.proveedorService.editarProveedor(proveedor).subscribe(
+            result => {
+                console.log(result);
+                this.cargarProveedores();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, proveedor: Proveedor): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
@@ -127,6 +151,24 @@ export class ProveedorComponent implements OnInit {
             console.log(result);
             if (result.data) {
                 this.deleteItem(proveedor.id);
+            }
+        });
+    }
+
+    reactivate(event: any, proveedor: Proveedor): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Proveedor',
+                msg: '¿Está seguro que desea reactivar este Proveedor?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(proveedor);
             }
         });
     }

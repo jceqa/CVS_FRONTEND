@@ -8,4 +8,5 @@ export class Equipo {
     modelo: string;
     marca: Marca;
     cliente: Cliente;
+    estado: string;
 }
