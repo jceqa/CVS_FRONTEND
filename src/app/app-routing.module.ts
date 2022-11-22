@@ -48,6 +48,7 @@ import {FormularioComponent} from './frm/administracion/referenciales/formulario
 import {RolComponent} from './frm/administracion/referenciales/rol/rol.component';
 import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuario.component';
 import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
+import {EntregaEquipoComponent} from './frm/servicio/procesos/entrega-equipo/entrega-equipo.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -100,6 +101,7 @@ const routes: Routes = [
     { path: 'rol', component: RolComponent},
     { path: 'usuario', component: UsuarioComponent},
     { path: 'reportepago', component: ReportePagoComponent},
+    { path: 'entregaequipo', component: EntregaEquipoComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

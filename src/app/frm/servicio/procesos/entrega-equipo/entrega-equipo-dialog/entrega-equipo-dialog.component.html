@@ -33,9 +33,9 @@
                        class="text">
                 <mat-autocomplete #autoFactura="matAutocomplete" [displayWith]="displayFactura">
                     <mat-option *ngFor="let factura of facturasFiltered | async" [value]="factura"
-                                (onSelectionChange)="selectedPedido($event)">
+                                (onSelectionChange)="selectedFactura($event)">
                         {{ factura.observacion }} | {{ factura.fecha | date: 'dd/MM/yyyy' }} |
-                        {{ factura.usuario.nombre }}| {{ factura.fechagarantia | date: 'dd/MM/yyyy'}} |
+                        {{ factura.usuario.nombre }}| {{ factura.numeroFactura}} | {{ factura.monto | myCurrency }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>

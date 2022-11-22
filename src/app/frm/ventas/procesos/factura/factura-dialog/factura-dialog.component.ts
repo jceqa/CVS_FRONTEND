@@ -462,7 +462,7 @@ export class FacturaDialogComponent implements OnInit {
                 const iva = monto - montoSinIVA;
                 this.totalIVA -= iva;
                 this.total -= monto;
-                this.detalles = this.detalles.filter(d => d.pedidoVentaDetalle.id !== pVD.id);
+                this.detalles = this.detalles.filter(d => (d.pedidoVentaDetalle && d.pedidoVentaDetalle.id !== pVD.id));
                 this.dataSource = new MatTableDataSource<FacturaDetalle>(
                     this.detalles
                 );
@@ -522,7 +522,7 @@ export class FacturaDialogComponent implements OnInit {
                 const iva = oSD.monto - montoSinIVA;
                 this.totalIVA -= iva;
                 this.total -= oSD.monto;
-                this.detalles = this.detalles.filter(d => d.ordenServicioDetalle.id !== oSD.id);
+                this.detalles = this.detalles.filter(d => (d.ordenServicioDetalle && d.ordenServicioDetalle.id !== oSD.id));
                 this.dataSource = new MatTableDataSource<FacturaDetalle>(
                     this.detalles
                 );

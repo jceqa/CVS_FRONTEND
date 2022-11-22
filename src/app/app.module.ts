@@ -129,6 +129,10 @@ import {
     UsuarioDialogComponent
 } from './frm/administracion/referenciales/usuario/usuario-dialog/usuario-dialog.component';
 import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
+import {EntregaEquipoComponent} from './frm/servicio/procesos/entrega-equipo/entrega-equipo.component';
+import {
+    EntregaEquipoDialogComponent
+} from './frm/servicio/procesos/entrega-equipo/entrega-equipo-dialog/entrega-equipo-dialog.component';
 
 @NgModule({
     declarations: [
@@ -225,6 +229,8 @@ import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-
         UsuarioComponent,
         UsuarioDialogComponent,
         ReportePagoComponent,
+        EntregaEquipoComponent,
+        EntregaEquipoDialogComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

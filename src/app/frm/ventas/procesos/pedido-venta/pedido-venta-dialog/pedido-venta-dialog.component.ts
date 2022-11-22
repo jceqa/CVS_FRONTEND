@@ -183,6 +183,11 @@ export class PedidoVentaDialogComponent implements OnInit {
 
     listDepositos() {
         this.form.get('deposito').setValue('');
+        this.limpiarCampos();
+        this.detalles.length = 0;
+        this.dataSource = new MatTableDataSource<PedidoVentaDetalle>(
+            this.detalles
+        );
         this.utils.startLoading();
         this.depositoService.listDepositosBySucursal(this.form.get('sucursal').value.id).subscribe(
             data => {
@@ -202,6 +207,11 @@ export class PedidoVentaDialogComponent implements OnInit {
 
     listStock() {
         this.utils.startLoading();
+        this.limpiarCampos();
+        this.detalles.length = 0;
+        this.dataSource = new MatTableDataSource<PedidoVentaDetalle>(
+            this.detalles
+        );
         this.stockService.listStockByDeposito(this.form.get('deposito').value.id).subscribe(data => {
             console.log(data);
             this.options = data;
