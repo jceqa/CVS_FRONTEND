@@ -17,7 +17,6 @@ import {FacturaService} from '../../../../../services/factura.service';
 import {Factura} from '../../../../../models/factura';
 import {formatDate} from '@angular/common';
 import {Proveedor} from '../../../../../models/proveedor';
-import {ProveedorService} from '../../../../../services/proveedor.service';
 
 @Component({
     selector: 'app-presupuesto-compra-dialog',
