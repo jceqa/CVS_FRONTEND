@@ -83,6 +83,7 @@ const routes: Routes = [
     { path: 'ajuste', component: AjusteComponent},
     { path: 'pago', component: PagoComponent},
     { path: 'stock', component: StockComponent},
+    { path: 'stockcompra', component: StockComponent},
     { path: 'deposito', component: DepositoComponent},
     { path: 'sucursal', component: SucursalComponent},
     { path: 'tipoarticulo', component: TipoArticuloComponent},
