@@ -50,7 +50,7 @@ export class ReportePagoComponent implements OnInit {
             const date = new Date(p.fecha);
             data.push({
                 descripcion: p.descripcion,
-                fecha: date.toLocaleDateString('en-US'),
+                fecha: date.toLocaleDateString('en-GB'),
                 monto: p.monto
             });
         });
@@ -66,8 +66,8 @@ export class ReportePagoComponent implements OnInit {
                 '<img class="logo" src="assets/Innovalogic%20Logo.jpg" style="width: 20%" >' +
                 '<h3 class="custom-h3">Reporte de Pagos</h3>',
             style: '.custom-h3 { color: black; }',
-            gridHeaderStyle: 'color: black;  border: 2px solid #3971A5;',
-            gridStyle: 'border: 2px solid #3971A5;'
+            gridHeaderStyle: 'color: black;  border: 2px solid black;',
+            gridStyle: 'border: 2px solid black;'
         });
     }
 

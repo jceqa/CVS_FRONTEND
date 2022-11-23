@@ -49,6 +49,7 @@ import {RolComponent} from './frm/administracion/referenciales/rol/rol.component
 import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuario.component';
 import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
 import {EntregaEquipoComponent} from './frm/servicio/procesos/entrega-equipo/entrega-equipo.component';
+import {CobroComponent} from './frm/ventas/procesos/cobro/cobro.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -102,6 +103,7 @@ const routes: Routes = [
     { path: 'usuario', component: UsuarioComponent},
     { path: 'reportepago', component: ReportePagoComponent},
     { path: 'entregaequipo', component: EntregaEquipoComponent},
+    { path: 'cobro', component: CobroComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

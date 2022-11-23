@@ -39,7 +39,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
     editID: number;
     fecha = new Date();
 
-    displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'precio', 'total'/*, 'actions'*/];
+    displayedColumns: string[] = ['codigo', 'descripcion', 'marca', 'modelo', 'serie',  /*'actions'*/];
     dataSource = new MatTableDataSource<EntregaEquipoDetalle>();
     detalles: EntregaEquipoDetalle[] = [];
 
@@ -80,7 +80,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
             // this.total = this.item.total;
         } else {
             // Si no existe es una nueva lista
-            this.title = 'Nuevo';
+            this.title = 'Nueva';
             this.formType = FormType.NEW;
         }
 
@@ -107,7 +107,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
                 observacion: item.observacion,
             });
             this.fecha = item.fecha;
-            this.detalles = item.entregaEquipoDetalles;
+            this.detalles = item.entregaEquipoDetalle;
             this.estadoEntregaEquipo = item.estadoEntregaEquipo.descripcion;
             this.dataSource = new MatTableDataSource<EntregaEquipoDetalle>(
                 this.detalles
@@ -123,7 +123,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
-        this.item.entregaEquipoDetalles = this.detalles;
+        this.item.entregaEquipoDetalle = this.detalles;
         // this.item.total = this.total;
         this.item.factura = this.facturaSelected;
     }
@@ -160,6 +160,20 @@ export class EntregaEquipoDialogComponent implements OnInit {
     selectedFactura($event): void {
         console.log($event.source.value);
         this.facturaSelected = $event.source.value;
+
+        this.facturaSelected.facturaDetalles.forEach(fD => {
+            if (fD.ordenServicioDetalle) {
+               this.detalles.push({
+                 id: 0,
+                 estado: 'ACTIVO',
+                 facturaDetalle: fD
+               });
+            }
+        });
+
+        this.dataSource = new MatTableDataSource<EntregaEquipoDetalle>(
+            this.detalles
+        );
     }
 
     displayFactura(value: Factura) {

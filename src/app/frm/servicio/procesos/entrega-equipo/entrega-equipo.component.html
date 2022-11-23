@@ -67,18 +67,18 @@
                         <h4><strong>Estado</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.estadoRecepcion.descripcion }}
+                        {{ dato.estadoEntregaEquipo.descripcion }}
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="sucursal">
+                <!--<ng-container matColumnDef="sucursal">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Sucursal</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
                         {{ dato.sucursal.descripcion }}
                     </mat-cell>
-                </ng-container>
+                </ng-container>-->
 
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
@@ -88,7 +88,7 @@
                             <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                         </button>
 
-                        <button [disabled]="dato.estadoRecepcion.id !== 1" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                        <button [disabled]="dato.estadoEntregaEquipo.id !== 1" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
                             <mat-icon aria-label="Editar item">block</mat-icon>
                         </button>
 

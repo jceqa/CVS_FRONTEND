@@ -1,15 +1,15 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Pago} from '../models/pago';
 import {AccountService} from './account.service';
+import {Observable} from 'rxjs';
+import {Cobro} from '../models/cobro';
 import {Filtro} from '../models/filtro';
 
 @Injectable({
     providedIn: 'root'
 })
 
-export class PagoService {
+export class CobroService {
 
     constructor(private http: HttpClient,
                 private accountService: AccountService
@@ -19,16 +19,17 @@ export class PagoService {
         return this.accountService.getAuthHeather();
     }
 
-    private baseUrl = 'api/pago/';
+    private baseUrl = 'api/cobro/';
 
-    public getPagos(all: boolean = false): Observable<Pago[]> {
-        return this.http.get<Pago[]>(this.baseUrl + `?all=${all}`);
+    public getCobros(all: boolean = false): Observable<Cobro[]> {
+        return this.http.get<Cobro[]>(this.baseUrl + `?all=${all}`);
     }
 
-    public filterPagosByDate(filtro: Filtro): Observable<any> {
+    public filterCobrosByDate(filtro: Filtro): Observable<any> {
         return this.http.post<any>(this.baseUrl + 'filter', filtro, {
             headers: this.headers,
             observe: 'response'
         });
     }
+
 }

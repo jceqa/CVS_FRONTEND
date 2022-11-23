@@ -16,7 +16,7 @@ import {EntregaEquipo} from '../../../../models/entregaEquipo';
 })
 export class EntregaEquipoComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'estado', 'sucursal', 'actions'];
+    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'estado', /*'sucursal',*/ 'actions'];
     dataSource = new MatTableDataSource<EntregaEquipo>();
 
     @ViewChild(MatPaginator)

@@ -133,6 +133,7 @@ import {EntregaEquipoComponent} from './frm/servicio/procesos/entrega-equipo/ent
 import {
     EntregaEquipoDialogComponent
 } from './frm/servicio/procesos/entrega-equipo/entrega-equipo-dialog/entrega-equipo-dialog.component';
+import {CobroComponent} from './frm/ventas/procesos/cobro/cobro.component';
 
 @NgModule({
     declarations: [
@@ -231,6 +232,7 @@ import {
         ReportePagoComponent,
         EntregaEquipoComponent,
         EntregaEquipoDialogComponent,
+        CobroComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

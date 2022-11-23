@@ -8,7 +8,7 @@ import {CuentaACobrar} from '../models/cuentaACobrar';
     providedIn: 'root'
 })
 
-export class CuentACcobrarService {
+export class CuentaACobrarService {
 
     constructor(private http: HttpClient,
                 private accountService: AccountService
@@ -41,5 +41,9 @@ export class CuentACcobrarService {
 
     public getCuentasACobrarPendientes(): Observable<CuentaACobrar[]> {
         return this.http.get<CuentaACobrar[]>(this.baseUrl + 'pendientes');
+    }
+
+    public processCuentaACobrar(cuentaACobrar: CuentaACobrar): Observable<any> {
+        return this.http.put<any>(this.baseUrl + 'procesar', cuentaACobrar);
     }
 }
