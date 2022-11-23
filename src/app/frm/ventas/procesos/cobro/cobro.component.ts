@@ -13,7 +13,7 @@ import {UtilService} from '../../../../services/util.service';
 })
 export class CobroComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'descripcion', 'fecha', 'monto'];
+  displayedColumns: string[] = ['id', 'descripcion', 'fecha', 'monto', 'tipo'];
 
   dataSource = new MatTableDataSource<Cobro>();
 

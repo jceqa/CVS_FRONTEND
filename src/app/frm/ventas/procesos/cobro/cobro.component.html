@@ -42,6 +42,13 @@
                     <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.monto | myCurrency }}</i></mat-cell>
                 </ng-container>
 
+                <ng-container matColumnDef="tipo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Tipo</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.tipoCobro.descripcion }}</i></mat-cell>
+                </ng-container>
+
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>

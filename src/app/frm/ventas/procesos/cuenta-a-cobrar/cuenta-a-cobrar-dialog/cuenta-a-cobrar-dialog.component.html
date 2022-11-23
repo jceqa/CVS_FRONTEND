@@ -35,5 +35,10 @@
             <mat-icon>cancel</mat-icon>
             Cerrar
         </button>
+
+        <button mat-button color="success" (click)="process()" *ngIf="this.estadoCuentaACobrar !== ''" [disabled]="item.estadoCuentaACobrar.id !== 1">
+            <mat-icon>done_all</mat-icon>
+            Procesar
+        </button>
     </mat-dialog-actions>
 </form>

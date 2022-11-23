@@ -25,12 +25,12 @@ import {PedidoVentaService} from '../../../../../services/pedidoventa.service';
 import {Timbrado} from '../../../../../models/timbrado';
 import {TimbradoService} from '../../../../../services/timbrado.service';
 import {SucursalService} from '../../../../../services/sucursal.service';
-import {CajaService} from '../../../../../services/caja.service';
 import {Sucursal} from '../../../../../models/sucursal';
 import {Caja} from '../../../../../models/caja';
 import {CondicionPagoService} from '../../../../../services/condicionpago.service';
 import {CondicionPago} from '../../../../../models/condicionPago';
 import {CuentaACobrar} from '../../../../../models/cuentaACobrar';
+import {AperturaCierreCajaService} from '../../../../../services/aperturacierrecaja.service';
 
 @Component({
   selector: 'app-factura-dialog',
@@ -92,7 +92,7 @@ export class FacturaDialogComponent implements OnInit {
         private clienteService: ClienteService,
         private timbradoService: TimbradoService,
         private sucursalService: SucursalService,
-        private cajaService: CajaService,
+        private aperturaCajaService: AperturaCierreCajaService,
         private condicionPagoService: CondicionPagoService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -239,10 +239,13 @@ export class FacturaDialogComponent implements OnInit {
     listCajas() {
         this.form.get('caja').setValue('');
         this.utils.startLoading();
-        this.cajaService.listCajasBySucursal([this.form.get('sucursal').value]).subscribe(
+        this.aperturaCajaService.getAperturaCierreCajaAbiertaBySucursal(this.form.get('sucursal').value).subscribe(
             data => {
                 console.log(data);
-                this.cajas = data;
+                this.cajas.length = 0;
+                data.forEach(d => {
+                    this.cajas.push(d.caja);
+                });
                 this.utils.stopLoading();
                 if (this.formType === FormType.EDIT) {
                     this.form.get('caja').setValue(this.item.caja);

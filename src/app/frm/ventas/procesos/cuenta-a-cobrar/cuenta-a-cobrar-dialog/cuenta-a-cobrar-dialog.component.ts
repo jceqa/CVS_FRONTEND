@@ -4,6 +4,10 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {FormType} from '../../../../../models/enum';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Estado} from '../../../../../models/estado';
+import {UtilService} from '../../../../../services/util.service';
+import {Cobro} from '../../../../../models/cobro';
+import {CuentaACobrarService} from '../../../../../services/cuentaacobrar.service';
+import {UIService} from '../../../../../services/ui.service';
 
 @Component({
   selector: 'app-cuenta-a-cobrar-dialog',
@@ -25,6 +29,9 @@ export class CuentaACobrarDialogComponent implements OnInit {
 
   constructor(
       private dialogRef: MatDialogRef<CuentaACobrarDialogComponent>,
+      private utils: UtilService,
+      private cuentaACobrarService: CuentaACobrarService,
+      private uiService: UIService,
       @Inject(MAT_DIALOG_DATA) public data: any) {
     if (data) {
       this.item = data.item;
@@ -73,4 +80,39 @@ export class CuentaACobrarDialogComponent implements OnInit {
   dismiss(result?: any) {
     this.dialogRef.close(result);
   }
+
+    process() {
+        this.utils.startLoading();
+        this.generateCobro();
+        this.cuentaACobrarService.processCuentaACobrar(this.item).subscribe(
+            data => {
+                console.log(data);
+                this.utils.stopLoading();
+                this.uiService.showSnackbar(
+                    'Procesado Exitosamente.',
+                    'Cerrar',
+                    3000
+                );
+                this.dialogRef.close(true);
+            }, error => {
+                console.log(error);
+                this.utils.stopLoading();
+            }
+        );
+    }
+
+    generateCobro(): void {
+        const cobro = new Cobro();
+        cobro.id = 0;
+        cobro.descripcion = 'COBRO GENERADO PARA CUENTA A COBRAR NRO: ' + this.item.id;
+        cobro.fecha = new Date();
+        cobro.estado = 'ACTIVO';
+        cobro.monto = this.item.monto;
+
+        /***
+         * TIPO COBRO
+         */
+
+        this.item.cobro = cobro;
+    }
 }
