@@ -50,7 +50,7 @@ export class AperturaCierreCajaService {
         return this.http.put<any>(this.baseUrl + 'anular', aperturaCierreCaja);
     }
 
-    public getPedidosCompraPendientes(): Observable<AperturaCierreCaja[]> {
-        return this.http.get<AperturaCierreCaja[]>(this.baseUrl + 'pendientes');
+    public getAperturaCierreCajaAbiertaBySucursal(idSucursal: number): Observable<AperturaCierreCaja[]> {
+        return this.http.get<AperturaCierreCaja[]>(this.baseUrl + `abiertos/${idSucursal}`);
     }
 }

@@ -16,12 +16,12 @@ import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dial
 import {FacturaService} from '../../../../../services/factura.service';
 import {Factura} from '../../../../../models/factura';
 import {formatDate} from '@angular/common';
-import {Proveedor} from '../../../../../models/proveedor';
+// import {Proveedor} from '../../../../../models/proveedor';
 
 @Component({
-    selector: 'app-presupuesto-compra-dialog',
-    templateUrl: './presupuesto-compra-dialog.component.html',
-    styleUrls: ['./presupuesto-compra-dialog.component.scss']
+    selector: 'app-entrega-equipo-dialog',
+    templateUrl: './entrega-equipo-dialog.component.html',
+    styleUrls: ['./entrega-equipo-dialog.component.scss']
 })
 export class EntregaEquipoDialogComponent implements OnInit {
 
@@ -39,7 +39,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
     editID: number;
     fecha = new Date();
 
-    displayedColumns: string[] = ['codigo', 'item', 'cantidad', 'precio', 'total'/*, 'actions'*/];
+    displayedColumns: string[] = ['codigo', 'descripcion', 'marca', 'modelo', 'serie',  /*'actions'*/];
     dataSource = new MatTableDataSource<EntregaEquipoDetalle>();
     detalles: EntregaEquipoDetalle[] = [];
 
@@ -77,20 +77,20 @@ export class EntregaEquipoDialogComponent implements OnInit {
             this.formType = FormType.EDIT;
             this.setForm(this.item);
             this.form.get('observacion').disable();
-            this.total = this.item.total;
+            // this.total = this.item.total;
         } else {
             // Si no existe es una nueva lista
-            this.title = 'Nuevo';
+            this.title = 'Nueva';
             this.formType = FormType.NEW;
         }
 
         this.utils.startLoading();
-        this.facturaService.getFacturasPendientes().subscribe(data => {
+        this.facturaService.getFacturasProcesadas().subscribe(data => {
             console.log(data);
             this.facturas = data;
             this.facturasFiltered = this.facturasControl.valueChanges.pipe(
                 startWith(''),
-                map(value => this._filterPedido(value || '')),
+                map(value => this._filterFactura(value || '')),
             );
             this.utils.stopLoading();
         }, error => {
@@ -107,7 +107,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
                 observacion: item.observacion,
             });
             this.fecha = item.fecha;
-            this.detalles = item.entregaEquipoDetalles;
+            this.detalles = item.entregaEquipoDetalle;
             this.estadoEntregaEquipo = item.estadoEntregaEquipo.descripcion;
             this.dataSource = new MatTableDataSource<EntregaEquipoDetalle>(
                 this.detalles
@@ -123,9 +123,9 @@ export class EntregaEquipoDialogComponent implements OnInit {
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.fecha = this.fecha;
         this.item.estado = 'ACTIVO';
-        this.item.entregaEquipoDetalles = this.detalles;
-        this.item.total = this.total;
-        this.item.factura = this.fcaturaSelected;
+        this.item.entregaEquipoDetalle = this.detalles;
+        // this.item.total = this.total;
+        this.item.factura = this.facturaSelected;
     }
 
     dismiss(result?: any) {
@@ -136,7 +136,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
         console.log(dato);
     }
 
-    selectedPedido($event): void {
+    /*selectedPedido($event): void {
         console.log($event.source.value);
         this.pedidoSelected = $event.source.value;
 
@@ -155,29 +155,44 @@ export class EntregaEquipoDialogComponent implements OnInit {
         this.dataSource = new MatTableDataSource<EntregaEquipoDetalle>(
             this.detalles
         );
-    }
+    }*/
 
-    selectedProveedor($event): void {
+    selectedFactura($event): void {
         console.log($event.source.value);
-        this.proveedorSelected = $event.source.value;
+        this.facturaSelected = $event.source.value;
+
+        this.facturaSelected.facturaDetalles.forEach(fD => {
+            if (fD.ordenServicioDetalle) {
+               this.detalles.push({
+                 id: 0,
+                 estado: 'ACTIVO',
+                 facturaDetalle: fD
+               });
+            }
+        });
+
+        this.dataSource = new MatTableDataSource<EntregaEquipoDetalle>(
+            this.detalles
+        );
     }
 
-    displayPedido(value) {
+    displayFactura(value: Factura) {
         if (value) {
             return value.observacion + ' | '
                 + formatDate(value.fecha, 'dd/MM/yyyy', 'en-US') + ' | '
                 + value.usuario.nombre + ' | '
-                + value.deposito.descripcion;
+                + value.numeroFactura + ' | '
+                + value.monto;
         }
     }
 
-    displayProveedor(value) {
+    /*displayProveedor(value) {
         if (value) {
             return value.ruc + ' | ' + value.razonSocial;
         }
-    }
+    }*/
 
-    setNumber($event, index) {
+    /*setNumber($event, index) {
         this.total -= this.detalles[index].monto * this.detalles[index].facturaDetalle.cantidad;
         this.detalles[index].monto = this.utils.getNumber($event.target.value);
         this.total += this.detalles[index].monto * this.detalles[index].facturaDetalle.cantidad;
@@ -187,7 +202,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
         if ($event.key === 'Enter') {
             this.setNumber($event, index);
         }
-    }
+    }*/
 
     // Metodo que se llama al oprimir el boton guardar
     ok(): void {
@@ -210,7 +225,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
                 5000
             );
             return false;
-        } else if (!this.pedidoSelected) {
+        } /*else if (!this.pedidoSelected) {
             this.uiService.showSnackbar(
                 'Debe seleccionar un Pedido de Compra.',
                 'Cerrar',
@@ -224,9 +239,9 @@ export class EntregaEquipoDialogComponent implements OnInit {
                 5000
             );
             return false;
-        }
+        }*/
 
-        let haveZero = false;
+        /*let haveZero = false;
         this.item.entregaEquipoDetalles.forEach( pcd => {
             if (pcd.monto === 0) {
                 haveZero = true;
@@ -240,7 +255,7 @@ export class EntregaEquipoDialogComponent implements OnInit {
                 5000
             );
             return false;
-        }
+        }*/
 
         return true;
     }
@@ -353,23 +368,24 @@ export class EntregaEquipoDialogComponent implements OnInit {
         });
     }
 
-    private _filterPedido(value: any): Factura[] {
+    private _filterFactura(value: any): Factura[] {
         const filterValue = value.toString().toLowerCase();
         return (
-            this.pedidos.filter(pedido =>
-                pedido.observacion.toLowerCase().includes(filterValue) ||
-                pedido.usuario.nombre.toLowerCase().includes(filterValue) ||
-                pedido.deposito.descripcion.toLowerCase().includes(filterValue) ||
-                formatDate(pedido.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
+            this.facturas.filter(factura =>
+                factura.observacion.toLowerCase().includes(filterValue) ||
+                factura.usuario.nombre.toLowerCase().includes(filterValue) ||
+                factura.monto.toString().toLowerCase().includes(filterValue) ||
+                factura.numeroFactura.toLowerCase().includes(filterValue) ||
+                formatDate(factura.fecha, 'dd/MM/yyyy', 'en-US').includes(filterValue))
         );
     }
 
-    private _filterProveedor(value: any): Proveedor[] {
+    /*private _filterProveedor(value: any): Proveedor[] {
         const filterValue = value.toString().toLowerCase();
         return (
             this.proveedores.filter(proveedor =>
                 proveedor.ruc.toLowerCase().includes(filterValue) ||
                 proveedor.razonSocial.toLowerCase().includes(filterValue))
         );
-    }
+    }*/
 }

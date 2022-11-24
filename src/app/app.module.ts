@@ -133,6 +133,11 @@ import {TipoNotaComponent} from './frm/ventas/referenciales/tipo-nota/tipo-nota.
 import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
 import {NotaVentaDialogComponent} from './frm/ventas/procesos/nota-venta/nota-venta-dialog/nota-venta-dialog.component';
 import {NotaVentaComponent} from './frm/ventas/procesos/nota-venta/nota-venta.component';
+import {EntregaEquipoComponent} from './frm/servicio/procesos/entrega-equipo/entrega-equipo.component';
+import {
+    EntregaEquipoDialogComponent
+} from './frm/servicio/procesos/entrega-equipo/entrega-equipo-dialog/entrega-equipo-dialog.component';
+import {CobroComponent} from './frm/ventas/procesos/cobro/cobro.component';
 
 
 @NgModule({
@@ -234,6 +239,9 @@ import {NotaVentaComponent} from './frm/ventas/procesos/nota-venta/nota-venta.co
         UsuarioComponent,
         UsuarioDialogComponent,
         ReportePagoComponent,
+        EntregaEquipoComponent,
+        EntregaEquipoDialogComponent,
+        CobroComponent,
 
         MyCurrencyPipe,
         MyCurrencyFormatterDirective

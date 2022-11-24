@@ -43,6 +43,10 @@ export class FacturaService {
         return this.http.get<Factura[]>(this.baseUrl + 'procesadas');
     }
 
+    public getFacturasByCaja(idCaja: number): Observable<Factura[]> {
+        return this.http.get<Factura[]>(this.baseUrl + `caja/${idCaja}`);
+    }
+
     public getNumeroActual(): Observable<number> {
         return this.http.get<number>(this.baseUrl + 'numeroactual');
     }

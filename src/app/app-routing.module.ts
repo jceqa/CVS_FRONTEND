@@ -50,6 +50,8 @@ import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuar
 import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
 import {TipoNotaComponent} from './frm/ventas/referenciales/tipo-nota/tipo-nota.component';
 import {NotaVentaComponent} from './frm/ventas/procesos/nota-venta/nota-venta.component';
+import {EntregaEquipoComponent} from './frm/servicio/procesos/entrega-equipo/entrega-equipo.component';
+import {CobroComponent} from './frm/ventas/procesos/cobro/cobro.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -104,6 +106,8 @@ const routes: Routes = [
     { path: 'reportepago', component: ReportePagoComponent},
     { path: 'tiponota', component: TipoNotaComponent},
     { path: 'notaventa', component: NotaVentaComponent},
+    { path: 'entregaequipo', component: EntregaEquipoComponent},
+    { path: 'cobro', component: CobroComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

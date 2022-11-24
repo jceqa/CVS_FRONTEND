@@ -33,11 +33,18 @@
                        class="text">
                 <mat-autocomplete #autoFactura="matAutocomplete" [displayWith]="displayFactura">
                     <mat-option *ngFor="let factura of facturasFiltered | async" [value]="factura"
-                                (onSelectionChange)="selectedPedido($event)">
+                                (onSelectionChange)="selectedFactura($event)">
                         {{ factura.observacion }} | {{ factura.fecha | date: 'dd/MM/yyyy' }} |
-                        {{ factura.usuario.nombre }}| {{ factura.fechagarantia | date: 'dd/MM/yyyy'}} |
+                        {{ factura.usuario.nombre }}| {{ factura.numeroFactura}} | {{ factura.monto | myCurrency }}
                     </mat-option>
                 </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="observacion" formControlName="observacion" required matInput placeholder="Observación"
+                       autocomplete="off" class="text"/>
             </mat-form-field>
         </div>
 
@@ -45,10 +52,6 @@
         <mat-divider></mat-divider>
 
         <h4>Detalles</h4>
-        <div align="end">
-            <h3>Expiracion de Garantia: {{fechagarantia | myCurrency}}</h3>
-        </div>
-
         <div>
             <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
                 <ng-container matColumnDef="codigo">
@@ -56,47 +59,56 @@
                         <h4><strong>Código</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        <span> {{ dato.facturaDetalle }} </span>
+                        <span> {{ dato.facturaDetalle.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.recepcionDetalle.equipo.id }} </span>
                     </mat-cell>
+                    >
                 </ng-container>
 
-                <ng-container matColumnDef="item">
+                <ng-container matColumnDef="descripcion">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Item</strong></h4>
+                        <h4><strong>Descripción</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.facturaDetalle.descripcion }}
+                        {{ dato.facturaDetalle.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.recepcionDetalle.equipo.descripcion }}
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="cantidad">
+                <ng-container matColumnDef="marca">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Cantidad</strong></h4>
+                        <h4><strong>Marca</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.facturaDetalle.cantidad }}
+                        {{ dato.facturaDetalle.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.recepcionDetalle.equipo.marca.descripcion }}
                     </mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="precio">
+                <ng-container matColumnDef="modelo">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Precio</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato;let index = index" class="texto-tabla">
-                        <input id="precioVenta" matInput [value]="dato.monto"
-                               autocomplete="off" myCurrencyFormatter (blur)="setNumber($event, index)"
-                               (keydown)="onKeydown($event, index)"/>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="total">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Sub Total</strong></h4>
+                        <h4><strong>Modelo</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.monto * dato.facturaDetalle.cantidad | myCurrency }}
+                        {{ dato.facturaDetalle.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.recepcionDetalle.equipo.modelo }}
                     </mat-cell>
                 </ng-container>
+
+                <ng-container matColumnDef="serie">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Serie</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.facturaDetalle.ordenServicioDetalle.presupuestoServicioDetalle.diagnosticoDetalle.recepcionDetalle.equipo.serie }}
+                    </mat-cell>
+                </ng-container>
+
+                <!--<ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let dato">
+                        <button matTooltip="Eliminar" color="warn" mat-icon-button
+                                (click)="deleteItem(dato)" *ngIf="formType !== 1">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>-->
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

@@ -15,6 +15,7 @@ import {Usuario} from '../../../../../models/usuario';
 import {ConfirmDialogComponent} from '../../../../../confirm-dialog/confirm-dialog.component';
 import {Caja} from '../../../../../models/caja';
 import {CajaService} from '../../../../../services/caja.service';
+import {FacturaService} from '../../../../../services/factura.service';
 
 @Component({
     selector: 'app-apertura-cierre-caja-dialog',
@@ -51,6 +52,7 @@ export class AperturaCierreCajaDialogComponent implements OnInit {
         private utils: UtilService,
         private sucursalService: SucursalService,
         private cajaService: CajaService,
+        private facturaService: FacturaService,
         private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data) {
@@ -110,7 +112,20 @@ export class AperturaCierreCajaDialogComponent implements OnInit {
                 montoApertura: item.montoApertura,
                 fecha: item.fechaHoraApertura
             });
+            this.getFacturas(item.caja);
         }
+    }
+
+    getFacturas(caja: Caja): void {
+        this.utils.startLoading();
+        this.facturaService.getFacturasByCaja(caja.id).subscribe(data => {
+            console.log(data);
+            // this.sucursales = data;
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
     }
 
     // Asigna los valores del formulario al objeto de tipo {PriceListDraft}

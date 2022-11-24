@@ -11,5 +11,5 @@ export class EntregaEquipo {
     estadoEntregaEquipo: Estado;
     usuario: Usuario;
     factura: Factura;
-    entregaEquipoDetalles: EntregaEquipoDetalle[];
+    entregaEquipoDetalle: EntregaEquipoDetalle[];
 }
