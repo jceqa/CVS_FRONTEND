@@ -239,7 +239,7 @@ export class FacturaDialogComponent implements OnInit {
     listCajas() {
         this.form.get('caja').setValue('');
         this.utils.startLoading();
-        this.aperturaCajaService.getAperturaCierreCajaAbiertaBySucursal(this.form.get('sucursal').value).subscribe(
+        this.aperturaCajaService.getAperturaCierreCajaAbiertaBySucursal(this.form.get('sucursal').value.id).subscribe(
             data => {
                 console.log(data);
                 this.cajas.length = 0;

@@ -28,6 +28,17 @@
                 <span>Total: {{ item.monto | myCurrency }}</span>
             </div>
         </div>
+        <br>
+        <div>
+            <mat-form-field class="full-width-field">
+                <mat-label>Tipo Cobro</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="tipo">
+                    <mat-option *ngFor="let tipo of tiposCobro" [value]="tipo">
+                        {{tipo.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end" class="mt-4">
@@ -36,7 +47,7 @@
             Cerrar
         </button>
 
-        <button mat-button color="success" (click)="process()" *ngIf="this.estadoCuentaACobrar !== ''" [disabled]="item.estadoCuentaACobrar.id !== 1">
+        <button mat-button color="success" (click)="process()"  *ngIf="item.estadoCuentaACobrar.id === 1" [disabled]="!form.valid">
             <mat-icon>done_all</mat-icon>
             Procesar
         </button>
