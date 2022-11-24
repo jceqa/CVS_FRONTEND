@@ -14,7 +14,7 @@ import {
 @Component({
     selector: 'app-libro-compra',
     templateUrl: './libro-compra.component.html',
-    styleUrls: ['./libro-compra.component.sass']
+    styleUrls: ['./libro-compra.component.scss']
 })
 export class LibroCompraComponent implements OnInit {
 

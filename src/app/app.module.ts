@@ -128,7 +128,12 @@ import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuar
 import {
     UsuarioDialogComponent
 } from './frm/administracion/referenciales/usuario/usuario-dialog/usuario-dialog.component';
+import {TipoNotaDialogComponent} from './frm/ventas/referenciales/tipo-nota/tipo-nota-dialog/tipo-nota-dialog.component';
+import {TipoNotaComponent} from './frm/ventas/referenciales/tipo-nota/tipo-nota.component';
 import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
+import {NotaVentaDialogComponent} from './frm/ventas/procesos/nota-venta/nota-venta-dialog/nota-venta-dialog.component';
+import {NotaVentaComponent} from './frm/ventas/procesos/nota-venta/nota-venta.component';
+
 
 @NgModule({
     declarations: [
@@ -218,6 +223,10 @@ import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-
         LibroVentaDialogComponent,
         CuentaACobrarComponent,
         CuentaACobrarDialogComponent,
+        TipoNotaDialogComponent,
+        TipoNotaComponent,
+        NotaVentaDialogComponent,
+        NotaVentaComponent,
         FormularioComponent,
         FormularioDialogComponent,
         RolComponent,

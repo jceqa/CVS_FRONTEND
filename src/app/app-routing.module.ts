@@ -48,6 +48,8 @@ import {FormularioComponent} from './frm/administracion/referenciales/formulario
 import {RolComponent} from './frm/administracion/referenciales/rol/rol.component';
 import {UsuarioComponent} from './frm/administracion/referenciales/usuario/usuario.component';
 import {ReportePagoComponent} from './frm/compras/reportes/reporte-pago/reporte-pago.component';
+import {TipoNotaComponent} from './frm/ventas/referenciales/tipo-nota/tipo-nota.component';
+import {NotaVentaComponent} from './frm/ventas/procesos/nota-venta/nota-venta.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -100,6 +102,8 @@ const routes: Routes = [
     { path: 'rol', component: RolComponent},
     { path: 'usuario', component: UsuarioComponent},
     { path: 'reportepago', component: ReportePagoComponent},
+    { path: 'tiponota', component: TipoNotaComponent},
+    { path: 'notaventa', component: NotaVentaComponent},
     { path: '', component: MainContentComponent },
     { path: '**', redirectTo: '' }
 ];

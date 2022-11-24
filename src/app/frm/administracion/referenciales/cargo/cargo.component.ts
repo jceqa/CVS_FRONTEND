@@ -7,6 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { CargoDialogComponent } from './cargo-dialog/cargo-dialog.component';
 import { UIService } from '../../../../services/ui.service';
 import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
+import {UtilService} from '../../../../services/util.service';
+
+
 
 @Component({
     selector: 'app-cargo',
@@ -26,11 +29,12 @@ export class CargoComponent implements OnInit {
 
     pagina = 1;
     numeroResultados = 5;
-
+    all = false;
     constructor(
         private cargoService: CargoService,
         private dialog: MatDialog,
         private uiService: UIService,
+        private util: UtilService
     ) { }
 
     ngOnInit(): void {
@@ -38,7 +42,8 @@ export class CargoComponent implements OnInit {
     }
 
     cargarCargos() {
-        this.cargoService.getCargos().subscribe(
+        this.util.startLoading();
+        this.cargoService.getCargos(this.all).subscribe(
             (data) => {
                 console.log(data);
                 this.cargos = data;
@@ -47,6 +52,7 @@ export class CargoComponent implements OnInit {
                     this.cargos
                 );
                 this.dataSource.paginator = this.paginator;
+                this.util.stopLoading();
             },
             err => {
                 console.log(err.error);
@@ -85,6 +91,7 @@ export class CargoComponent implements OnInit {
     }
 
     deleteItem(id: number): void {
+        this.util.startLoading();
         this.cargoService.eliminarCargo(id).subscribe(
             result => {
                 console.log(result);
@@ -104,16 +111,39 @@ export class CargoComponent implements OnInit {
                     3000
                 );
             }
-        )
+        );
     }
 
-    openDialog(event: any, cargo: Cargo): void {
+    reactivateItem(cargo: Cargo): void {
+        cargo.estado = 'ACTIVO';
+        this.cargoService.editarCargo(cargo).subscribe(
+            result => {
+                console.log(result);
+                this.cargarCargos();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, cargo: Cargo): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            //width: '50vw',
+            // width: '50vw',
             data: {
-                title: "Eliminar Cargo",
-                msg: "¿Está seguro que desea eliminar este cargo?"
+                title: 'Eliminar Cargo',
+                msg: '¿Está seguro que desea eliminar este Cargo?'
             }
         });
 
@@ -124,4 +154,23 @@ export class CargoComponent implements OnInit {
             }
         });
     }
+
+    reactivate(event: any, cargo: Cargo): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Cargo',
+                msg: '¿Está seguro que desea reactivar este Cargo?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(cargo);
+            }
+        });
+    }
 }
+

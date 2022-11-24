@@ -9,4 +9,5 @@ export class Cliente {
     correo: string;
     telefono: string;
     ciudad: Ciudad;
+    estado: string;
 }

@@ -1,0 +1,173 @@
+<h4 mat-dialog-title>{{ title }} Nota de Ventas</h4>
+
+<form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
+
+    <mat-dialog-content>
+
+        <div style="display: flex">
+            <div class="third-width-field">
+                <span>Nro Nota de Venta: {{ item.id }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Fecha: {{ fecha | date : 'dd/MM/yyyy' }}</span>
+            </div>
+            &nbsp;
+            <div class="third-width-field">
+                <span>Estado: {{ estadoNotaVenta }}</span>
+            </div>
+        </div>
+
+        <div>
+            <mat-form-field class="middle-width-field">
+                <mat-label>Tipo de Nota</mat-label>
+                <mat-select [compareWith]="compareFunction" formControlName="marca">
+                    <mat-option *ngFor="let tiponota of tiponotas" [value]="tiponota">
+                        {{tiponota.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
+                <input type="text"
+                       placeholder="Factura"
+                       matInput
+                       [formControl]="facturaControl"
+                       [matAutocomplete]="autoFactura"
+                       class="text">
+                <mat-autocomplete #autoFactura="matAutocomplete" [displayWith]="displayFactura">
+                    <mat-option *ngFor="let factura of facturaFiltered | async" [value]="factura"
+                                (onSelectionChange)="selectedFactura($event)">
+                        {{factura.numeroFactura}} | {{ factura.observacion }} |
+                        {{ factura.fecha | date: 'dd/MM/yyyy' }} | {{ factura.pedidoVenta.cliente.razon }} |
+                        {{ factura.usuario.nombre }} | {{ factura.monto | myCurrency }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+            <mat-form-field class="full-width-field">
+                <input id="descripcion" formControlName="observacion" required matInput
+                       placeholder="Observación"
+                       autocomplete="off" class="text"/>
+            </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h4>Detalles</h4>
+        <div align="end">
+            <h3 *ngIf="this.formType !== 1">Total Factura: {{ total | myCurrency }}</h3>
+            <h3>Total Nota Venta : {{ totalNotaVenta | myCurrency }}</h3>
+        </div>
+
+        <div>
+            <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Código</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span> {{ dato.pedidoVentaDetalle.articulo.codigoGenerico }} </span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="item">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Item</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.pedidoVentaDetalle.articulo.descripcion }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cantidad">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Cantidad</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.pedidoVentaDetalle.cantidad }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="precio">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Precio</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        {{ dato.facturaDetalle.monto | myCurrency }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="total">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Total</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <span *ngIf="dato.pedidoVentaDetalle.articulo.impuesto.id === 2">
+                            {{  dato.facturaDetalle.monto *
+                        dato.pedidoVentaDetalle.cantidad | myCurrency }}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cantidadNotaVenta">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>Cant. Nota Venta </strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato, let i = index" class="texto-tabla">
+                        {{ cantidadNotaVenta[i] }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="subTotalNotaVenta">
+                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <h4><strong>SubTotal Nota Venta</strong></h4>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let dato, let i = index" class="texto-tabla">
+                        {{ cantidadNotaVenta[i] * dato.facturaDetalle.monto | myCurrency }}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let dato, let i = index">
+                        <button matTooltip="Aumentar" color="primary" mat-icon-button
+                                (click)="incItem(i)" *ngIf="formType !== 1" [disabled]="disableInc(dato, i)">
+                            <mat-icon aria-label="Aumentar item">add_circle_outline</mat-icon>
+                        </button>
+
+                        <button matTooltip="Disminuir" color="primary" mat-icon-button
+                                (click)="descItem(i)" [disabled]="cantidadNotaVenta[i] < 1" *ngIf="formType !== 1">
+                            <mat-icon aria-label="Disminuir item">remove_circle_outline</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mt-4">
+        <button mat-button color="primary" (click)="dismiss()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+        </button>
+
+        <button mat-raised-button color="primary" (click)="ok()" [disabled]="!form.valid" *ngIf="this.formType !== 1">
+            <mat-icon>save</mat-icon>
+            Aceptar
+        </button>
+
+        <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoNotaVenta.id === 2"
+                *ngIf="this.formType === 1">
+            <mat-icon>block</mat-icon>
+            Anular
+        </button>
+    </mat-dialog-actions>
+</form>

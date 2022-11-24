@@ -8,7 +8,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 @Component({
   selector: 'app-libro-compra-dialog',
   templateUrl: './libro-compra-dialog.component.html',
-  styleUrls: ['./libro-compra-dialog.component.sass']
+  styleUrls: ['./libro-compra-dialog.component.scss']
 })
 export class LibroCompraDialogComponent implements OnInit {
 

@@ -1,62 +1,62 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatPaginator} from '@angular/material/paginator';
-import {Deposito} from '../../../../models/deposito';
-import {MatDialog} from '@angular/material/dialog';
-import {DepositoDialogComponent} from './deposito-dialog/deposito-dialog.component';
-import {UIService} from '../../../../services/ui.service';
-import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
-import {DepositoService} from '../../../../services/deposito.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { TipoNotaService } from '../../../../services/tiponota.service';
+import { TipoNota } from '../../../../models/tipoNota';
+import { MatDialog } from '@angular/material/dialog';
+import { TipoNotaDialogComponent } from './tipo-nota-dialog/tipo-nota-dialog.component';
+import { UIService } from '../../../../services/ui.service';
+import { ConfirmDialogComponent } from '../../../../confirm-dialog/confirm-dialog.component';
 import {UtilService} from '../../../../services/util.service';
 
 
 @Component({
-    selector: 'app-deposito',
-    templateUrl: './deposito.component.html',
-    styleUrls: ['./deposito.component.css']
+    selector: 'app-tipo-nota',
+    templateUrl: './tipo-nota.component.html',
+    styleUrls: ['./tipo-nota.component.css']
 })
-export class DepositoComponent implements OnInit {
+export class TipoNotaComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'descripcion', 'sucursal', 'actions'];
+    displayedColumns: string[] = ['id', 'descripcion', 'actions'];
 
-    dataSource = new MatTableDataSource<Deposito>();
+    dataSource = new MatTableDataSource<TipoNota>();
 
     @ViewChild(MatPaginator)
     paginator!: MatPaginator;
 
-    depositos: Deposito[] = [];
+    tiponotas: TipoNota[] = [];
 
     pagina = 1;
     numeroResultados = 5;
 
     all = false;
     constructor(
-        private depositoService: DepositoService,
+        private tipoNotaService: TipoNotaService,
         private dialog: MatDialog,
         private uiService: UIService,
         private util: UtilService
-    ) {
-    }
+    ) { }
 
     ngOnInit(): void {
-        this.cargarDepositos();
+        this.cargarTipoNotas();
     }
 
-    cargarDepositos() {
+    cargarTipoNotas() {
         this.util.startLoading();
-        this.depositoService.getDepositos(this.all).subscribe(
+        this.tipoNotaService.getTipoNotas(this.all).subscribe(
             (data) => {
                 console.log(data);
-                this.depositos = data;
-                this.dataSource = new MatTableDataSource<Deposito>(
-                    this.depositos
+                this.tiponotas = data;
+
+                this.dataSource = new MatTableDataSource<TipoNota>(
+                    this.tiponotas
                 );
                 this.dataSource.paginator = this.paginator;
                 this.util.stopLoading();
             },
             err => {
-                console.log(err.error);
                 this.util.stopLoading();
+                console.log(err.error);
                 this.uiService.showSnackbar(
                     'Ha ocurrido un error.',
                     'Cerrar',
@@ -67,15 +67,12 @@ export class DepositoComponent implements OnInit {
     }
 
     addItem(): void {
-
-        const item = new Deposito();
-
+        const item = new TipoNota();
         this.editItem(item);
-
     }
 
-    editItem(item: Deposito): void {
-        const dialogRef = this.dialog.open(DepositoDialogComponent, {
+    editItem(item: TipoNota): void {
+        const dialogRef = this.dialog.open(TipoNotaDialogComponent, {
             minWidth: '60%',
             // maxWidth: '600px',
             disableClose: true,
@@ -86,17 +83,17 @@ export class DepositoComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargarDepositos();
+                this.cargarTipoNotas();
             }
         });
     }
 
     deleteItem(id: number): void {
-        this.util.startLoading();
-        this.depositoService.eliminarDeposito(id).subscribe(
+        this.tipoNotaService.eliminarTipoNota(id).subscribe(
             result => {
                 console.log(result);
-                this.cargarDepositos();
+                this.cargarTipoNotas();
+
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
                     'Cerrar',
@@ -114,12 +111,12 @@ export class DepositoComponent implements OnInit {
         );
     }
 
-    reactivateItem(deposito: Deposito): void {
-        deposito.estado = 'ACTIVO';
-        this.depositoService.editarDeposito(deposito).subscribe(
+    reactivateItem(tiponota: TipoNota): void {
+        tiponota.estado = 'ACTIVO';
+        this.tipoNotaService.editarTipoNota(tiponota).subscribe(
             result => {
                 console.log(result);
-                this.cargarDepositos();
+                this.cargarTipoNotas();
                 this.uiService.showSnackbar(
                     'Reactivado correctamente.',
                     'Cerrar',
@@ -137,40 +134,39 @@ export class DepositoComponent implements OnInit {
         );
     }
 
-    delete(event: any, deposito: Deposito): void {
+    delete(event: any, tiponota: TipoNota): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Eliminar Deposito',
-                msg: '¿Está seguro que desea eliminar este Deposito?'
+                title: 'Eliminar este Tipo de Nota',
+                msg: '¿Está seguro que desea eliminar este Tipo de Nota?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.deleteItem(deposito.id);
+                this.deleteItem(tiponota.id);
             }
         });
     }
 
-    reactivate(event: any, deposito: Deposito): void {
+    reactivate(event: any, tiponota: TipoNota): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Reactivar Deposito',
-                msg: '¿Está seguro que desea reactivar este Deposito?'
+                title: 'Reactivar tipo de nota',
+                msg: '¿Está seguro que desea reactivar este tipo de nota?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.reactivateItem(deposito);
+                this.reactivateItem(tiponota);
             }
         });
     }
 }
-

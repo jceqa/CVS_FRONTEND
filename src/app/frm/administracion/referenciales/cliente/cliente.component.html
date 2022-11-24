@@ -3,7 +3,7 @@
         <span>Cliente</span>
         <span class="line-spacer"></span>
 
-        <button color="primary" mat-button (click)="cargar()">
+        <button color="primary" mat-button (click)="cargarClientes()">
             <mat-icon>refresh</mat-icon>
             <span>Actualizar</span>
         </button>
@@ -17,21 +17,21 @@
         <mat-card-content>
             <div class="table-responsive">
                 <div class="end">
-                    <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Todos</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="all" (change)="cargarClientes()">Ver Todos</mat-checkbox>
                 </div>
                 <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
                     <ng-container matColumnDef="id">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                             <h4><strong>Id</strong></h4>
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let dato" class="texto-tabla">{{dato.id}}</mat-cell>>
+                        <mat-cell *matCellDef="let dato" class="texto-tabla"><span [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}"> {{ dato.id }} </span></mat-cell>>
                     </ng-container>
 
                     <ng-container matColumnDef="ruc">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                             <h4><strong>Ruc</strong></h4>
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let dato" class="texto-tabla"><i>{{dato.ruc}}</i></mat-cell>
+                        <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.descripcion }}</i></mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="razon">
@@ -72,12 +72,16 @@
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let dato">
-                            <button color="primary" mat-icon-button (click)="edit(dato)">
+                            <button matTooltip="Editar" *ngIf="dato.estado === 'ACTIVO'" color="primary" mat-icon-button (click)="editItem(dato)">
                                 <mat-icon aria-label="Editar item">mode_edit</mat-icon>
                             </button>
 
-                            <button color="warn" mat-icon-button (click)="openDialog($event, dato)">
+                            <button matTooltip="Eliminar" *ngIf="dato.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">
                                 <mat-icon>delete</mat-icon>
+                            </button>
+
+                            <button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
+                                <mat-icon>refresh</mat-icon>
                             </button>
                         </mat-cell>
                     </ng-container>

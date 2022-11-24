@@ -1,9 +1,9 @@
 <div style="margin: 8px;">
     <mat-toolbar>
-        <span>Deposito</span>
+        <span>Tipo de Nota</span>
         <span class="line-spacer"></span>
 
-        <button color="primary" mat-button (click)="cargarDepositos()">
+        <button color="primary" mat-button (click)="cargarTipoNotas()">
             <mat-icon>refresh</mat-icon>
             <span>Actualizar</span>
         </button>
@@ -32,7 +32,7 @@
     <mat-card>
         <mat-card-content>
             <div class="end">
-                <mat-checkbox [(ngModel)]="all" (change)="cargarDepositos()">Ver Inactivos</mat-checkbox>
+                <mat-checkbox [(ngModel)]="all" (change)="cargarTipoNotas()">Ver Inactivos</mat-checkbox>
             </div>
             <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
                 <ng-container matColumnDef="id">
@@ -47,13 +47,6 @@
                         <h4><strong>Descripcion</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla"><i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.descripcion }}</i></mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="sucursal">
-                    <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                        <h4><strong>Sucursal</strong></h4>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let dato" class="texto-tabla"><i *ngIf="dato.sucursal">{{ dato.sucursal.descripcion }}</i></mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="actions">

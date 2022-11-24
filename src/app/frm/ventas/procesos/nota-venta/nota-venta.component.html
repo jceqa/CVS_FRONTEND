@@ -1,6 +1,6 @@
 <div style="margin: 8px;">
     <mat-toolbar>
-        <span>Libro de Ventas</span>
+        <span>Notas Ventas</span>
         <span class="line-spacer"></span>
 
         <button color="primary" mat-button (click)="cargar()">
@@ -8,7 +8,7 @@
             <span>Actualizar</span>
         </button>
 
-        <button color="primary" mat-button (click)="add()" *ngIf="false">
+        <button color="primary" mat-button (click)="add()">
             <mat-icon>add</mat-icon>
             <span>Nuevo</span>
         </button>
@@ -16,18 +16,45 @@
     </mat-toolbar>
     <mat-card>
         <mat-card-content>
-            <div class="end" *ngIf="false">
-                <mat-checkbox [(ngModel)]="all" (change)="cargar()" disabled>Ver Inactivos</mat-checkbox>
+            <div class="end">
+                <mat-checkbox [(ngModel)]="all" (change)="cargar()">Ver Todos</mat-checkbox>
             </div>
             <div class="table-responsive">
-                <mat-table #table [dataSource]="dataSource" class="table table-striped text-center">
+                <mat-table #table [dataSource]="dataSource">
                     <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                        <mat-header-cell *matHeaderCellDef>
                             <h4><strong>Id</strong></h4>
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let dato" class="texto-tabla">
+                        <mat-cell *matCellDef="let dato">
                             <span [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}"> {{ dato.id }} </span>
                         </mat-cell>>
+                    </ng-container>
+
+                    <ng-container matColumnDef="observacion">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                            <h4><strong>Observación</strong></h4>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let dato" class="texto-tabla">
+                            <i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.observacion }}</i>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cliente">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                            <h4><strong>Cliente</strong></h4>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let dato" class="texto-tabla">
+                            {{ dato.cliente.razon }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fecha">
+                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
+                            <h4><strong>Fecha </strong></h4>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let dato" class="texto-tabla">
+                            {{ dato.fecha | date : 'dd/MM/yyyy' }}
+                        </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="estado">
@@ -35,61 +62,48 @@
                             <h4><strong>Estado</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            <i [ngClass]="{'eliminado':dato.estado === 'INACTIVO'}">{{ dato.estado }}</i>
+                            {{ dato.estadoNotaVenta.descripcion }}
                         </mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="fecha">
+                    <ng-container matColumnDef="tiponota">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Fecha</strong></h4>
+                            <h4><strong>Tipo de Nota</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.fecha | date : 'dd/MM/yyyy' }}
+                            {{ dato.tiponota.descripcion }}
                         </mat-cell>
                     </ng-container>
 
-                    <ng-container matColumnDef="montoIVA5">
+                    <ng-container matColumnDef="monto">
                         <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>I.V.A 5%</strong></h4>
+                            <h4><strong>Monto</strong></h4>
                         </mat-header-cell>
                         <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.montoIVA5 | myCurrency }}
-                        </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="montoIVA10">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>I.V.A. 10%</strong></h4>
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.montoIVA10 | myCurrency }}
-                        </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="montoNeto">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Monto Neto</strong></h4>
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.montoNeto | myCurrency }}
-                        </mat-cell>
-                    </ng-container>
-
-                    <ng-container matColumnDef="montoTotal">
-                        <mat-header-cell *matHeaderCellDef class="text-center fix-head">
-                            <h4><strong>Total</strong></h4>
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let dato" class="texto-tabla">
-                            {{ dato.montoNeto + dato.montoIVA5 + dato.montoIVA10 | myCurrency }}
+                            {{ dato.monto | myCurrency }}
                         </mat-cell>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let dato">
+
                             <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(dato)">
                                 <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                             </button>
+
+                            <button [disabled]="dato.estadoNotaVenta.id === 2" matTooltip="Anular" color="warn" mat-icon-button (click)="anularDialog($event, dato)">
+                                <mat-icon aria-label="Editar item">block</mat-icon>
+                            </button>
+
+                            <!--<button matTooltip="Eliminar" *ngIf="dato.estado === 'ACTIVO'" color="warn" mat-icon-button (click)="delete($event, dato)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+
+                            <button matTooltip="Reactivar" *ngIf="dato.estado === 'INACTIVO'"mat-icon-button (click)="reactivate($event, dato)">
+                                <mat-icon>refresh</mat-icon>
+                            </button>-->
+
                         </mat-cell>
                     </ng-container>
 

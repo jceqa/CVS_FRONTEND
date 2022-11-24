@@ -1,28 +1,31 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
+import {NotaVenta} from '../../../../models/notaVenta';
 import {MatPaginator} from '@angular/material/paginator';
-import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
+import {NotaVentaService} from '../../../../services/notaventa.service';
 import {MatDialog} from '@angular/material/dialog';
 import {UIService} from '../../../../services/ui.service';
 import {UtilService} from '../../../../services/util.service';
-import {OrdenServicio} from '../../../../models/ordenServicio';
-import {OrdenServicioDialogComponent} from './orden-servicio-dialog/orden-servicio-dialog.component';
-import {OrdenServicioService} from '../../../../services/ordenservicio.service';
+import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
+import {
+    NotaVentaDialogComponent
+} from './nota-venta-dialog/nota-venta-dialog.component';
 
 @Component({
-    selector: 'app-orden-servicio',
-    templateUrl: './orden-servicio.component.html',
-    styleUrls: ['./orden-servicio.component.scss']
+    selector: 'app-nota-venta',
+    templateUrl: './nota-venta.component.html',
+    styleUrls: ['./nota-venta.component.scss']
 })
-export class OrdenServicioComponent implements OnInit {
+export class NotaVentaComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'observacion', 'fecha', 'cliente', 'estado', 'total', 'actions'];
-    dataSource = new MatTableDataSource<OrdenServicio>();
+
+    displayedColumns: string[] = ['id', 'observacion', 'cliente', 'fecha', 'estado', 'monto', 'actions'];
+    dataSource = new MatTableDataSource<NotaVenta>();
 
     @ViewChild(MatPaginator)
     paginator!: MatPaginator;
 
-    ordenServicios: OrdenServicio[] = [];
+    facturas: NotaVenta[] = [];
 
     pagina = 1;
     numeroResultados = 5;
@@ -30,7 +33,7 @@ export class OrdenServicioComponent implements OnInit {
     all = false;
 
     constructor(
-        private ordenServicioService: OrdenServicioService,
+        private notaVentaService: NotaVentaService,
         private dialog: MatDialog,
         private uiService: UIService,
         private util: UtilService
@@ -43,12 +46,12 @@ export class OrdenServicioComponent implements OnInit {
     cargar() {
         this.util.startLoading();
         if (this.all) {
-            this.ordenServicioService.getOrdenesServicio(this.all).subscribe(
+            this.notaVentaService.getNotasVenta(this.all).subscribe(
                 (data) => {
                     console.log(data);
-                    this.ordenServicios = data;
-                    this.dataSource = new MatTableDataSource<OrdenServicio>(
-                        this.ordenServicios
+                    this.facturas = data;
+                    this.dataSource = new MatTableDataSource<NotaVenta>(
+                        this.facturas
                     );
                     this.dataSource.paginator = this.paginator;
                     this.util.stopLoading();
@@ -64,12 +67,12 @@ export class OrdenServicioComponent implements OnInit {
                 }
             );
         } else {
-            this.ordenServicioService.getOrdenServicioPendientes().subscribe(
+            this.notaVentaService.getNotaVentaPendientes().subscribe(
                 (data) => {
                     console.log(data);
-                    this.ordenServicios = data;
-                    this.dataSource = new MatTableDataSource<OrdenServicio>(
-                        this.ordenServicios
+                    this.facturas = data;
+                    this.dataSource = new MatTableDataSource<NotaVenta>(
+                        this.facturas
                     );
                     this.dataSource.paginator = this.paginator;
                     this.util.stopLoading();
@@ -88,13 +91,16 @@ export class OrdenServicioComponent implements OnInit {
     }
 
     add(): void {
-        const item = new OrdenServicio();
+
+        const item = new NotaVenta();
+
         this.openDialog(item);
+
     }
 
-    anular(dato: OrdenServicio): void {
+    anular(dato: NotaVenta): void {
         this.util.startLoading();
-        this.ordenServicioService.anularOrdenServicio(dato).subscribe(
+        this.notaVentaService.anularNotaVenta(dato).subscribe(
             result => {
                 console.log(result);
                 this.cargar();
@@ -116,26 +122,26 @@ export class OrdenServicioComponent implements OnInit {
         );
     }
 
-    anularDialog(event: any, ordenServicio: OrdenServicio): void {
+    anularDialog(event: any, notaVenta: NotaVenta): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Orden de Servicio',
-                msg: '¿Está seguro que desea anular esta Orden de Servicio?'
+                title: 'Anular Nota de Venta',
+                msg: '¿Está seguro que desea anular esta Nota de Venta?'
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.anular(ordenServicio);
+                this.anular(notaVenta);
             }
         });
     }
 
-    openDialog(item: OrdenServicio): void {
-        const dialogRef = this.dialog.open(OrdenServicioDialogComponent, {
+    openDialog(item: NotaVenta): void {
+        const dialogRef = this.dialog.open(NotaVentaDialogComponent, {
             minWidth: '70%',
             // maxWidth: '600px',
             disableClose: true,

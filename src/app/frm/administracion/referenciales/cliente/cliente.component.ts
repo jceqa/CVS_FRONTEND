@@ -9,6 +9,7 @@ import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.
 import {ClienteService} from '../../../../services/cliente.service';
 import {UtilService} from '../../../../services/util.service';
 
+
 @Component({
     selector: 'app-cliente',
     templateUrl: './cliente.component.html',
@@ -38,10 +39,10 @@ export class ClienteComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.cargar();
+        this.cargarClientes();
     }
 
-    cargar() {
+    cargarClientes() {
         this.utils.startLoading();
         this.clienteService.getClientes(this.all).subscribe(
             (data) => {
@@ -82,17 +83,17 @@ export class ClienteComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.cargar();
+                this.cargarClientes();
             }
         });
     }
 
-    delete(id: number): void {
+    deleteItem(id: number): void {
         this.utils.startLoading();
         this.clienteService.eliminarCliente(id).subscribe(
             result => {
                 console.log(result);
-                this.cargar();
+                this.cargarClientes();
                 this.utils.stopLoading();
                 this.uiService.showSnackbar(
                     'Eliminado correctamente.',
@@ -111,7 +112,30 @@ export class ClienteComponent implements OnInit {
         );
     }
 
-    openDialog(event: any, cliente: Cliente): void {
+    reactivateItem(cliente: Cliente): void {
+        cliente.estado = 'ACTIVO';
+        this.clienteService.editarCliente(cliente).subscribe(
+            result => {
+                console.log(result);
+                this.cargarClientes();
+                this.uiService.showSnackbar(
+                    'Reactivado correctamente.',
+                    'Cerrar',
+                    3000
+                );
+            }, error => {
+                console.log(error);
+
+                this.uiService.showSnackbar(
+                    'Ha ocurrido un error.',
+                    'Cerrar',
+                    3000
+                );
+            }
+        );
+    }
+
+    delete(event: any, cliente: Cliente): void {
         event.stopPropagation();
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
@@ -124,7 +148,25 @@ export class ClienteComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result.data) {
-                this.delete(cliente.id);
+                this.deleteItem(cliente.id);
+            }
+        });
+    }
+
+    reactivate(event: any, cliente: Cliente): void {
+        event.stopPropagation();
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Reactivar Cliente',
+                msg: '¿Está seguro que desea reactivar este Cliente?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                this.reactivateItem(cliente);
             }
         });
     }
