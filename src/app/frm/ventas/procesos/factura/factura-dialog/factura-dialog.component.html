@@ -2,8 +2,10 @@
 
 <form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
 
-    <mat-dialog-content>
-
+    <mat-dialog-content id="print">
+        <div style="text-align: right">
+            <img class="logo" src="assets/My%20project-1.png" style="width: 10%;">
+        </div>
         <div style="display: flex">
             <div class="third-width-field">
                 <span>Nro Factura: {{ numeroFactura }}</span>
@@ -126,15 +128,15 @@
             <br/>
             <div style="display: flex" *ngIf="this.item.condicionPago.id === 2">
                 <div class="third-width-field">
-                    <span>Cantidad Cuotas: {{ this.item.cantidadCuota }}</span>
+                    <span>Cantidad Cuotas: {{ this.item.cuentaACobrarList[0].cantidadCuotas }}</span>
                 </div>
                 &nbsp;
                 <div class="third-width-field">
-                    <span>Intervalo (días): {{ this.item.intervalo }}</span>
+                    <span>Vto. Cuota: {{ this.item.cuentaACobrarList[0].fechaVencimiento | date : 'dd/MM/yyyy'}}</span>
                 </div>
                 &nbsp;
                 <div class="third-width-field">
-                    <span>Monto Cuota: {{ this.item.montoCuota | myCurrency }}</span>
+                    <span>Monto Cuota: {{ this.item.cuentaACobrarList[0].monto | myCurrency }}</span>
                 </div>
             </div>
             <br/>
@@ -314,6 +316,12 @@
             <mat-icon>block</mat-icon>
             Anular
         </button>
+
+        <button color="primary" mat-button (click)="print()" *ngIf="this.formType === 1">
+            <mat-icon>print</mat-icon>
+            <span>Imprimir</span>
+        </button>
+
 
     </mat-dialog-actions>
 

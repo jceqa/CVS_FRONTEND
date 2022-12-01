@@ -31,6 +31,7 @@ import {CondicionPagoService} from '../../../../../services/condicionpago.servic
 import {CondicionPago} from '../../../../../models/condicionPago';
 import {CuentaACobrar} from '../../../../../models/cuentaACobrar';
 import {AperturaCierreCajaService} from '../../../../../services/aperturacierrecaja.service';
+import * as es6printJS from 'print-js';
 
 @Component({
   selector: 'app-factura-dialog',
@@ -81,6 +82,8 @@ export class FacturaDialogComponent implements OnInit {
 
     numeroFactura = '012-';
     numeroActual;
+
+    isPrinting = false;
 
     constructor(
         private dialogRef: MatDialogRef<FacturaDialogComponent>,
@@ -704,5 +707,33 @@ export class FacturaDialogComponent implements OnInit {
         if (value) {
             return value.ruc.toString() + ' - ' + value.razon;
         }
+    }
+
+    print() {
+        /*const data = [];
+        /*this.pagos.forEach( p => {
+            const date = new Date(p.fecha);
+            data.push({
+                descripcion: p.descripcion,
+                fecha: date.toLocaleDateString('en-GB'),
+                monto: p.monto
+            });
+        });*/
+        es6printJS({
+            printable: 'print',
+            type: 'html',
+            /*onLoadingStart : () => {
+                console.log('imprimiendo');
+                this.isPrinting = true;
+            },*/
+            // header : '<img class="logo" src="assets/Innovalogic%20Logo.jpg" style="width: 20%">',
+            /*header: '',
+                /*'' +
+                '',
+                 '<h3 class="custom-h3">Reporte de Pagos</h3>',
+            style: '.custom-h3 { color: black; }',
+            gridHeaderStyle: 'color: black;  border: 2px solid black;',
+            gridStyle: 'border: 2px solid black;'*/
+        });
     }
 }

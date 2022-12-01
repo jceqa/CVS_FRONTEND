@@ -20,7 +20,7 @@
                     <span>
                         {{ servicio.descripcion }} |
                         {{ servicio.monto | myCurrency }}
-                        <span *ngIf="servicio.articulo"> + {{ servicio.articulo.precioVenta | myCurrency}} </span>
+                        <span *ngIf="servicio.articulo"> + {{ servicio.articulo.precioVenta | myCurrency}} | {{servicio.articulo.descripcion}} </span>
                     </span>
                 </mat-list-option>
             </mat-selection-list>
