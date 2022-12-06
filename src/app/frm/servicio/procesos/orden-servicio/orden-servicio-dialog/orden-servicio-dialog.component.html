@@ -26,6 +26,7 @@
                     {{ item.presupuestoServicio.usuario.nombre }} |
                     {{ item.presupuestoServicio.diagnostico.recepcion.sucursal.descripcion }} |
                     {{ item.presupuestoServicio.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon}} |
+                    {{ item.presupuestoServicio.diagnostico.recepcion.observacion}} |
                     {{ item.presupuestoServicio.total | myCurrency }}
                 </span>
                 <br/>
@@ -44,6 +45,7 @@
                         {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
                         {{ presupuesto.usuario.nombre }} | {{ presupuesto.diagnostico.recepcion.sucursal.descripcion }} |
                         {{ presupuesto.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon}} |
+                        {{ presupuesto.diagnostico.recepcion.observacion}} |
                         {{ presupuesto.total | myCurrency }}
                     </mat-option>
                 </mat-autocomplete>
@@ -97,12 +99,13 @@
                     </mat-cell>
                 </ng-container>
 
+
                 <ng-container matColumnDef="diagnostico">
                     <mat-header-cell *matHeaderCellDef class="text-center fix-head">
                         <h4><strong>Diagnostico</strong></h4>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let dato" class="texto-tabla">
-                        {{ dato.presupuestoServicioDetalle.diagnosticoDetalle.diagnostico }}
+                        {{ dato.presupuestoServicioDetalle.diagnosticoDetalle.diagnostico }}|
                     </mat-cell>
                 </ng-container>
 

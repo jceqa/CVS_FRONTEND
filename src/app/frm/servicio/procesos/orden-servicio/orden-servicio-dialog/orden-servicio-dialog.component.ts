@@ -22,6 +22,7 @@ import {PresupuestoServicioDetalle} from '../../../../../models/presupuestoServi
 import {DateAdapter} from '@angular/material/core';
 import {Estado} from '../../../../../models/estado';
 
+
 @Component({
     selector: 'app-orden-servicio-dialog',
     templateUrl: './orden-servicio-dialog.component.html',
@@ -141,6 +142,7 @@ import {Estado} from '../../../../../models/estado';
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.ordenServicioDetalles = this.detalles;
         this.item.presupuestoServicio = this.presupuestoSelected;
+
     }
 
     dismiss(result?: any) {
@@ -180,6 +182,7 @@ import {Estado} from '../../../../../models/estado';
                 + value.usuario.nombre + ' | '
                 + value.diagnostico.recepcion.sucursal.descripcion + ' | '
                 + value.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon + ' | '
+                + value.diagnostico.recepcion.observacion + ' | '
                 + value.total.toString();
         }
     }
