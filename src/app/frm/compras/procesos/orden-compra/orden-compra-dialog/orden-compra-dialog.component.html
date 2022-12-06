@@ -59,7 +59,7 @@
             </mat-selection-list>
         </div>
 
-        <div *ngIf="this.formType === 1 && item.notaCreditoComprasCancelacion.length > 0" >
+        <div *ngIf="this.formType === 1" >
             <h4>Notas de Crédito</h4>
             <div *ngFor="let notaCreditoCompra of item.notaCreditoComprasCancelacion">
                 <span>Nota de Crédito: {{ notaCreditoCompra.observacion }} | {{ notaCreditoCompra.fecha | date: 'dd/MM/yyyy' }} |
@@ -70,7 +70,7 @@
             </div>
         </div>
 
-        <div *ngIf="this.formType !== 1 && notasCredito.length > 0">
+        <div *ngIf="this.formType !== 1">
             <h4>Notas de Crédito</h4>
             <mat-selection-list #shoes (selectionChange)="selectedNotaCredito($event)">
                 <mat-list-option *ngFor="let notaCreditoCompra of notasCredito" [value]="notaCreditoCompra">

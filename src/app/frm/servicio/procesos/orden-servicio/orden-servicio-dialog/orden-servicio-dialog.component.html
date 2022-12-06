@@ -50,6 +50,25 @@
             </mat-form-field>
 
         </div>
+        <div>
+            <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
+                <input type="text"
+                       placeholder="Técnico Asignado"
+                       matInput
+                       [formControl]="presupuestoControl"
+                       [matAutocomplete]="autoPresupuesto"
+                       class="text">
+                <mat-autocomplete #autoPresupuesto="matAutocomplete" [displayWith]="displayPresupuesto">
+                    <mat-option *ngFor="let presupuesto of presupuestoFiltered | async" [value]="presupuesto"
+                                (onSelectionChange)="selectedPresupuesto($event)">
+                        {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
+                        {{ presupuesto.usuario.nombre }} | {{ presupuesto.diagnostico.recepcion.sucursal.descripcion }} |
+                        {{ presupuesto.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon}} |
+                        {{ presupuesto.total | myCurrency }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
         <br/>
         <div>
             <mat-form-field class="third-width-field">
