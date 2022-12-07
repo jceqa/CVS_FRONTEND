@@ -21,6 +21,9 @@ import {
 import {PresupuestoServicioDetalle} from '../../../../../models/presupuestoServicioDetalle';
 import {DateAdapter} from '@angular/material/core';
 import {Estado} from '../../../../../models/estado';
+import {UsuarioService} from '../../../../../services/usuario.service';
+import {UsuarioRol} from '../../../../../models/usuarioRol';
+import * as es6printJS from 'print-js';
 
 
 @Component({
@@ -31,6 +34,9 @@ import {Estado} from '../../../../../models/estado';
 
     presupuestoControl = new FormControl('');
     presupuestoFiltered: Observable<PresupuestoServicio[]>;
+
+    tecnicoControl = new FormControl('');
+    tecnicoFiltered: Observable<UsuarioRol[]>;
 
     item: OrdenServicio;
     companyId = 0;
@@ -53,8 +59,13 @@ import {Estado} from '../../../../../models/estado';
     presupuestos: PresupuestoServicio[] = [];
     presupuestoSelected: PresupuestoServicio;
 
+    tecnicos: UsuarioRol[] = [];
+    tecnicoSelected: Usuario;
+
     estadoOrdenServicio = '';
     total = 0;
+
+    isPrinting = false;
 
     constructor(
         private dialogRef: MatDialogRef<OrdenServicioDialogComponent>,
@@ -62,6 +73,7 @@ import {Estado} from '../../../../../models/estado';
         private ordenServicioService: OrdenServicioService,
         private utils: UtilService,
         private presupuestoService: PresupuestoServicioService,
+        private usuarioService: UsuarioService,
         private dialog: MatDialog,
         private dateAdapter: DateAdapter<Date>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -111,6 +123,21 @@ import {Estado} from '../../../../../models/estado';
             console.log(error);
             this.utils.stopLoading();
         });
+
+        this.utils.startLoading();
+        this.usuarioService.listUsuariosByRol(45).subscribe(data => {
+            console.log(data);
+            this.tecnicos = data;
+
+            this.tecnicoFiltered = this.tecnicoControl.valueChanges.pipe(
+                startWith(''),
+                map(value => this._filterTecnico(value || '')),
+            );
+            this.utils.stopLoading();
+        }, error => {
+            console.log(error);
+            this.utils.stopLoading();
+        });
     }
 
     setForm(item: OrdenServicio) {
@@ -142,7 +169,7 @@ import {Estado} from '../../../../../models/estado';
         this.item.usuario = new Usuario(this.utils.getUserId());
         this.item.ordenServicioDetalles = this.detalles;
         this.item.presupuestoServicio = this.presupuestoSelected;
-
+        this.item.tecnico = this.tecnicoSelected;
     }
 
     dismiss(result?: any) {
@@ -175,6 +202,11 @@ import {Estado} from '../../../../../models/estado';
         );
     }
 
+    selectedTecnico($event): void {
+        console.log($event.source.value);
+        this.tecnicoSelected = $event.source.value.usuario;
+    }
+
     displayPresupuesto(value: PresupuestoServicio) {
         if (value) {
             return value.observacion + ' | '
@@ -184,6 +216,13 @@ import {Estado} from '../../../../../models/estado';
                 + value.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon + ' | '
                 + value.diagnostico.recepcion.observacion + ' | '
                 + value.total.toString();
+        }
+    }
+
+    displayTecnico(value: UsuarioRol) {
+        if (value) {
+            return value.usuario.nombre + ' | '
+                + value.usuario.usuario;
         }
     }
 
@@ -211,6 +250,13 @@ import {Estado} from '../../../../../models/estado';
         } else if (!this.presupuestoSelected) {
             this.uiService.showSnackbar(
                 'Debe seleccionar un Prespuesto de Servicio.',
+                'Cerrar',
+                5000
+            );
+            return false;
+        } else if (!this.tecnicoSelected) {
+            this.uiService.showSnackbar(
+                'Debe seleccionar un Técnico.',
                 'Cerrar',
                 5000
             );
@@ -340,6 +386,15 @@ import {Estado} from '../../../../../models/estado';
         );
     }
 
+    private _filterTecnico(value: any): UsuarioRol[] {
+        const filterValue = value.toString().toLowerCase();
+        return (
+            this.tecnicos.filter(tecnico =>
+                tecnico.usuario.nombre.toLowerCase().includes(filterValue) ||
+                tecnico.usuario.usuario.toLowerCase().includes(filterValue))
+        );
+    }
+
     openDialog(index): void {
         const dialogRef = this.dialog.open(DiagnosticoEquipoDialogComponent, {
             minWidth: '70%',
@@ -357,6 +412,28 @@ import {Estado} from '../../../../../models/estado';
                 console.log(result);
                 // this.detalles[index].servicios = result;
             }
+        });
+    }
+
+    print() {
+        this.isPrinting = true;
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Imprimir Orden de Servicio',
+                msg: '¿Está seguro que desea imprimir esta Orden de Servicio?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                es6printJS({
+                    printable: 'print',
+                    type: 'html',
+                });
+            }
+            this.isPrinting = false;
         });
     }
 }

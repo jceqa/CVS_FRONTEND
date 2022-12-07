@@ -14,4 +14,5 @@ export class OrdenServicio {
     usuario: Usuario;
     presupuestoServicio: PresupuestoServicio;
     ordenServicioDetalles: OrdenServicioDetalle[];
+    tecnico: Usuario;
 }
