@@ -29,7 +29,7 @@
             </div>
         </div>
         <br>
-        <div>
+        <!--<div>
             <mat-form-field class="full-width-field">
                 <mat-label>Tipo Cobro</mat-label>
                 <mat-select [compareWith]="compareFunction" formControlName="tipo">
@@ -38,6 +38,41 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+        </div>-->
+        <div>
+            <h2>Tipo Cobro</h2>
+            <div>
+                <mat-checkbox formControlName="checkEfectivo" [checked]="isEfectivo">
+                        <h3>Efectivo</h3>
+                </mat-checkbox>
+                &nbsp;
+                <mat-form-field class="third-width-field">
+                    <input id="efectivo" formControlName="efectivo" [disabled]="!isEfectivo" matInput
+                           placeholder="Monto Efectivo" autocomplete="off"/>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-checkbox formControlName="checkEfectivo" [checked]="isEfectivo">
+                    <h3>Tarjeta</h3>
+                </mat-checkbox>
+                &nbsp;
+                <mat-form-field class="third-width-field">
+                    <input id="tarjeta" formControlName="efectivo" [disabled]="!isEfectivo" matInput
+                           placeholder="Monto Tarjeta" autocomplete="off"/>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-checkbox formControlName="checkEfectivo" [checked]="isEfectivo">
+                    <h3>Cheque</h3>
+                </mat-checkbox>
+                &nbsp;
+                <mat-form-field class="third-width-field">
+                    <input id="cheque" formControlName="efectivo" [disabled]="!isEfectivo" matInput
+                           placeholder="Monto Cheque" autocomplete="off"/>
+                </mat-form-field>
+            </div>
         </div>
     </mat-dialog-content>
 

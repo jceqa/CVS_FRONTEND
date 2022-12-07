@@ -44,7 +44,7 @@ export class ReportePagoComponent implements OnInit {
         this.cargar();
     }
 
-    printTest() {
+    print() {
         const data = [];
         this.pagos.forEach( p => {
             const date = new Date(p.fecha);
@@ -63,7 +63,7 @@ export class ReportePagoComponent implements OnInit {
             ],
             type: 'json',
             header: '' +
-                '<img class="logo" src="assets/Innovalogic%20Logo.jpg" style="width: 20%" >' +
+                '<img class="logo" src="assets/My" style="width: 20%" >' +
                 '<h3 class="custom-h3">Reporte de Pagos</h3>',
             style: '.custom-h3 { color: black; }',
             gridHeaderStyle: 'color: black;  border: 2px solid black;',

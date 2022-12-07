@@ -21,9 +21,14 @@
                 <mat-list-option *ngFor="let servicio of servicios, let i = index" [value]="servicio" [selected]="selected[i]">
                     <span>
                         {{ servicio.descripcion }} |
+
                         {{ servicio.monto | myCurrency  }}
                         <span *ngIf="servicio.articulo"> + {{ servicio.articulo.precioVenta }} |
                         {{ servicio.articulo.descripcion }} </span>
+
+                        {{ servicio.monto | myCurrency }}
+                        <span *ngIf="servicio.articulo"> + {{ servicio.articulo.precioVenta | myCurrency}} | {{servicio.articulo.descripcion}} </span>
+
                     </span>
                 </mat-list-option>
             </mat-selection-list>

@@ -31,6 +31,8 @@ export class CuentaACobrarDialogComponent implements OnInit {
 
     tiposCobro: TipoCobro[] = [];
 
+    isEfectivo = false;
+
     constructor(
         private dialogRef: MatDialogRef<CuentaACobrarDialogComponent>,
         private utils: UtilService,
@@ -47,6 +49,8 @@ export class CuentaACobrarDialogComponent implements OnInit {
         this.form = new FormGroup({
             id: new FormControl('', []),
             tipo: new FormControl('', [Validators.required]),
+            efectivo: new FormControl(),
+            checkEfectivo: new FormControl()
         });
 
         if (this.data.item.id) {
