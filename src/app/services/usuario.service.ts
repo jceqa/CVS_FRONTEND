@@ -4,6 +4,7 @@ import { Usuario } from '../models/usuario';
 import { Observable } from 'rxjs';
 import {AccountService} from './account.service';
 import {UsuarioDto} from '../models/usuarioDto';
+import {UsuarioRol} from '../models/usuarioRol';
 
 @Injectable({
     providedIn: 'root'
@@ -51,5 +52,9 @@ export class UsuarioService {
 
     public eliminarUsuario(idUsuario: number): Observable<any> {
         return this.http.delete<any>(this.baseUrl + `${idUsuario}`);
+    }
+
+    public listUsuariosByRol(idRol: number): Observable<UsuarioRol[]> {
+        return this.http.get<UsuarioRol[]>(this.baseUrl + `rol/${idRol}`);
     }
 }

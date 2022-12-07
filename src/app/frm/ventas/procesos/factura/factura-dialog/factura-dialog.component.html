@@ -4,7 +4,7 @@
 
     <mat-dialog-content id="print">
         <div style="text-align: right">
-            <img class="logo" src="assets/My%20project-1.png" style="width: 10%;">
+            <img class="logo" src="assets/My%20project-1.png" style="width: 10%;" *ngIf="isPrinting">
         </div>
         <div style="display: flex">
             <div class="third-width-field">
@@ -321,7 +321,6 @@
             <mat-icon>print</mat-icon>
             <span>Imprimir</span>
         </button>
-
 
     </mat-dialog-actions>
 

@@ -2,7 +2,10 @@
 
 <form [formGroup]='form' (keydown.enter)="$event.preventDefault()">
 
-    <mat-dialog-content>
+    <mat-dialog-content id="print">
+        <div style="text-align: right">
+            <img class="logo" src="assets/My%20project-1.png" style="width: 10%;" *ngIf="isPrinting">
+        </div>
         <div style="display: flex">
             <div class="third-width-field">
                 <span>Nro Orden de Servicio: {{ item.id }}</span>
@@ -51,20 +54,25 @@
 
         </div>
         <div>
+            <div *ngIf="this.formType === 1">
+                <br/>
+                <span >
+                    Tecnico Asignado: {{ item.tecnico.nombre }} | {{ item.tecnico.usuario }}
+                </span>
+                <br/>
+            </div>
+
             <mat-form-field class="full-width-field" *ngIf="this.formType !== 1">
                 <input type="text"
                        placeholder="Técnico Asignado"
                        matInput
-                       [formControl]="presupuestoControl"
-                       [matAutocomplete]="autoPresupuesto"
+                       [formControl]="tecnicoControl"
+                       [matAutocomplete]="autoTecnico"
                        class="text">
-                <mat-autocomplete #autoPresupuesto="matAutocomplete" [displayWith]="displayPresupuesto">
-                    <mat-option *ngFor="let presupuesto of presupuestoFiltered | async" [value]="presupuesto"
-                                (onSelectionChange)="selectedPresupuesto($event)">
-                        {{ presupuesto.observacion }} | {{ presupuesto.fecha | date: 'dd/MM/yyyy' }} |
-                        {{ presupuesto.usuario.nombre }} | {{ presupuesto.diagnostico.recepcion.sucursal.descripcion }} |
-                        {{ presupuesto.diagnostico.recepcion.recepcionDetalles[0].equipo.cliente.razon}} |
-                        {{ presupuesto.total | myCurrency }}
+                <mat-autocomplete #autoTecnico="matAutocomplete" [displayWith]="displayTecnico">
+                    <mat-option *ngFor="let tecnico of tecnicoFiltered | async" [value]="tecnico"
+                                (onSelectionChange)="selectedTecnico($event)">
+                        {{ tecnico.usuario.nombre }} | {{ tecnico.usuario.usuario }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
@@ -74,7 +82,7 @@
             <mat-form-field class="third-width-field">
                 <mat-label>Fecha Entrega</mat-label>
                 <input matInput [matDatepicker]="picker1" [min]="minDate" formControlName="fechaEntrega" readonly>
-                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-hint *ngIf="!isPrinting">DD/MM/YYYY</mat-hint>
                 <mat-datepicker-toggle matSuffix [for]="picker1" [disabled] *ngIf="this.formType !== 1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
@@ -82,7 +90,7 @@
             <mat-form-field class="third-width-field">
                 <mat-label>Vencimiento Garantía</mat-label>
                 <input matInput [matDatepicker]="picker2" [min]="minDate" formControlName="vencimientoGarantia" readonly>
-                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-hint *ngIf="!isPrinting">DD/MM/YYYY</mat-hint>
                 <mat-datepicker-toggle matSuffix [for]="picker2" *ngIf="this.formType !== 1"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
@@ -137,7 +145,7 @@
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef>Servicios</mat-header-cell>
                     <mat-cell *matCellDef="let dato, let i = index">
-                        <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(i)">
+                        <button matTooltip="Ver Detalle" color="primary" mat-icon-button (click)="openDialog(i)" *ngIf="!isPrinting">
                             <mat-icon aria-label="Ver detalle">view_list</mat-icon>
                         </button>
                     </mat-cell>
@@ -164,6 +172,11 @@
         <button mat-button color="warn" (click)="anularDialog($event)" [disabled]="item.estadoOrdenServicio.id !== 1" *ngIf="this.formType === 1">
             <mat-icon>block</mat-icon>
             Anular
+        </button>
+
+        <button color="primary" mat-button (click)="print()" *ngIf="this.formType === 1">
+            <mat-icon>print</mat-icon>
+            <span>Imprimir</span>
         </button>
     </mat-dialog-actions>
 </form>

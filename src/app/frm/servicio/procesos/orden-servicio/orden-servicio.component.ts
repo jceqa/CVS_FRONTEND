@@ -121,7 +121,7 @@ export class OrdenServicioComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             // width: '50vw',
             data: {
-                title: 'Anular Orden deServicio',
+                title: 'Anular Orden de Servicio',
                 msg: '¿Está seguro que desea anular esta Orden de Servicio?'
             }
         });

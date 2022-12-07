@@ -21,6 +21,7 @@ import {Proveedor} from '../../../../../models/proveedor';
 import {ProveedorService} from '../../../../../services/proveedor.service';
 import {NotaCreditoCompraService} from '../../../../../services/notacreditocompra.service';
 import {NotaCreditoCompra} from '../../../../../models/notaCreditoCompra';
+import * as es6printJS from 'print-js';
 
 @Component({
     selector: 'app-orden-compra-dialog',
@@ -63,6 +64,8 @@ export class OrdenCompraDialogComponent implements OnInit {
     notasCredito: NotaCreditoCompra[] = [];
     totalNotasCredito = 0;
     notasCreditoSelected: NotaCreditoCompra[] = [];
+
+    isPrinting = false;
 
     constructor(
         private dialogRef: MatDialogRef<OrdenCompraDialogComponent>,
@@ -457,5 +460,27 @@ export class OrdenCompraDialogComponent implements OnInit {
 
         const montoCuota = Math.round(this.total / this.utils.getNumber(this.form.get('cantidadCuota').value));
         this.form.get('montoCuota').setValue(montoCuota);
+    }
+
+    print() {
+        this.isPrinting = true;
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            // width: '50vw',
+            data: {
+                title: 'Imprimir Orden de Compra',
+                msg: '¿Está seguro que desea imprimir esta Orden de Compra?'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result.data) {
+                es6printJS({
+                    printable: 'print',
+                    type: 'html',
+                });
+            }
+            this.isPrinting = false;
+        });
     }
 }
